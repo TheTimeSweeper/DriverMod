@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ECA5x/25mxY=",
+  "dgSpecHash": "uQ0a6o/JQTE=",
   "success": true,
   "projectFilePath": "C:\\Users\\golde\\Documents\\GitHub\\DriverModRemote\\DriverProject\\DriverMod.csproj",
   "expectedPackageFiles": [
@@ -11,7 +11,7 @@
     "C:\\Users\\golde\\.nuget\\packages\\harmonyx\\2.7.0\\harmonyx.2.7.0.nupkg.sha512",
     "C:\\Users\\golde\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\golde\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
-    "C:\\Users\\golde\\.nuget\\packages\\mmhook.ror2\\2024.8.28\\mmhook.ror2.2024.8.28.nupkg.sha512",
+    "C:\\Users\\golde\\.nuget\\packages\\mmhook.ror2\\2024.9.5\\mmhook.ror2.2024.9.5.nupkg.sha512",
     "C:\\Users\\golde\\.nuget\\packages\\mono.cecil\\0.11.4\\mono.cecil.0.11.4.nupkg.sha512",
     "C:\\Users\\golde\\.nuget\\packages\\monomod\\22.5.1.1\\monomod.22.5.1.1.nupkg.sha512",
     "C:\\Users\\golde\\.nuget\\packages\\monomod.runtimedetour\\21.12.13.1\\monomod.runtimedetour.21.12.13.1.nupkg.sha512",
@@ -41,9 +41,9 @@
     "C:\\Users\\golde\\.nuget\\packages\\r2api.sound\\1.0.2\\r2api.sound.1.0.2.nupkg.sha512",
     "C:\\Users\\golde\\.nuget\\packages\\r2api.tempvisualeffect\\1.0.2\\r2api.tempvisualeffect.1.0.2.nupkg.sha512",
     "C:\\Users\\golde\\.nuget\\packages\\r2api.unlockable\\1.0.2\\r2api.unlockable.1.0.2.nupkg.sha512",
-    "C:\\Users\\golde\\.nuget\\packages\\riskofrain2.gamelibs\\1.3.1.275-r.0\\riskofrain2.gamelibs.1.3.1.275-r.0.nupkg.sha512",
+    "C:\\Users\\golde\\.nuget\\packages\\riskofrain2.gamelibs\\1.3.2-r.1\\riskofrain2.gamelibs.1.3.2-r.1.nupkg.sha512",
     "C:\\Users\\golde\\.nuget\\packages\\ror2bepinexpack\\1.7.0\\ror2bepinexpack.1.7.0.nupkg.sha512",
-    "C:\\Users\\golde\\.nuget\\packages\\rune580.mods.riskofrain2.riskofoptions\\2.8.1\\rune580.mods.riskofrain2.riskofoptions.2.8.1.nupkg.sha512",
+    "C:\\Users\\golde\\.nuget\\packages\\rune580.mods.riskofrain2.riskofoptions\\2.8.2\\rune580.mods.riskofrain2.riskofoptions.2.8.2.nupkg.sha512",
     "C:\\Users\\golde\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
     "C:\\Users\\golde\\.nuget\\packages\\system.collections.nongeneric\\4.3.0\\system.collections.nongeneric.4.3.0.nupkg.sha512",
     "C:\\Users\\golde\\.nuget\\packages\\system.collections.specialized\\4.3.0\\system.collections.specialized.4.3.0.nupkg.sha512",

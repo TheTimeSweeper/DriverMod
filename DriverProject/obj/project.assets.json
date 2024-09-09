@@ -71,7 +71,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "MMHOOK.RoR2/2024.8.28": {
+      "MMHOOK.RoR2/2024.9.5": {
         "type": "package",
         "compile": {
           "lib/MMHOOK_RoR2.dll": {}
@@ -719,7 +719,7 @@
           }
         }
       },
-      "RiskOfRain2.GameLibs/1.3.1.275-r.0": {
+      "RiskOfRain2.GameLibs/1.3.2-r.1": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/AK.Wwise.Unity.API.WwiseTypes.dll": {},
@@ -736,6 +736,7 @@
           "lib/netstandard2.0/Rewired_CSharp.dll": {},
           "lib/netstandard2.0/Rewired_Core.dll": {},
           "lib/netstandard2.0/RoR2.dll": {},
+          "lib/netstandard2.0/SimpleJSON.dll": {},
           "lib/netstandard2.0/Unity.Addressables.dll": {},
           "lib/netstandard2.0/Unity.ResourceManager.dll": {},
           "lib/netstandard2.0/Unity.TextMeshPro.dll": {},
@@ -757,6 +758,7 @@
           "lib/netstandard2.0/Rewired_CSharp.dll": {},
           "lib/netstandard2.0/Rewired_Core.dll": {},
           "lib/netstandard2.0/RoR2.dll": {},
+          "lib/netstandard2.0/SimpleJSON.dll": {},
           "lib/netstandard2.0/Unity.Addressables.dll": {},
           "lib/netstandard2.0/Unity.ResourceManager.dll": {},
           "lib/netstandard2.0/Unity.TextMeshPro.dll": {},
@@ -782,7 +784,7 @@
           }
         }
       },
-      "Rune580.Mods.RiskOfRain2.RiskOfOptions/2.8.1": {
+      "Rune580.Mods.RiskOfRain2.RiskOfOptions/2.8.2": {
         "type": "package",
         "dependencies": {
           "BepInEx.Core": "5.4.21",
@@ -1445,15 +1447,15 @@
         "runtime.json"
       ]
     },
-    "MMHOOK.RoR2/2024.8.28": {
-      "sha512": "PMNoPVqqMTirkpQ2Z2Ob8dOyCmmzZ/wJZP6IboLE92hBqkogA607QBTP3vDNCdsot5MSkyyCEUyXAIPKAIJUNw==",
+    "MMHOOK.RoR2/2024.9.5": {
+      "sha512": "3kZii0iBR0QnsXmLb2WZVmqEQ5vLDKmwwziHgg6S5KHW5L/Ar1KtdaOnv0lVrFxj6fKoT2CMIyU8dAPqAP2ZMw==",
       "type": "package",
-      "path": "mmhook.ror2/2024.8.28",
+      "path": "mmhook.ror2/2024.9.5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/MMHOOK_RoR2.dll",
-        "mmhook.ror2.2024.8.28.nupkg.sha512",
+        "mmhook.ror2.2024.9.5.nupkg.sha512",
         "mmhook.ror2.nuspec"
       ]
     },
@@ -1866,10 +1868,10 @@
         "r2api.unlockable.nuspec"
       ]
     },
-    "RiskOfRain2.GameLibs/1.3.1.275-r.0": {
-      "sha512": "JzUYFA80XaoFW4JiBNiB+MO22oLmm+ZsEakPos5UqHyWVVe5H+/I3R+P0y/sdIvaT+QWqk/vGEooc8uJ7rYnzQ==",
+    "RiskOfRain2.GameLibs/1.3.2-r.1": {
+      "sha512": "28aXs+CX9HCzZYkA9UthGvDwWOnB2rviBsiAroWqhlzzi8p9nxn7u4x8BORxnFfHRgjSMoH5SWWKC/abF3td5A==",
       "type": "package",
-      "path": "riskofrain2.gamelibs/1.3.1.275-r.0",
+      "path": "riskofrain2.gamelibs/1.3.2-r.1",
       "files": [
         ".nupkg.metadata",
         "lib/netstandard2.0/AK.Wwise.Unity.API.WwiseTypes.dll",
@@ -1886,12 +1888,13 @@
         "lib/netstandard2.0/Rewired_CSharp.dll",
         "lib/netstandard2.0/Rewired_Core.dll",
         "lib/netstandard2.0/RoR2.dll",
+        "lib/netstandard2.0/SimpleJSON.dll",
         "lib/netstandard2.0/Unity.Addressables.dll",
         "lib/netstandard2.0/Unity.ResourceManager.dll",
         "lib/netstandard2.0/Unity.TextMeshPro.dll",
         "lib/netstandard2.0/UnityEngine.UI.dll",
         "lib/netstandard2.0/com.unity.multiplayer-hlapi.Runtime.dll",
-        "riskofrain2.gamelibs.1.3.1.275-r.0.nupkg.sha512",
+        "riskofrain2.gamelibs.1.3.2-r.1.nupkg.sha512",
         "riskofrain2.gamelibs.nuspec"
       ]
     },
@@ -1908,10 +1911,10 @@
         "ror2bepinexpack.nuspec"
       ]
     },
-    "Rune580.Mods.RiskOfRain2.RiskOfOptions/2.8.1": {
-      "sha512": "+9bgXTN1P146cja9IAatEp/UVtr729P/mkcTpNjKSlcy18jGTFNY14Pscs/5YEX/SPvGW+pD5hlfu2TYHci39w==",
+    "Rune580.Mods.RiskOfRain2.RiskOfOptions/2.8.2": {
+      "sha512": "1eCGhnBX+TjoyOdpl0juTsIUwj1YUtzPeS5oCqGEpW5DOCJNBBU+jEp1XRhlPsQIJibcmkvSUo3OvDdYCo8coA==",
       "type": "package",
-      "path": "rune580.mods.riskofrain2.riskofoptions/2.8.1",
+      "path": "rune580.mods.riskofrain2.riskofoptions/2.8.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1919,7 +1922,7 @@
         "README.md",
         "lib/netstandard2.1/RiskOfOptions.dll",
         "roo-icon-static.png",
-        "rune580.mods.riskofrain2.riskofoptions.2.8.1.nupkg.sha512",
+        "rune580.mods.riskofrain2.riskofoptions.2.8.2.nupkg.sha512",
         "rune580.mods.riskofrain2.riskofoptions.nuspec"
       ]
     },
@@ -3808,10 +3811,10 @@
     ".NETStandard,Version=v2.1": [
       "BepInEx.Analyzers >= 1.0.*",
       "BepInEx.Core >= 5.4.21",
-      "MMHOOK.RoR2 >= 2024.8.28",
+      "MMHOOK.RoR2 >= 2024.9.5",
       "R2API >= 5.0.5",
-      "RiskOfRain2.GameLibs >= 1.3.1.275-r.0",
-      "Rune580.Mods.RiskOfRain2.RiskOfOptions >= 2.8.1"
+      "RiskOfRain2.GameLibs >= 1.3.2-r.1",
+      "Rune580.Mods.RiskOfRain2.RiskOfOptions >= 2.8.2"
     ]
   },
   "packageFolders": {
@@ -3873,7 +3876,7 @@
           },
           "MMHOOK.RoR2": {
             "target": "Package",
-            "version": "[2024.8.28, )",
+            "version": "[2024.9.5, )",
             "noWarn": [
               "NU1701"
             ]
@@ -3884,11 +3887,11 @@
           },
           "RiskOfRain2.GameLibs": {
             "target": "Package",
-            "version": "[1.3.1.275-r.0, )"
+            "version": "[1.3.2-r.1, )"
           },
           "Rune580.Mods.RiskOfRain2.RiskOfOptions": {
             "target": "Package",
-            "version": "[2.8.1, )"
+            "version": "[2.8.2, )"
           }
         },
         "imports": [

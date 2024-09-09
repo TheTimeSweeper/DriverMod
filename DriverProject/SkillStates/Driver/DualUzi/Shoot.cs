@@ -100,7 +100,7 @@ namespace RobDriver.SkillStates.Driver.DualUzi
                     origin = aimRay.origin,
                     damage = Shoot.damageCoefficient * this.damageStat,
                     damageColorIndex = DamageColorIndex.Default,
-                    damageType = DamageType.Generic,
+                    damageType = DamageTypeCombo.Generic,
                     falloffModel = BulletAttack.FalloffModel.None,
                     maxDistance = Shoot.range,
                     force = Shoot.force,

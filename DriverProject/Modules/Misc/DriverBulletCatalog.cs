@@ -1,15 +1,8 @@
 ﻿using R2API;
-using RoR2.Orbs;
 using RoR2;
 using UnityEngine;
 using System.Collections.Generic;
-using RobDriver.Modules;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using Newtonsoft.Json.Utilities;
-using System.Diagnostics;
-using static UnityEngine.AddressableAssets.ResourceLocators.ContentCatalogData;
-using UnityEngine.Networking;
 
 namespace RobDriver.Modules
 {
@@ -19,8 +12,8 @@ namespace RobDriver.Modules
 
         internal static DriverBulletDef Default { get; private set; }
 
-        internal static DamageType[] allowedDamageTypes = new DamageType[]
-        {
+        internal static DamageType[] allowedDamageTypes =
+        [
             DamageType.ResetCooldownsOnKill,
             DamageType.SlowOnHit,
             DamageType.Stun1s,
@@ -35,7 +28,7 @@ namespace RobDriver.Modules
             DamageType.BlightOnHit,
             DamageType.CrippleOnHit,
             DamageType.FruitOnHit
-        };
+        ];
 
         internal static void Init() => InitializeBullets();
 
@@ -46,7 +39,7 @@ namespace RobDriver.Modules
                 nameToken = "Default",
                 tier = DriverWeaponTier.Unique,
                 moddedDriverBulletType = DamageTypes.Generic,
-                driverBulletType = DamageType.Generic,
+                driverBulletType = DamageTypeCombo.Generic,
                 trailColor = Color.white 
             });
             Default.index = 0;
@@ -146,9 +139,9 @@ namespace RobDriver.Modules
 
         public static void CreateBulletType(string nameToken, DamageType damageType, DriverWeaponTier tier, Color color) => CreateBulletType(nameToken, damageType, DamageTypes.Generic, tier, color);
 
-        public static void CreateBulletType(string nameToken, DamageAPI.ModdedDamageType moddedBulletType, DriverWeaponTier tier, DamageColorIndex color) => CreateBulletType(nameToken, DamageType.Generic, moddedBulletType, tier, DamageColor.FindColor(color));
+        public static void CreateBulletType(string nameToken, DamageAPI.ModdedDamageType moddedBulletType, DriverWeaponTier tier, DamageColorIndex color) => CreateBulletType(nameToken, DamageTypeCombo.Generic, moddedBulletType, tier, DamageColor.FindColor(color));
 
-        public static void CreateBulletType(string nameToken, DamageAPI.ModdedDamageType moddedBulletType, DriverWeaponTier tier, Color color) => CreateBulletType(nameToken, DamageType.Generic, moddedBulletType, tier, color);
+        public static void CreateBulletType(string nameToken, DamageAPI.ModdedDamageType moddedBulletType, DriverWeaponTier tier, Color color) => CreateBulletType(nameToken, DamageTypeCombo.Generic, moddedBulletType, tier, color);
 
         public static void CreateBulletType(string nameToken, DamageType damageType, DamageAPI.ModdedDamageType moddedBulletType, DriverWeaponTier tier, Color color)
         {

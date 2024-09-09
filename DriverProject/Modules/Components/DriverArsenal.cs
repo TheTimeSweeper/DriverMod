@@ -7,15 +7,25 @@ namespace RobDriver.Modules.Components
     public class DriverArsenal : MonoBehaviour
     {
         public GenericSkill weaponSkillSlot;
+        private DriverWeaponDef _defaultWeapon;
 
         public DriverWeaponDef DefaultWeapon
         {
             get
             {
-                if (this.weaponSkillSlot && this.weaponSkillSlot.skillDef && !string.IsNullOrEmpty(this.weaponSkillSlot.skillDef.skillName))
-                    return DriverWeaponCatalog.weaponDefs.FirstOrDefault(def => def && def.name == this.weaponSkillSlot.skillDef.skillName) ?? DriverWeaponCatalog.Pistol;
+                if (!this._defaultWeapon)
+                {
+                    if (this.weaponSkillSlot && this.weaponSkillSlot.skillDef && !string.IsNullOrEmpty(this.weaponSkillSlot.skillDef.skillName))
+                    {
+                        var skillName = this.weaponSkillSlot.skillDef.skillName;
+                        _defaultWeapon = DriverWeaponCatalog.weaponDefs.FirstOrDefault(def => def && def.nameToken == skillName);
+                    }
 
-                return DriverWeaponCatalog.Pistol;
+                    if (!_defaultWeapon)
+                        _defaultWeapon = DriverWeaponCatalog.Pistol;
+                }
+
+                return _defaultWeapon;
             }
         }
     }

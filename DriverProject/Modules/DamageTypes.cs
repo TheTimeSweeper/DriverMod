@@ -248,7 +248,7 @@ namespace RobDriver.Modules
                         {
                             damage = damage,
                             damageColorIndex = DamageColorIndex.Item,
-                            damageType = DamageType.Generic,
+                            damageType = DamageTypeCombo.Generic,
                             attacker = damageInfo.attacker,
                             crit = damageInfo.crit,
                             force = Vector3.zero,

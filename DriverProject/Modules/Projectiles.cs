@@ -238,7 +238,7 @@ namespace RobDriver.Modules
 
             coinProjectile.AddComponent<SkillLocator>();
             var teamComponent = coinProjectile.AddComponent<TeamComponent>();
-            teamComponent.hideAllyCardDisplay = false;
+            teamComponent.hideAllyCardDisplay = true;
 
             var characterBody = coinProjectile.AddComponent<CharacterBody>();
             characterBody.baseVisionDistance = Mathf.Infinity;
@@ -267,7 +267,6 @@ namespace RobDriver.Modules
             dcbc.collidersB[0] = coinProjectile.transform.GetChild(0).GetChild(0).gameObject.GetComponent<SphereCollider>();
 
             var coinController = coinProjectile.AddComponent<CoinController>();
-            coinController.projectileHealthComponent = healthComponent;
             coinController.controller = projectileController;
             coinController.ricochetSound = Modules.Assets.CreateNetworkSoundEventDef("sfx_driver_stun_grenade");
             coinController.canRicochet = true;
@@ -413,7 +412,7 @@ namespace RobDriver.Modules
             projectileImpactExplosion.offsetForLifetimeExpiredSound = 0f;
             projectileImpactExplosion.timerAfterImpact = false;
 
-            projectileImpactExplosion.GetComponent<ProjectileDamage>().damageType = DamageType.Generic;
+            projectileImpactExplosion.GetComponent<ProjectileDamage>().damageType = DamageTypeCombo.Generic;
         }
 
         private static GameObject CreateGhostPrefab(string ghostName)

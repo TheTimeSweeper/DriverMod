@@ -386,7 +386,7 @@ namespace RobDriver.Modules.Components
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private bool IsItemGoldenGun2(ItemIndex itemIndex)
         {
-            var goldenGun = ClassicItemsReturns.Items.GoldenGun.Instance;
+            var goldenGun = ClassicItemsReturns.Items.Uncommon.GoldenGun.Instance;
 
             return goldenGun?.ItemDef && goldenGun.ItemDef.itemIndex == itemIndex;
         }
@@ -760,7 +760,7 @@ namespace RobDriver.Modules.Components
 
         private void TryUnlock()
         {
-            if (this.characterBody && this.characterBody.isPlayerControlled && this.characterBody.isLocalPlayer && this.weaponDef != this.arsenal.DefaultWeapon)
+            if (this.characterBody && this.weaponDef != this.arsenal.DefaultWeapon)
             {
                 var statSheet = PlayerStatsComponent.FindBodyStatsComponent(this.characterBody);
                 var unlockable = UnlockableCatalog.GetUnlockableDef(this.weaponDef.nameToken);

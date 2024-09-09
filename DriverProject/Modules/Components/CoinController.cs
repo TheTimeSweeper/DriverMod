@@ -16,7 +16,6 @@ namespace RobDriver.Modules.Components
             Coin
         }
 
-        public HealthComponent projectileHealthComponent;
         public ProjectileController controller;
         public DriverController iDrive;
 
@@ -109,7 +108,7 @@ namespace RobDriver.Modules.Components
         }
 
         [Command]
-        public void CmdRicochetBullet(GameObject attacker, GameObject inflictor, bool isCrit, float damage, uint procChainMask, Vector3 force, bool canRejectForce, byte colorIndex, uint damageType)
+        public void CmdRicochetBullet(GameObject attacker, GameObject inflictor, bool isCrit, float damage, uint procChainMask, Vector3 force, bool canRejectForce, byte colorIndex, ulong damageType)
         {
             this.damageInfo = new DamageInfo
             {
@@ -121,7 +120,7 @@ namespace RobDriver.Modules.Components
                 force = force,
                 canRejectForce = canRejectForce,
                 damageColorIndex = (DamageColorIndex)colorIndex,
-                damageType = (DamageType)damageType
+                damageType = damageType
             };
             this.damageInfo.procChainMask.mask = procChainMask;
 

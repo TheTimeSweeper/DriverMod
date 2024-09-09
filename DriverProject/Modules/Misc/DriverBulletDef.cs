@@ -8,7 +8,7 @@ public class DriverBulletDef : ScriptableObject
 {
     [Header("General")]
     public string nameToken = "";
-    public DamageType bulletType = DamageType.Generic;
+    public DamageTypeCombo bulletType = DamageTypeCombo.Generic;
     public DamageAPI.ModdedDamageType moddedBulletType = DamageTypes.Generic;
     public DriverWeaponTier tier = DriverWeaponTier.Common;
 
@@ -37,7 +37,7 @@ public class DriverBulletDef : ScriptableObject
 public struct DriverBulletDefInfo
 {
     public string nameToken;
-    public DamageType driverBulletType;
+    public DamageTypeCombo driverBulletType;
     public DamageAPI.ModdedDamageType moddedDriverBulletType;
     public DriverWeaponTier tier;
 
