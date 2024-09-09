@@ -9,20 +9,20 @@ namespace RobDriver.Modules.Components
 
         private void Awake()
         {
-            CharacterBody characterBody = this.GetComponent<CharacterBody>();
+            var characterBody = this.GetComponent<CharacterBody>();
             if (characterBody)
             {
-                ModelLocator modelLocator = characterBody.modelLocator;
+                var modelLocator = characterBody.modelLocator;
                 if (modelLocator)
                 {
-                    Transform modelTransform = modelLocator.modelTransform;
+                    var modelTransform = modelLocator.modelTransform;
                     if (modelTransform)
                     {
-                        ChildLocator childLocator = modelTransform.GetComponent<ChildLocator>();
+                        var childLocator = modelTransform.GetComponent<ChildLocator>();
                         if (childLocator)
                         {
-                            Transform head = childLocator.FindChild("Head");
-                            Transform head2 = childLocator.FindChild("HeadCenter");
+                            var head = childLocator.FindChild("Head");
+                            var head2 = childLocator.FindChild("HeadCenter");
 
                             if (head) this.headTransform = head;
                             if (!head && head2) this.headTransform = head2;

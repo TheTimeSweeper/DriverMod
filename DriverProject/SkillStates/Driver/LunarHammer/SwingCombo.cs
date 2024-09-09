@@ -48,7 +48,7 @@ namespace RobDriver.SkillStates.Driver.LunarHammer
         {
             if (base.isAuthority)
             {
-                Vector3 direction = this.GetAimRay().direction;
+                var direction = this.GetAimRay().direction;
                 direction.y = Mathf.Max(direction.y, direction.y * 0.5f);
                 this.FindModelChild("MeleePivot").rotation = Util.QuaternionSafeLookRotation(direction);
             }
@@ -73,11 +73,11 @@ namespace RobDriver.SkillStates.Driver.LunarHammer
             Util.PlaySound(this.swingSoundString, this.gameObject);
             if (this.swingEffectPrefab)
             {
-                Transform muzzleTransform = this.FindModelChild(this.muzzleString);
+                var muzzleTransform = this.FindModelChild(this.muzzleString);
                 if (muzzleTransform)
                 {
                     this.swingEffectInstance = UnityEngine.Object.Instantiate<GameObject>(this.swingEffectPrefab, muzzleTransform);
-                    ScaleParticleSystemDuration fuck = this.swingEffectInstance.GetComponent<ScaleParticleSystemDuration>();
+                    var fuck = this.swingEffectInstance.GetComponent<ScaleParticleSystemDuration>();
                     if (fuck) fuck.newDuration = fuck.initialDuration;
                 }
             }
@@ -89,7 +89,7 @@ namespace RobDriver.SkillStates.Driver.LunarHammer
 
             if (this.swingEffectInstance)
             {
-                ScaleParticleSystemDuration fuck = this.swingEffectInstance.GetComponent<ScaleParticleSystemDuration>();
+                var fuck = this.swingEffectInstance.GetComponent<ScaleParticleSystemDuration>();
                 if (fuck) fuck.newDuration = 20f;
             }
         }
@@ -102,7 +102,7 @@ namespace RobDriver.SkillStates.Driver.LunarHammer
 
         protected override void SetNextState()
         {
-            int index = (this.swingIndex + 1) % 2;
+            var index = (this.swingIndex + 1) % 2;
 
             this.outer.SetNextState(new SwingCombo
             {

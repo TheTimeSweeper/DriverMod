@@ -50,7 +50,7 @@ namespace RobDriver.SkillStates.Driver.Revolver
 
             if (base.isAuthority)
             {
-                float recoil = 24f;
+                var recoil = 24f;
                 base.AddRecoil2(-1f * recoil, -2f * recoil, -0.5f * recoil, 0.5f * recoil);
 
                 this.FireBullet();
@@ -61,9 +61,9 @@ namespace RobDriver.SkillStates.Driver.Revolver
 
         protected virtual void FireBullet()
         {
-            Ray aimRay = base.GetAimRay();
+            var aimRay = base.GetAimRay();
 
-            BulletAttack bulletAttack = new BulletAttack
+            var bulletAttack = new BulletAttack
             {
                 bulletCount = 1,
                 aimVector = aimRay.direction,
@@ -102,7 +102,7 @@ namespace RobDriver.SkillStates.Driver.Revolver
                     damageInfo.damage *= 2f;
                     damageInfo.damageColorIndex = DamageColorIndex.Sniper;
 
-                    EffectData effectData = new EffectData
+                    var effectData = new EffectData
                     {
                         origin = hitInfo.point,
                         rotation = Quaternion.LookRotation(-hitInfo.direction)
@@ -151,9 +151,6 @@ namespace RobDriver.SkillStates.Driver.Revolver
             this.crosshairOverrideRequest?.Dispose();
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.PrioritySkill;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.PrioritySkill;
     }
 }

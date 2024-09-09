@@ -12,10 +12,7 @@ namespace RobDriver.Modules.Components
             eventFunctions = GetComponent<EventFunctions>();
             onArrival.AddListener(Event);
         }
-        
-        private void Event()
-        {
-            eventFunctions.UnparentTransform(base.transform.Find("Trail"));
-        }
+
+        private void Event() => eventFunctions.UnparentTransform(base.transform.Find("Trail"));
     }
 }

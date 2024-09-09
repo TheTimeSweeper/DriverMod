@@ -52,7 +52,7 @@ namespace RobDriver.SkillStates.Driver.SMG
             if (DriverPlugin.starstormInstalled) Util.PlaySound("NemmandoSubmissionFire", base.gameObject);
             else Util.PlaySound("sfx_driver_rocket_launcher_shoot", base.gameObject);
 
-            float recoilAmplitude = SuppressiveFire.recoil / this.attackSpeedStat;
+            var recoilAmplitude = SuppressiveFire.recoil / this.attackSpeedStat;
 
             base.AddRecoil2(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
             this.characterBody.AddSpreadBloom(2f);
@@ -60,15 +60,15 @@ namespace RobDriver.SkillStates.Driver.SMG
 
             if (base.isAuthority)
             {
-                float damage = Shoot.damageCoefficient * this.damageStat;
+                var damage = Shoot.damageCoefficient * this.damageStat;
 
-                Ray aimRay = GetAimRay();
+                var aimRay = GetAimRay();
 
-                float spread = this.maxSpread;
-                float thiccness = 1f;
+                var spread = this.maxSpread;
+                var thiccness = 1f;
                 float force = 50;
 
-                BulletAttack bulletAttack = new BulletAttack
+                var bulletAttack = new BulletAttack
                 {
                     aimVector = aimRay.direction,
                     origin = aimRay.origin,
@@ -178,9 +178,6 @@ namespace RobDriver.SkillStates.Driver.SMG
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.PrioritySkill;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.PrioritySkill;
     }
 }

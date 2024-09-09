@@ -13,19 +13,19 @@ namespace RobDriver.Modules
         // cache this just to give our ragdolls the same physic material as vanilla stuff
         private static PhysicMaterial ragdollMaterial;
 
-        internal static List<SurvivorDef> survivorDefinitions = new List<SurvivorDef>();
-        internal static List<GameObject> bodyPrefabs = new List<GameObject>();
-        internal static List<GameObject> masterPrefabs = new List<GameObject>();
-        internal static List<GameObject> projectilePrefabs = new List<GameObject>();
+        internal static List<SurvivorDef> survivorDefinitions = new();
+        internal static List<GameObject> bodyPrefabs = new();
+        internal static List<GameObject> masterPrefabs = new();
+        internal static List<GameObject> projectilePrefabs = new();
 
         internal static void RegisterNewSurvivor(GameObject bodyPrefab, GameObject displayPrefab, string namePrefix, UnlockableDef unlockableDef)
         {
-            string fullNameString = DriverPlugin.developerPrefix + "_" + namePrefix + "_BODY_NAME";
-            string fullDescString = DriverPlugin.developerPrefix + "_" + namePrefix + "_BODY_DESCRIPTION";
-            string fullOutroString = DriverPlugin.developerPrefix + "_" + namePrefix + "_BODY_OUTRO_FLAVOR";
-            string fullFailureString = DriverPlugin.developerPrefix + "_" + namePrefix + "_BODY_OUTRO_FAILURE";
+            var fullNameString = DriverPlugin.developerPrefix + "_" + namePrefix + "_BODY_NAME";
+            var fullDescString = DriverPlugin.developerPrefix + "_" + namePrefix + "_BODY_DESCRIPTION";
+            var fullOutroString = DriverPlugin.developerPrefix + "_" + namePrefix + "_BODY_OUTRO_FLAVOR";
+            var fullFailureString = DriverPlugin.developerPrefix + "_" + namePrefix + "_BODY_OUTRO_FAILURE";
 
-            SurvivorDef survivorDef = ScriptableObject.CreateInstance<SurvivorDef>();
+            var survivorDef = ScriptableObject.CreateInstance<SurvivorDef>();
             survivorDef.bodyPrefab = bodyPrefab;
             survivorDef.displayPrefab = displayPrefab;
             survivorDef.displayNameToken = fullNameString;
@@ -39,14 +39,14 @@ namespace RobDriver.Modules
             survivorDefinitions.Add(survivorDef);
         }
 
-        internal static void RegisterNewSurvivor(GameObject bodyPrefab, GameObject displayPrefab, string namePrefix) { RegisterNewSurvivor(bodyPrefab, displayPrefab, namePrefix, null); }
+        internal static void RegisterNewSurvivor(GameObject bodyPrefab, GameObject displayPrefab, string namePrefix) => RegisterNewSurvivor(bodyPrefab, displayPrefab, namePrefix, null);
 
         internal static GameObject CreateDisplayPrefab(string modelName, GameObject prefab)
         {
-            GameObject newPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody"), modelName + "Prefab");
+            var newPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody"), modelName + "Prefab");
 
-            GameObject model = CreateModel(newPrefab, modelName);
-            Transform modelBaseTransform = SetupModel(newPrefab, model.transform);
+            var model = CreateModel(newPrefab, modelName);
+            var modelBaseTransform = SetupModel(newPrefab, model.transform);
 
             model.AddComponent<CharacterModel>().baseRendererInfos = prefab.GetComponentInChildren<CharacterModel>().baseRendererInfos;
             model.AddComponent<Modules.Components.DriverCSS>();
@@ -56,13 +56,13 @@ namespace RobDriver.Modules
 
         internal static GameObject CreatePrefab(string bodyName, string modelName, BodyInfo bodyInfo)
         {
-            GameObject newPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody"), bodyName);
+            var newPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody"), bodyName);
 
-            GameObject model = CreateModel(newPrefab, modelName);
-            Transform modelBaseTransform = SetupModel(newPrefab, model.transform);
+            var model = CreateModel(newPrefab, modelName);
+            var modelBaseTransform = SetupModel(newPrefab, model.transform);
 
             #region CharacterBody
-            CharacterBody bodyComponent = newPrefab.GetComponent<CharacterBody>();
+            var bodyComponent = newPrefab.GetComponent<CharacterBody>();
 
             bodyComponent.name = bodyInfo.bodyName;
             bodyComponent.baseNameToken = bodyInfo.bodyNameToken;
@@ -133,7 +133,7 @@ namespace RobDriver.Modules
 
         internal static void CreateGenericDoppelganger(GameObject bodyPrefab, string masterName, string masterToCopy)
         {
-            GameObject newMaster = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterMasters/" + masterToCopy + "MonsterMaster"), masterName, true);
+            var newMaster = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterMasters/" + masterToCopy + "MonsterMaster"), masterName, true);
             newMaster.GetComponent<CharacterMaster>().bodyPrefab = bodyPrefab;
 
             masterPrefabs.Add(newMaster);
@@ -142,19 +142,19 @@ namespace RobDriver.Modules
         #region ModelSetup
         private static Transform SetupModel(GameObject prefab, Transform modelTransform)
         {
-            GameObject modelBase = new GameObject("ModelBase");
+            var modelBase = new GameObject("ModelBase");
             modelBase.transform.parent = prefab.transform;
             modelBase.transform.localPosition = new Vector3(0f, -0.9f, 0f);
             modelBase.transform.localRotation = Quaternion.identity;
             modelBase.transform.localScale = new Vector3(1f, 1f, 1f);
 
-            GameObject cameraPivot = new GameObject("CameraPivot");
+            var cameraPivot = new GameObject("CameraPivot");
             cameraPivot.transform.parent = modelBase.transform;
             cameraPivot.transform.localPosition = new Vector3(0f, 1.59f, 0f);
             cameraPivot.transform.localRotation = Quaternion.identity;
             cameraPivot.transform.localScale = Vector3.one;
 
-            GameObject aimOrigin = new GameObject("AimOrigin");
+            var aimOrigin = new GameObject("AimOrigin");
             aimOrigin.transform.parent = modelBase.transform;
             aimOrigin.transform.localPosition = new Vector3(0f, 1.4f, 0f);
             aimOrigin.transform.localRotation = Quaternion.identity;
@@ -186,13 +186,13 @@ namespace RobDriver.Modules
 
         internal static void SetupCharacterModel(GameObject prefab, CustomRendererInfo[] rendererInfo, int mainRendererIndex)
         {
-            CharacterModel characterModel = prefab.GetComponent<ModelLocator>().modelTransform.gameObject.AddComponent<CharacterModel>();
-            ChildLocator childLocator = characterModel.GetComponent<ChildLocator>();
+            var characterModel = prefab.GetComponent<ModelLocator>().modelTransform.gameObject.AddComponent<CharacterModel>();
+            var childLocator = characterModel.GetComponent<ChildLocator>();
             characterModel.body = prefab.GetComponent<CharacterBody>();
 
-            List<CharacterModel.RendererInfo> rendererInfos = new List<CharacterModel.RendererInfo>();
+            var rendererInfos = new List<CharacterModel.RendererInfo>();
 
-            for (int i = 0; i < rendererInfo.Length; i++)
+            for (var i = 0; i < rendererInfo.Length; i++)
             {
                 rendererInfos.Add(new CharacterModel.RendererInfo
                 {
@@ -203,11 +203,11 @@ namespace RobDriver.Modules
                 });
             }
 
-            characterModel.baseRendererInfos = rendererInfos.ToArray();
+            characterModel.baseRendererInfos = [.. rendererInfos];
 
             characterModel.autoPopulateLightInfos = true;
             characterModel.invisibilityCount = 0;
-            characterModel.temporaryOverlays = new List<TemporaryOverlay>();
+            characterModel.temporaryOverlays = [];
 
             characterModel.mainSkinnedMeshRenderer = characterModel.baseRendererInfos[mainRendererIndex].renderer.GetComponent<SkinnedMeshRenderer>();
         }
@@ -216,7 +216,7 @@ namespace RobDriver.Modules
         #region ComponentSetup
         private static void SetupCharacterDirection(GameObject prefab, Transform modelBaseTransform, Transform modelTransform)
         {
-            CharacterDirection characterDirection = prefab.GetComponent<CharacterDirection>();
+            var characterDirection = prefab.GetComponent<CharacterDirection>();
             characterDirection.targetTransform = modelBaseTransform;
             characterDirection.overrideAnimatorForwardTransform = null;
             characterDirection.rootMotionAccumulator = null;
@@ -227,27 +227,27 @@ namespace RobDriver.Modules
 
         private static void SetupCameraTargetParams(GameObject prefab)
         {
-            CameraTargetParams cameraTargetParams = prefab.GetComponent<CameraTargetParams>();
+            var cameraTargetParams = prefab.GetComponent<CameraTargetParams>();
             cameraTargetParams.cameraParams = Resources.Load<GameObject>("Prefabs/CharacterBodies/MercBody").GetComponent<CameraTargetParams>().cameraParams;
             cameraTargetParams.cameraPivotTransform = prefab.transform.Find("ModelBase").Find("CameraPivot");
         }
 
         private static void SetupModelLocator(GameObject prefab, Transform modelBaseTransform, Transform modelTransform)
         {
-            ModelLocator modelLocator = prefab.GetComponent<ModelLocator>();
+            var modelLocator = prefab.GetComponent<ModelLocator>();
             modelLocator.modelTransform = modelTransform;
             modelLocator.modelBaseTransform = modelBaseTransform;
         }
 
         private static void SetupRigidbody(GameObject prefab)
         {
-            Rigidbody rigidbody = prefab.GetComponent<Rigidbody>();
+            var rigidbody = prefab.GetComponent<Rigidbody>();
             rigidbody.mass = 100f;
         }
 
         private static void SetupCapsuleCollider(GameObject prefab)
         {
-            CapsuleCollider capsuleCollider = prefab.GetComponent<CapsuleCollider>();
+            var capsuleCollider = prefab.GetComponent<CapsuleCollider>();
             capsuleCollider.center = new Vector3(0f, 0f, 0f);
             capsuleCollider.radius = 0.5f;
             capsuleCollider.height = 1.82f;
@@ -256,8 +256,8 @@ namespace RobDriver.Modules
 
         private static void SetupMainHurtbox(GameObject prefab, GameObject model)
         {
-            HurtBoxGroup hurtBoxGroup = model.AddComponent<HurtBoxGroup>();
-            ChildLocator childLocator = model.GetComponent<ChildLocator>();
+            var hurtBoxGroup = model.AddComponent<HurtBoxGroup>();
+            var childLocator = model.GetComponent<ChildLocator>();
 
             if (!childLocator.FindChild("MainHurtbox"))
             {
@@ -265,7 +265,7 @@ namespace RobDriver.Modules
                 return;
             }
 
-            HurtBox mainHurtbox = childLocator.FindChild("MainHurtbox").gameObject.AddComponent<HurtBox>();
+            var mainHurtbox = childLocator.FindChild("MainHurtbox").gameObject.AddComponent<HurtBox>();
             mainHurtbox.gameObject.layer = LayerIndex.entityPrecise.intVal;
             mainHurtbox.healthComponent = prefab.GetComponent<HealthComponent>();
             mainHurtbox.isBullseye = true;
@@ -285,7 +285,7 @@ namespace RobDriver.Modules
 
         private static void SetupFootstepController(GameObject model)
         {
-            FootstepHandler footstepHandler = model.AddComponent<FootstepHandler>();
+            var footstepHandler = model.AddComponent<FootstepHandler>();
             footstepHandler.baseFootstepString = "Play_player_footstep";
             footstepHandler.sprintFootstepOverrideString = "";
             footstepHandler.enableFootstepDust = true;
@@ -294,18 +294,18 @@ namespace RobDriver.Modules
 
         private static void SetupRagdoll(GameObject model)
         {
-            RagdollController ragdollController = model.GetComponent<RagdollController>();
+            var ragdollController = model.GetComponent<RagdollController>();
 
             if (!ragdollController) return;
 
             if (ragdollMaterial == null) ragdollMaterial = Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<RagdollController>().bones[1].GetComponent<Collider>().material;
 
-            foreach (Transform i in ragdollController.bones)
+            foreach (var i in ragdollController.bones)
             {
                 if (i)
                 {
                     i.gameObject.layer = LayerIndex.ragdoll.intVal;
-                    Collider j = i.GetComponent<Collider>();
+                    var j = i.GetComponent<Collider>();
                     if (j)
                     {
                         j.material = ragdollMaterial;
@@ -317,7 +317,7 @@ namespace RobDriver.Modules
 
         private static void SetupAimAnimator(GameObject prefab, GameObject model)
         {
-            AimAnimator aimAnimator = model.AddComponent<AimAnimator>();
+            var aimAnimator = model.AddComponent<AimAnimator>();
             aimAnimator.directionComponent = prefab.GetComponent<CharacterDirection>();
             aimAnimator.pitchRangeMax = 45f;
             aimAnimator.pitchRangeMin = -45f;
@@ -331,18 +331,18 @@ namespace RobDriver.Modules
 
         internal static void SetupHitbox(GameObject prefab, Transform[] hitboxTransforms, string hitboxName)
         {
-            HitBoxGroup hitBoxGroup = prefab.AddComponent<HitBoxGroup>();
+            var hitBoxGroup = prefab.AddComponent<HitBoxGroup>();
 
-            List<HitBox> hitboxes = new List<HitBox>();
+            var hitboxes = new List<HitBox>();
 
-            foreach (Transform i in hitboxTransforms)
+            foreach (var i in hitboxTransforms)
             {
-                HitBox hitBox = i.gameObject.AddComponent<HitBox>();
+                var hitBox = i.gameObject.AddComponent<HitBox>();
                 i.gameObject.layer = LayerIndex.projectile.intVal;
                 hitboxes.Add(hitBox);
             }
 
-            hitBoxGroup.hitBoxes = hitboxes.ToArray();
+            hitBoxGroup.hitBoxes = [.. hitboxes];
 
             hitBoxGroup.groupName = hitboxName;
         }

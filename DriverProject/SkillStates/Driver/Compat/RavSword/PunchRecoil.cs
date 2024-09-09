@@ -46,10 +46,7 @@ namespace RobDriver.SkillStates.Driver.Compat
             }
         }
 
-        public override void OnExit()
-        {
-            base.OnExit();
-        }
+        public override void OnExit() => base.OnExit();
 
         public override InterruptPriority GetMinimumInterruptPriority()
         {

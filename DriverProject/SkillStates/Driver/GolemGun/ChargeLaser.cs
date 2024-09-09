@@ -24,23 +24,23 @@ namespace RobDriver.SkillStates.Driver.GolemGun
 		{
 			base.OnEnter();
 			this.duration = ChargeLaser.baseDuration / this.attackSpeedStat;
-			Transform modelTransform = base.GetModelTransform();
+			var modelTransform = base.GetModelTransform();
 
 			this.chargePlayID = Util.PlayAttackSpeedSound(EntityStates.GolemMonster.ChargeLaser.attackSoundString, this.gameObject, 10f + this.attackSpeedStat);
 
 			if (modelTransform)
 			{
-				ChildLocator component = modelTransform.GetComponent<ChildLocator>();
+				var component = modelTransform.GetComponent<ChildLocator>();
 				if (component)
 				{
-					Transform transform = component.FindChild("ShotgunMuzzle");
+					var transform = component.FindChild("ShotgunMuzzle");
 					if (transform)
 					{
 						if (EntityStates.GolemMonster.ChargeLaser.effectPrefab)
 						{
 							this.chargeEffect = UnityEngine.Object.Instantiate<GameObject>(EntityStates.GolemMonster.ChargeLaser.effectPrefab, transform.position, transform.rotation);
 							this.chargeEffect.transform.parent = transform;
-							ScaleParticleSystemDuration component2 = this.chargeEffect.GetComponent<ScaleParticleSystemDuration>();
+							var component2 = this.chargeEffect.GetComponent<ScaleParticleSystemDuration>();
 							if (component2)
 							{
 								component2.newDuration = this.duration;
@@ -94,10 +94,10 @@ namespace RobDriver.SkillStates.Driver.GolemGun
 			base.Update();
 			if (this.laserEffect && this.laserLineComponent)
 			{
-				float num = 1000f;
-				Ray aimRay = base.GetAimRay();
-				Vector3 position = this.laserEffect.transform.parent.position;
-				Vector3 point = aimRay.GetPoint(num);
+				var num = 1000f;
+				var aimRay = base.GetAimRay();
+				var position = this.laserEffect.transform.parent.position;
+				var point = aimRay.GetPoint(num);
 				this.laserDirection = point - position;
 				RaycastHit raycastHit;
 				if (Physics.Raycast(aimRay, out raycastHit, num, LayerIndex.world.mask | LayerIndex.entityPrecise.mask))
@@ -142,16 +142,13 @@ namespace RobDriver.SkillStates.Driver.GolemGun
 
 			if (base.fixedAge >= this.duration && base.isAuthority)
 			{
-				FireLaser fireLaser = new FireLaser();
+				var fireLaser = new FireLaser();
 				fireLaser.laserDirection = this.laserDirection;
 				this.outer.SetNextState(fireLaser);
 				return;
 			}
 		}
 
-		public override InterruptPriority GetMinimumInterruptPriority()
-		{
-			return InterruptPriority.Skill;
-		}
-	}
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Skill;
+    }
 }

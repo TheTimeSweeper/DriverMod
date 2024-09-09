@@ -21,8 +21,9 @@ namespace RobDriver.Modules
         internal static Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/HGStandard");
         internal static Material commandoMat;
 
-        internal static List<EffectDef> effectDefs = new List<EffectDef>();
-        internal static List<NetworkSoundEventDef> networkSoundEventDefs = new List<NetworkSoundEventDef>();
+        internal static List<EffectDef> effectDefs = [];
+        internal static List<NetworkSoundEventDef> networkSoundEventDefs = [];
+        internal static List<UnlockableDef> unlockableDefs = [];
 
         internal static NetworkSoundEventDef hammerImpactSoundDef;
         internal static NetworkSoundEventDef knifeImpactSoundDef;
@@ -162,7 +163,6 @@ namespace RobDriver.Modules
         internal static Texture lunarRifleWeaponIcon;
         internal static Texture lunarHammerWeaponIcon;
         internal static Texture nemmandoGunWeaponIcon;
-        internal static Texture nemmandoSwordWeaponIcon;
         internal static Texture nemmercGunWeaponIcon;
         internal static Texture golemGunWeaponIcon;
 
@@ -192,34 +192,6 @@ namespace RobDriver.Modules
         public static GameObject bigRedSwingEffect;
         public static GameObject consumeOrb;
 
-        internal static DriverWeaponDef pistolWeaponDef;
-        internal static DriverWeaponDef goldenGunWeaponDef;
-        internal static DriverWeaponDef pyriteGunWeaponDef;
-        internal static DriverWeaponDef shotgunWeaponDef;
-        internal static DriverWeaponDef riotShotgunWeaponDef;
-        internal static DriverWeaponDef slugShotgunWeaponDef;
-        internal static DriverWeaponDef machineGunWeaponDef;
-        internal static DriverWeaponDef heavyMachineGunWeaponDef;
-        internal static DriverWeaponDef bazookaWeaponDef;
-        internal static DriverWeaponDef rocketLauncherWeaponDef;
-        internal static DriverWeaponDef rocketLauncherAltWeaponDef;
-        internal static DriverWeaponDef sniperWeaponDef;
-        internal static DriverWeaponDef armCannonWeaponDef;
-        internal static DriverWeaponDef plasmaCannonWeaponDef;
-        internal static DriverWeaponDef beetleShieldWeaponDef;
-        internal static DriverWeaponDef behemothWeaponDef;
-        internal static DriverWeaponDef grenadeLauncherWeaponDef;
-        internal static DriverWeaponDef lunarPistolWeaponDef;
-        internal static DriverWeaponDef voidPistolWeaponDef;
-        internal static DriverWeaponDef needlerWeaponDef;
-        internal static DriverWeaponDef badassShotgunWeaponDef;
-        internal static DriverWeaponDef lunarRifleWeaponDef;
-        internal static DriverWeaponDef lunarHammerWeaponDef;
-        internal static DriverWeaponDef nemmandoGunWeaponDef;
-        internal static DriverWeaponDef nemmandoSwordWeaponDef;
-        internal static DriverWeaponDef nemmercGunWeaponDef;
-        internal static DriverWeaponDef golemGunWeaponDef;
-
         internal static Material syringeDamageOverlayMat;
         internal static Material syringeAttackSpeedOverlayMat;
         internal static Material syringeCritOverlayMat;
@@ -235,9 +207,9 @@ namespace RobDriver.Modules
                 }
             }
 
-            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("DriverMod.driver_bank.bnk"))
+            using (var manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("DriverMod.driver_bank.bnk"))
             {
-                byte[] array = new byte[manifestResourceStream2.Length];
+                var array = new byte[manifestResourceStream2.Length];
                 manifestResourceStream2.Read(array, 0, array.Length);
                 SoundAPI.SoundBanks.Add(array);
             }
@@ -269,18 +241,18 @@ namespace RobDriver.Modules
             knifeImpactSoundDef = CreateNetworkSoundEventDef("sfx_driver_knife_hit");
 
             headshotOverlay = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/Railgunner/RailgunnerScopeLightOverlay.prefab").WaitForCompletion().InstantiateClone("DriverHeadshotOverlay", false);
-            SniperTargetViewer viewer = headshotOverlay.GetComponentInChildren<SniperTargetViewer>();
+            var viewer = headshotOverlay.GetComponentInChildren<SniperTargetViewer>();
             headshotOverlay.transform.Find("ScopeOverlay").gameObject.SetActive(false);
 
             headshotVisualizer = viewer.visualizerPrefab.InstantiateClone("DriverHeadshotVisualizer", false);
-            Image headshotImage = headshotVisualizer.transform.Find("Scaler/Rectangle").GetComponent<Image>();
+            var headshotImage = headshotVisualizer.transform.Find("Scaler/Rectangle").GetComponent<Image>();
             headshotVisualizer.transform.Find("Scaler/Outer").gameObject.SetActive(false);
             headshotImage.color = Color.red;
             //headshotImage.sprite = Addressables.LoadAssetAsync<Sprite>("RoR2/Base/Captain/texCaptainCrosshairInner.png").WaitForCompletion();
 
             viewer.visualizerPrefab = headshotVisualizer;
 
-            bool dynamicCrosshair = Modules.Config.dynamicCrosshair.Value;
+            var dynamicCrosshair = Modules.Config.dynamicCrosshair.Value;
 
             #region Pistol Crosshair
             defaultCrosshairPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/UI/StandardCrosshair.prefab").WaitForCompletion().InstantiateClone("DriverPistolCrosshair", false);
@@ -293,12 +265,12 @@ namespace RobDriver.Modules
             if (!Modules.Config.enableCrosshairDot.Value) pistolAimCrosshairPrefab.GetComponent<RawImage>().enabled = false;
             if (dynamicCrosshair) pistolAimCrosshairPrefab.AddComponent<DynamicCrosshair>();
 
-            GameObject stockHolder = GameObject.Instantiate(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Mage/MageCrosshair.prefab").WaitForCompletion().transform.Find("Stock").gameObject);
+            var stockHolder = GameObject.Instantiate(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Mage/MageCrosshair.prefab").WaitForCompletion().transform.Find("Stock").gameObject);
             stockHolder.transform.parent = pistolAimCrosshairPrefab.transform;
 
-            CrosshairController pistolCrosshair = pistolAimCrosshairPrefab.GetComponent<CrosshairController>();
+            var pistolCrosshair = pistolAimCrosshairPrefab.GetComponent<CrosshairController>();
 
-            Sprite boolet = mainAssetBundle.LoadAsset<Sprite>("texBulletIndicator");
+            var boolet = mainAssetBundle.LoadAsset<Sprite>("texBulletIndicator");
             stockHolder.transform.GetChild(0).GetComponent<Image>().sprite = boolet;
             stockHolder.transform.GetChild(0).GetComponent<RectTransform>().localScale *= 2.5f;
             stockHolder.transform.GetChild(1).GetComponent<Image>().sprite = boolet;
@@ -308,8 +280,8 @@ namespace RobDriver.Modules
             stockHolder.transform.GetChild(3).GetComponent<Image>().sprite = boolet;
             stockHolder.transform.GetChild(3).GetComponent<RectTransform>().localScale *= 2.5f;
 
-            pistolCrosshair.skillStockSpriteDisplays = new CrosshairController.SkillStockSpriteDisplay[]
-            {
+            pistolCrosshair.skillStockSpriteDisplays =
+            [
                 new CrosshairController.SkillStockSpriteDisplay
                 {
                     target = stockHolder.transform.GetChild(0).gameObject,
@@ -338,12 +310,12 @@ namespace RobDriver.Modules
                     minimumStockCountToBeValid = 4,
                     maximumStockCountToBeValid = 999
                 }
-            };
+            ];
 
-            GameObject chargeBar = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("ChargeBar"));
+            var chargeBar = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("ChargeBar"));
             chargeBar.transform.SetParent(pistolAimCrosshairPrefab.transform);
 
-            RectTransform rect = chargeBar.GetComponent<RectTransform>();
+            var rect = chargeBar.GetComponent<RectTransform>();
 
             rect.localScale = new Vector3(0.75f, 0.075f, 1f);
             rect.anchorMin = new Vector2(0f, 0f);
@@ -354,7 +326,7 @@ namespace RobDriver.Modules
 
             chargeBar.transform.GetChild(0).gameObject.AddComponent<Modules.Components.CrosshairChargeBar>().crosshairController = pistolAimCrosshairPrefab.GetComponent<RoR2.UI.CrosshairController>();
 
-            GameObject chargeRing = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("ChargeRing"));
+            var chargeRing = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("ChargeRing"));
             chargeRing.transform.SetParent(pistolAimCrosshairPrefab.transform);
 
             rect = chargeRing.GetComponent<RectTransform>();
@@ -385,8 +357,8 @@ namespace RobDriver.Modules
 
             #region Bazooka Crosshair
             bazookaCrosshairPrefab = PrefabAPI.InstantiateClone(LoadCrosshair("ToolbotGrenadeLauncher"), "DriverBazookaCrosshair", false);
-            CrosshairController crosshair = bazookaCrosshairPrefab.GetComponent<CrosshairController>();
-            crosshair.skillStockSpriteDisplays = new CrosshairController.SkillStockSpriteDisplay[0];
+            var crosshair = bazookaCrosshairPrefab.GetComponent<CrosshairController>();
+            crosshair.skillStockSpriteDisplays = [];
 
             bazookaCrosshairPrefab.transform.GetChild(0).GetComponentInChildren<Image>().sprite = Addressables.LoadAssetAsync<Sprite>("RoR2/DLC1/Railgunner/texCrosshairRailgunSniperNib.png").WaitForCompletion();
             rect = bazookaCrosshairPrefab.transform.GetChild(0).GetComponent<RectTransform>();
@@ -434,7 +406,7 @@ namespace RobDriver.Modules
             grenadeLauncherCrosshairPrefab = PrefabAPI.InstantiateClone(LoadCrosshair("ToolbotGrenadeLauncher"), "DriverGrenadeLauncherCrosshair", false);
             if (dynamicCrosshair) grenadeLauncherCrosshairPrefab.AddComponent<DynamicCrosshair>();
             crosshair = grenadeLauncherCrosshairPrefab.GetComponent<CrosshairController>();
-            crosshair.skillStockSpriteDisplays = new CrosshairController.SkillStockSpriteDisplay[0];
+            crosshair.skillStockSpriteDisplays = [];
 
             grenadeLauncherCrosshairPrefab.transform.GetChild(0).GetComponentInChildren<Image>().sprite = Addressables.LoadAssetAsync<Sprite>("RoR2/DLC1/Railgunner/texCrosshairRailgunSniperNib.png").WaitForCompletion();
             rect = grenadeLauncherCrosshairPrefab.transform.GetChild(0).GetComponent<RectTransform>();
@@ -467,7 +439,7 @@ namespace RobDriver.Modules
             rocketLauncherCrosshairPrefab = PrefabAPI.InstantiateClone(LoadCrosshair("ToolbotGrenadeLauncher"), "DriveRocketLauncherCrosshair", false);
             if (dynamicCrosshair) rocketLauncherCrosshairPrefab.AddComponent<DynamicCrosshair>();
             crosshair = rocketLauncherCrosshairPrefab.GetComponent<CrosshairController>();
-            crosshair.skillStockSpriteDisplays = new CrosshairController.SkillStockSpriteDisplay[0];
+            crosshair.skillStockSpriteDisplays = [];
             rocketLauncherCrosshairPrefab.transform.Find("StockCountHolder").gameObject.SetActive(false);
             #endregion
 
@@ -483,8 +455,8 @@ namespace RobDriver.Modules
             control.maxSpreadAlpha = 0;
             control.maxSpreadAngle = 3;
             control.minSpreadAlpha = 0;
-            control.spriteSpreadPositions = new CrosshairController.SpritePosition[]
-            {
+            control.spriteSpreadPositions =
+            [
                 new CrosshairController.SpritePosition
                 {
                     target = needlerCrosshairPrefab.transform.GetChild(2).GetComponent<RectTransform>(),
@@ -497,7 +469,7 @@ namespace RobDriver.Modules
                     zeroPosition = new Vector3(20f, 0, 0),
                     onePosition = new Vector3(48f, 0, 0)
                 }
-            };
+            ];
 
             DriverPlugin.Destroy(needlerCrosshairPrefab.transform.GetChild(0).gameObject);
             DriverPlugin.Destroy(needlerCrosshairPrefab.transform.GetChild(1).gameObject);
@@ -515,8 +487,8 @@ namespace RobDriver.Modules
             control.maxSpreadAlpha = 0;
             control.maxSpreadAngle = 3;
             control.minSpreadAlpha = 0;
-            control.spriteSpreadPositions = new CrosshairController.SpritePosition[]
-            {
+            control.spriteSpreadPositions =
+            [
                 new CrosshairController.SpritePosition
                 {
                     target = shotgunCrosshairPrefab.transform.GetChild(2).GetComponent<RectTransform>(),
@@ -529,7 +501,7 @@ namespace RobDriver.Modules
                     zeroPosition = new Vector3(32f, 0, 0),
                     onePosition = new Vector3(75f, 0, 0)
                 }
-            };
+            ];
 
             control.transform.Find("Bracket (2)").GetComponent<RectTransform>().localScale = new Vector3(1.25f, 1.75f, 1f);
             control.transform.Find("Bracket (3)").GetComponent<RectTransform>().localScale = new Vector3(1.25f, 1.75f, 1f);
@@ -608,14 +580,14 @@ namespace RobDriver.Modules
             weaponPickup.GetComponent<BeginRapidlyActivatingAndDeactivating>().delayBeforeBeginningBlinking = 55f;
             weaponPickup.GetComponent<DestroyOnTimer>().duration = 60f;
 
-            AmmoPickup ammoPickupComponent = weaponPickup.GetComponentInChildren<AmmoPickup>();
-            Components.WeaponPickup weaponPickupComponent = ammoPickupComponent.gameObject.AddComponent<Components.WeaponPickup>();
+            var ammoPickupComponent = weaponPickup.GetComponentInChildren<AmmoPickup>();
+            var weaponPickupComponent = ammoPickupComponent.gameObject.AddComponent<Components.WeaponPickup>();
 
             weaponPickupComponent.baseObject = ammoPickupComponent.baseObject;
             weaponPickupComponent.pickupEffect = ammoPickupComponent.pickupEffect;
             weaponPickupComponent.teamFilter = ammoPickupComponent.teamFilter;
 
-            Material uncommonPickupMat = Material.Instantiate(Addressables.LoadAssetAsync<Material>("RoR2/Base/Bandolier/matPickups.mat").WaitForCompletion());
+            var uncommonPickupMat = Material.Instantiate(Addressables.LoadAssetAsync<Material>("RoR2/Base/Bandolier/matPickups.mat").WaitForCompletion());
             uncommonPickupMat.SetColor("_TintColor", new Color(0f, 80f / 255f, 0f, 1f));
 
             weaponPickup.GetComponentInChildren<MeshRenderer>().enabled = false;/*.materials = new Material[]
@@ -624,12 +596,12 @@ namespace RobDriver.Modules
                 uncommonPickupMat
             };*/
 
-            GameObject pickupModel = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("WeaponPickup"));
+            var pickupModel = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("WeaponPickup"));
             pickupModel.transform.parent = weaponPickup.transform.Find("Visuals");
             pickupModel.transform.localPosition = new Vector3(0f, -0.35f, 0f);
             pickupModel.transform.localRotation = Quaternion.identity;
 
-            MeshRenderer pickupMesh = pickupModel.GetComponentInChildren<MeshRenderer>();
+            var pickupMesh = pickupModel.GetComponentInChildren<MeshRenderer>();
             /*pickupMesh.materials = new Material[]
             {
                 CreateMaterial("matCrate1"),
@@ -638,7 +610,7 @@ namespace RobDriver.Modules
             };*/
             pickupMesh.material = CreateMaterial("matBriefcase");
 
-            GameObject textShit = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
+            var textShit = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
             MonoBehaviour.Destroy(textShit.GetComponent<EffectComponent>());
             textShit.transform.parent = pickupModel.transform;
             textShit.transform.localPosition = Vector3.zero;
@@ -646,11 +618,11 @@ namespace RobDriver.Modules
 
             textShit.GetComponent<DestroyOnTimer>().enabled = false;
 
-            ObjectScaleCurve whatTheFuckIsThis = textShit.GetComponentInChildren<ObjectScaleCurve>();
+            var whatTheFuckIsThis = textShit.GetComponentInChildren<ObjectScaleCurve>();
             //whatTheFuckIsThis.enabled = false;
             //whatTheFuckIsThis.transform.localScale = Vector3.one * 2;
             //whatTheFuckIsThis.timeMax = 60f;
-            Transform helpMe = whatTheFuckIsThis.transform;
+            var helpMe = whatTheFuckIsThis.transform;
             MonoBehaviour.DestroyImmediate(whatTheFuckIsThis);
             helpMe.transform.localScale = Vector3.one * 1.25f;
 
@@ -664,8 +636,8 @@ namespace RobDriver.Modules
             weaponPickupLegendary.GetComponent<BeginRapidlyActivatingAndDeactivating>().delayBeforeBeginningBlinking = 110f;
             weaponPickupLegendary.GetComponent<DestroyOnTimer>().duration = 120f;
 
-            AmmoPickup ammoPickupComponent2 = weaponPickupLegendary.GetComponentInChildren<AmmoPickup>();
-            Components.WeaponPickup weaponPickupComponent2 = ammoPickupComponent2.gameObject.AddComponent<Components.WeaponPickup>();
+            var ammoPickupComponent2 = weaponPickupLegendary.GetComponentInChildren<AmmoPickup>();
+            var weaponPickupComponent2 = ammoPickupComponent2.gameObject.AddComponent<Components.WeaponPickup>();
 
             weaponPickupComponent2.baseObject = ammoPickupComponent2.baseObject;
             weaponPickupComponent2.pickupEffect = ammoPickupComponent2.pickupEffect;
@@ -673,15 +645,15 @@ namespace RobDriver.Modules
 
             weaponPickupLegendary.GetComponentInChildren<MeshRenderer>().enabled = false;
 
-            GameObject pickupModel2 = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("WeaponPickupLegendary"));
+            var pickupModel2 = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("WeaponPickupLegendary"));
             pickupModel2.transform.parent = weaponPickupLegendary.transform.Find("Visuals");
             pickupModel2.transform.localPosition = new Vector3(0f, -0.35f, 0f);
             pickupModel2.transform.localRotation = Quaternion.identity;
 
-            MeshRenderer pickupMesh2 = pickupModel2.GetComponentInChildren<MeshRenderer>();
+            var pickupMesh2 = pickupModel2.GetComponentInChildren<MeshRenderer>();
             pickupMesh2.material = CreateMaterial("matBriefcaseGold");
 
-            GameObject textShit2 = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
+            var textShit2 = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
             MonoBehaviour.Destroy(textShit2.GetComponent<EffectComponent>());
             textShit2.transform.parent = pickupModel2.transform;
             textShit2.transform.localPosition = Vector3.zero;
@@ -689,11 +661,11 @@ namespace RobDriver.Modules
 
             textShit2.GetComponent<DestroyOnTimer>().enabled = false;
 
-            ObjectScaleCurve whatTheFuckIsThis2 = textShit2.GetComponentInChildren<ObjectScaleCurve>();
+            var whatTheFuckIsThis2 = textShit2.GetComponentInChildren<ObjectScaleCurve>();
             //whatTheFuckIsThis.enabled = false;
             //whatTheFuckIsThis.transform.localScale = Vector3.one * 2;
             //whatTheFuckIsThis.timeMax = 60f;
-            Transform helpMe2 = whatTheFuckIsThis2.transform;
+            var helpMe2 = whatTheFuckIsThis2.transform;
             MonoBehaviour.DestroyImmediate(whatTheFuckIsThis2);
             helpMe2.transform.localScale = Vector3.one * 1.25f;
 
@@ -707,8 +679,8 @@ namespace RobDriver.Modules
             weaponPickupUnique.GetComponent<BeginRapidlyActivatingAndDeactivating>().delayBeforeBeginningBlinking = 110f;
             weaponPickupUnique.GetComponent<DestroyOnTimer>().duration = 120f;
 
-            AmmoPickup ammoPickupComponent3 = weaponPickupUnique.GetComponentInChildren<AmmoPickup>();
-            Components.WeaponPickup weaponPickupComponent3 = ammoPickupComponent3.gameObject.AddComponent<Components.WeaponPickup>();
+            var ammoPickupComponent3 = weaponPickupUnique.GetComponentInChildren<AmmoPickup>();
+            var weaponPickupComponent3 = ammoPickupComponent3.gameObject.AddComponent<Components.WeaponPickup>();
 
             weaponPickupComponent3.baseObject = ammoPickupComponent3.baseObject;
             weaponPickupComponent3.pickupEffect = ammoPickupComponent3.pickupEffect;
@@ -716,15 +688,15 @@ namespace RobDriver.Modules
 
             weaponPickupUnique.GetComponentInChildren<MeshRenderer>().enabled = false;
 
-            GameObject pickupModel3 = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("WeaponPickupUnique"));
+            var pickupModel3 = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("WeaponPickupUnique"));
             pickupModel3.transform.parent = weaponPickupUnique.transform.Find("Visuals");
             pickupModel3.transform.localPosition = new Vector3(0f, -0.35f, 0f);
             pickupModel3.transform.localRotation = Quaternion.identity;
 
-            MeshRenderer pickupMesh3 = pickupModel3.GetComponentInChildren<MeshRenderer>();
+            var pickupMesh3 = pickupModel3.GetComponentInChildren<MeshRenderer>();
             pickupMesh3.material = CreateMaterial("matBriefcaseUnique");
 
-            GameObject textShit3 = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
+            var textShit3 = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
             MonoBehaviour.Destroy(textShit3.GetComponent<EffectComponent>());
             textShit3.transform.parent = pickupModel3.transform;
             textShit3.transform.localPosition = Vector3.zero;
@@ -732,8 +704,8 @@ namespace RobDriver.Modules
 
             textShit3.GetComponent<DestroyOnTimer>().enabled = false;
 
-            ObjectScaleCurve whatTheFuckIsThis3 = textShit3.GetComponentInChildren<ObjectScaleCurve>();
-            Transform helpMe3 = whatTheFuckIsThis3.transform;
+            var whatTheFuckIsThis3 = textShit3.GetComponentInChildren<ObjectScaleCurve>();
+            var helpMe3 = whatTheFuckIsThis3.transform;
             MonoBehaviour.DestroyImmediate(whatTheFuckIsThis3);
             helpMe3.transform.localScale = Vector3.one * 1.25f;
 
@@ -747,8 +719,8 @@ namespace RobDriver.Modules
             weaponPickupOld.GetComponent<BeginRapidlyActivatingAndDeactivating>().delayBeforeBeginningBlinking = 55f;
             weaponPickupOld.GetComponent<DestroyOnTimer>().duration = 60f;
 
-            AmmoPickup ammoPickupComponent4 = weaponPickupOld.GetComponentInChildren<AmmoPickup>();
-            Components.WeaponPickup weaponPickupComponent4 = ammoPickupComponent4.gameObject.AddComponent<Components.WeaponPickup>();
+            var ammoPickupComponent4 = weaponPickupOld.GetComponentInChildren<AmmoPickup>();
+            var weaponPickupComponent4 = ammoPickupComponent4.gameObject.AddComponent<Components.WeaponPickup>();
 
             weaponPickupComponent4.baseObject = ammoPickupComponent4.baseObject;
             weaponPickupComponent4.pickupEffect = ammoPickupComponent4.pickupEffect;
@@ -756,19 +728,19 @@ namespace RobDriver.Modules
 
             weaponPickupOld.GetComponentInChildren<MeshRenderer>().enabled = false;
 
-            GameObject pickupModel4 = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("WeaponPickupOld"));
+            var pickupModel4 = GameObject.Instantiate(mainAssetBundle.LoadAsset<GameObject>("WeaponPickupOld"));
             pickupModel4.transform.parent = weaponPickupOld.transform.Find("Visuals");
             pickupModel4.transform.localPosition = new Vector4(0f, -0.35f, 0f);
             pickupModel4.transform.localRotation = Quaternion.identity;
 
-            MeshRenderer pickupMesh4 = pickupModel4.GetComponentInChildren<MeshRenderer>();
-            pickupMesh4.materials = new Material[]
-            {
+            var pickupMesh4 = pickupModel4.GetComponentInChildren<MeshRenderer>();
+            pickupMesh4.materials =
+            [
                 CreateMaterial("matCrate1"),
                 CreateMaterial("matCrate2")
-            };
+            ];
 
-            GameObject textShit4 = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
+            var textShit4 = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
             MonoBehaviour.Destroy(textShit4.GetComponent<EffectComponent>());
             textShit4.transform.parent = pickupModel4.transform;
             textShit4.transform.localPosition = Vector4.zero;
@@ -776,11 +748,11 @@ namespace RobDriver.Modules
 
             textShit4.GetComponent<DestroyOnTimer>().enabled = false;
 
-            ObjectScaleCurve whatTheFuckIsThis4 = textShit4.GetComponentInChildren<ObjectScaleCurve>();
+            var whatTheFuckIsThis4 = textShit4.GetComponentInChildren<ObjectScaleCurve>();
             //whatTheFuckIsThis.enabled = false;
             //whatTheFuckIsThis.transform.localScale = Vector4.one * 2;
             //whatTheFuckIsThis.timeMax = 60f;
-            Transform helpMe4 = whatTheFuckIsThis4.transform;
+            var helpMe4 = whatTheFuckIsThis4.transform;
             MonoBehaviour.DestroyImmediate(whatTheFuckIsThis4);
             helpMe4.transform.localScale = Vector4.one * 1.25f;
 
@@ -800,8 +772,8 @@ namespace RobDriver.Modules
 
 
             weaponNotificationPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/UI/NotificationPanel2.prefab").WaitForCompletion().InstantiateClone("WeaponNotification", false);
-            WeaponNotification _new = weaponNotificationPrefab.AddComponent<WeaponNotification>();
-            GenericNotification _old = weaponNotificationPrefab.GetComponent<GenericNotification>();
+            var _new = weaponNotificationPrefab.AddComponent<WeaponNotification>();
+            var _old = weaponNotificationPrefab.GetComponent<GenericNotification>();
 
             _new.titleText = _old.titleText;
             _new.titleTMP = _old.titleTMP;
@@ -843,8 +815,8 @@ namespace RobDriver.Modules
 
             badassExplosionEffect = LoadEffect("BigExplosion", "sfx_driver_explosion_badass", false);
             badassExplosionEffect.transform.Find("Shockwave").GetComponent<ParticleSystemRenderer>().material = Addressables.LoadAssetAsync<Material>("RoR2/Base/Common/VFX/matDistortion.mat").WaitForCompletion();
-            ShakeEmitter shake = badassExplosionEffect.AddComponent<ShakeEmitter>();
-            ShakeEmitter shake2 = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/BFG/BeamSphereExplosion.prefab").WaitForCompletion().GetComponent<ShakeEmitter>();
+            var shake = badassExplosionEffect.AddComponent<ShakeEmitter>();
+            var shake2 = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/BFG/BeamSphereExplosion.prefab").WaitForCompletion().GetComponent<ShakeEmitter>();
             shake.shakeOnStart = true;
             shake.shakeOnEnable = false;
             shake.wave = shake2.wave;
@@ -867,8 +839,8 @@ namespace RobDriver.Modules
             explosionEffect = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/VFX/OmniExplosionVFX.prefab").WaitForCompletion().InstantiateClone("StupidFuckExplosion", true);
             explosionEffect.AddComponent<NetworkIdentity>();
 
-            GameObject nadeEffect = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Commando/OmniExplosionVFXCommandoGrenade.prefab").WaitForCompletion();
-            GameObject radiusIndicator = GameObject.Instantiate(nadeEffect.transform.Find("Nova Sphere").gameObject);
+            var nadeEffect = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Commando/OmniExplosionVFXCommandoGrenade.prefab").WaitForCompletion();
+            var radiusIndicator = GameObject.Instantiate(nadeEffect.transform.Find("Nova Sphere").gameObject);
             radiusIndicator.transform.parent = explosionEffect.transform;
             radiusIndicator.transform.localPosition = Vector3.zero;
             radiusIndicator.transform.localScale = Vector3.one;
@@ -876,9 +848,9 @@ namespace RobDriver.Modules
 
             Assets.AddNewEffectDef(explosionEffect, "sfx_driver_explosion");
 
-            GameObject obj = new GameObject();
+            var obj = new GameObject();
             defaultMuzzleTrail = obj.InstantiateClone("PassiveMuzzleTrail", false);
-            TrailRenderer trail = defaultMuzzleTrail.AddComponent<TrailRenderer>();
+            var trail = defaultMuzzleTrail.AddComponent<TrailRenderer>();
             trail.startWidth = 0.045f;
             trail.endWidth = 0f;
             trail.time = 0.5f;
@@ -898,7 +870,7 @@ namespace RobDriver.Modules
 
             Material bulletMat = null;
 
-            foreach (LineRenderer i in shotgunTracer.GetComponentsInChildren<LineRenderer>())
+            foreach (var i in shotgunTracer.GetComponentsInChildren<LineRenderer>())
             {
                 if (i)
                 {
@@ -916,11 +888,11 @@ namespace RobDriver.Modules
             if (!shotgunTracerCrit.GetComponent<VFXAttributes>()) shotgunTracerCrit.AddComponent<VFXAttributes>();
             if (!shotgunTracerCrit.GetComponent<NetworkIdentity>()) shotgunTracerCrit.AddComponent<NetworkIdentity>();
 
-            foreach (LineRenderer i in shotgunTracerCrit.GetComponentsInChildren<LineRenderer>())
+            foreach (var i in shotgunTracerCrit.GetComponentsInChildren<LineRenderer>())
             {
                 if (i)
                 {
-                    Material material = UnityEngine.Object.Instantiate<Material>(i.material);
+                    var material = UnityEngine.Object.Instantiate<Material>(i.material);
                     material.SetColor("_TintColor", Color.yellow);
                     i.material = material;
                     i.startColor = new Color(0.8f, 0.24f, 0f);
@@ -934,7 +906,7 @@ namespace RobDriver.Modules
             if (!lunarTracer.GetComponent<VFXAttributes>()) lunarTracer.AddComponent<VFXAttributes>();
             if (!lunarTracer.GetComponent<NetworkIdentity>()) lunarTracer.AddComponent<NetworkIdentity>();
 
-            foreach (LineRenderer i in lunarTracer.GetComponentsInChildren<LineRenderer>())
+            foreach (var i in lunarTracer.GetComponentsInChildren<LineRenderer>())
             {
                 if (i)
                 {
@@ -961,7 +933,7 @@ namespace RobDriver.Modules
             if (!nemmandoTracer.GetComponent<VFXAttributes>()) nemmandoTracer.AddComponent<VFXAttributes>();
             if (!nemmandoTracer.GetComponent<NetworkIdentity>()) nemmandoTracer.AddComponent<NetworkIdentity>();
 
-            foreach (LineRenderer i in nemmandoTracer.GetComponentsInChildren<LineRenderer>())
+            foreach (var i in nemmandoTracer.GetComponentsInChildren<LineRenderer>())
             {
                 if (i)
                 {
@@ -979,7 +951,7 @@ namespace RobDriver.Modules
             if (!nemmercTracer.GetComponent<VFXAttributes>()) nemmercTracer.AddComponent<VFXAttributes>();
             if (!nemmercTracer.GetComponent<NetworkIdentity>()) nemmercTracer.AddComponent<NetworkIdentity>();
 
-            foreach (LineRenderer i in lunarTracer.GetComponentsInChildren<LineRenderer>())
+            foreach (var i in lunarTracer.GetComponentsInChildren<LineRenderer>())
             {
                 if (i)
                 {
@@ -993,7 +965,7 @@ namespace RobDriver.Modules
 
             sniperTracer = CreateTracer("TracerHuntressSnipe", "TracerDriverSniperRifle");
 
-            LineRenderer line = sniperTracer.transform.Find("TracerHead").GetComponent<LineRenderer>();
+            var line = sniperTracer.transform.Find("TracerHead").GetComponent<LineRenderer>();
             line.startWidth *= 0.25f;
             line.endWidth *= 0.25f;
             // this did not work.
@@ -1023,7 +995,7 @@ namespace RobDriver.Modules
             redSlashImpactEffect = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Merc/OmniImpactVFXSlashMerc.prefab").WaitForCompletion().InstantiateClone("RedSwordImpact", false);
             redSlashImpactEffect.GetComponent<OmniEffect>().enabled = false;
 
-            Material hitsparkMat = Material.Instantiate(Addressables.LoadAssetAsync<Material>("RoR2/Base/Merc/matOmniHitspark3Merc.mat").WaitForCompletion());
+            var hitsparkMat = Material.Instantiate(Addressables.LoadAssetAsync<Material>("RoR2/Base/Merc/matOmniHitspark3Merc.mat").WaitForCompletion());
             hitsparkMat.SetColor("_TintColor", Color.red);
 
             redSlashImpactEffect.transform.GetChild(1).gameObject.GetComponent<ParticleSystemRenderer>().material = hitsparkMat;
@@ -1031,7 +1003,7 @@ namespace RobDriver.Modules
             redSlashImpactEffect.transform.GetChild(2).localScale = Vector3.one * 1.5f;
             redSlashImpactEffect.transform.GetChild(2).gameObject.GetComponent<ParticleSystemRenderer>().material = Addressables.LoadAssetAsync<Material>("RoR2/DLC1/VoidSurvivor/matVoidSurvivorBlasterFireCorrupted.mat").WaitForCompletion();
 
-            Material slashMat = Material.Instantiate(Addressables.LoadAssetAsync<Material>("RoR2/Base/Merc/matOmniRadialSlash1Merc.mat").WaitForCompletion());
+            var slashMat = Material.Instantiate(Addressables.LoadAssetAsync<Material>("RoR2/Base/Merc/matOmniRadialSlash1Merc.mat").WaitForCompletion());
             slashMat.SetColor("_TintColor", Color.red);
 
             redSlashImpactEffect.transform.GetChild(5).gameObject.GetComponent<ParticleSystemRenderer>().material = slashMat;
@@ -1098,11 +1070,11 @@ namespace RobDriver.Modules
             redSmallSlashEffect.transform.GetChild(1).gameObject.GetComponent<ParticleSystemRenderer>().material = Addressables.LoadAssetAsync<Material>("RoR2/Base/Imp/matImpSwipe.mat").WaitForCompletion();
 
             discardedWeaponEffect = mainAssetBundle.LoadAsset<GameObject>("DiscardedWeapon");
-            Modules.Components.DiscardedWeaponComponent discardComponent = discardedWeaponEffect.AddComponent<Modules.Components.DiscardedWeaponComponent>();
+            var discardComponent = discardedWeaponEffect.AddComponent<Modules.Components.DiscardedWeaponComponent>();
             discardedWeaponEffect.gameObject.layer = LayerIndex.ragdoll.intVal;
 
             backWeaponEffect = mainAssetBundle.LoadAsset<GameObject>("BackWeapon");
-            Modules.Components.BackWeaponComponent backComponent = backWeaponEffect.AddComponent<Modules.Components.BackWeaponComponent>();
+            var backComponent = backWeaponEffect.AddComponent<Modules.Components.BackWeaponComponent>();
             backWeaponEffect.gameObject.layer = LayerIndex.ragdoll.intVal;
 
             knifeSwingEffect = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Merc/MercSwordSlash.prefab").WaitForCompletion().InstantiateClone("DriverKnifeSwing", false);
@@ -1151,7 +1123,7 @@ namespace RobDriver.Modules
             damageBuffEffectPrefab2.transform.Find("Ring").GetComponent<ParticleSystemRenderer>().material = Addressables.LoadAssetAsync<Material>("RoR2/Base/Common/VFX/matOmniRing2Generic.mat").WaitForCompletion();
             damageBuffEffectPrefab2.transform.Find("Spinner").gameObject.SetActive(false);
             damageBuffEffectPrefab2.transform.Find("TextCamScaler").gameObject.SetActive(false);
-            foreach(ParticleSystem i in damageBuffEffectPrefab2.GetComponentsInChildren<ParticleSystem>())
+            foreach(var i in damageBuffEffectPrefab2.GetComponentsInChildren<ParticleSystem>())
             {
                 if (i)
                 {
@@ -1167,7 +1139,7 @@ namespace RobDriver.Modules
             attackSpeedBuffEffectPrefab2.transform.Find("Ring").GetComponent<ParticleSystemRenderer>().material = Addressables.LoadAssetAsync<Material>("RoR2/Base/Common/VFX/matOmniRing2Generic.mat").WaitForCompletion();
             attackSpeedBuffEffectPrefab2.transform.Find("Spinner").gameObject.SetActive(false);
             attackSpeedBuffEffectPrefab2.transform.Find("TextCamScaler").gameObject.SetActive(false);
-            foreach (ParticleSystem i in attackSpeedBuffEffectPrefab2.GetComponentsInChildren<ParticleSystem>())
+            foreach (var i in attackSpeedBuffEffectPrefab2.GetComponentsInChildren<ParticleSystem>())
             {
                 if (i)
                 {
@@ -1182,7 +1154,7 @@ namespace RobDriver.Modules
             critBuffEffectPrefab2.transform.Find("Ring").GetComponent<ParticleSystemRenderer>().material = Addressables.LoadAssetAsync<Material>("RoR2/Base/Common/VFX/matOmniRing2Generic.mat").WaitForCompletion();
             critBuffEffectPrefab2.transform.Find("Spinner").gameObject.SetActive(false);
             critBuffEffectPrefab2.transform.Find("TextCamScaler").gameObject.SetActive(false);
-            foreach (ParticleSystem i in critBuffEffectPrefab2.GetComponentsInChildren<ParticleSystem>())
+            foreach (var i in critBuffEffectPrefab2.GetComponentsInChildren<ParticleSystem>())
             {
                 if (i)
                 {
@@ -1197,7 +1169,7 @@ namespace RobDriver.Modules
             scepterSyringeBuffEffectPrefab2.transform.Find("Ring").GetComponent<ParticleSystemRenderer>().material = Addressables.LoadAssetAsync<Material>("RoR2/Base/Common/VFX/matOmniRing2Generic.mat").WaitForCompletion();
             scepterSyringeBuffEffectPrefab2.transform.Find("Spinner").gameObject.SetActive(false);
             scepterSyringeBuffEffectPrefab2.transform.Find("TextCamScaler").gameObject.SetActive(false);
-            foreach (ParticleSystem i in scepterSyringeBuffEffectPrefab2.GetComponentsInChildren<ParticleSystem>())
+            foreach (var i in scepterSyringeBuffEffectPrefab2.GetComponentsInChildren<ParticleSystem>())
             {
                 if (i)
                 {
@@ -1209,8 +1181,8 @@ namespace RobDriver.Modules
 
             bloodExplosionEffect = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/ImpBoss/ImpBossBlink.prefab").WaitForCompletion().InstantiateClone("DriverBloodExplosion", false);
 
-            Material bloodMat = Addressables.LoadAssetAsync<Material>("RoR2/Base/Common/VFX/matBloodHumanLarge.mat").WaitForCompletion();
-            Material bloodMat2 = Addressables.LoadAssetAsync<Material>("RoR2/Base/moon2/matBloodSiphon.mat").WaitForCompletion();
+            var bloodMat = Addressables.LoadAssetAsync<Material>("RoR2/Base/Common/VFX/matBloodHumanLarge.mat").WaitForCompletion();
+            var bloodMat2 = Addressables.LoadAssetAsync<Material>("RoR2/Base/moon2/matBloodSiphon.mat").WaitForCompletion();
 
             bloodExplosionEffect.transform.Find("Particles/LongLifeNoiseTrails").GetComponent<ParticleSystemRenderer>().material = bloodMat;
             bloodExplosionEffect.transform.Find("Particles/LongLifeNoiseTrails, Bright").GetComponent<ParticleSystemRenderer>().material = bloodMat;
@@ -1255,16 +1227,18 @@ namespace RobDriver.Modules
 
             var beamPoints = trailChildObject.AddComponent<BeamPointsFromTransforms>();
             beamPoints.target = trailChildObject.GetComponent<LineRenderer>();
-            Transform[] bleh = new Transform[2];
+            var bleh = new Transform[2];
             bleh[0] = coinTracer.transform.GetChild(1);
             bleh[1] = trailChildObject.transform.GetChild(0);
             beamPoints.pointTransforms = bleh;
             trailChildObject.GetComponent<LineRenderer>().material = Addressables.LoadAssetAsync<Material>("RoR2/Base/Captain/matCaptainTracerTrail.mat").WaitForCompletion();
             trailChildObject.GetComponent<LineRenderer>().material.SetColor("_TintColor", Color.yellow);
             var animateShader = trailChildObject.AddComponent<AnimateShaderAlpha>();
-            var curve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(0.675f, 0.8f), new Keyframe(1, 0.3f));
-            curve.preWrapMode = WrapMode.Clamp;
-            curve.postWrapMode = WrapMode.Clamp;
+            var curve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(0.675f, 0.8f), new Keyframe(1, 0.3f))
+            {
+                preWrapMode = WrapMode.Clamp,
+                postWrapMode = WrapMode.Clamp
+            };
             animateShader.alphaCurve = curve;
             animateShader.timeMax = 0.5f;
             animateShader.pauseTime = false;
@@ -1295,9 +1269,11 @@ namespace RobDriver.Modules
             effectComp.applyScale = true;
             var orbEffect = coinOrbEffect.AddComponent<CoinOrbEffect>();
 
-            curve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
-            curve.preWrapMode = WrapMode.Clamp;
-            curve.postWrapMode = WrapMode.Clamp;
+            curve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1))
+            {
+                preWrapMode = WrapMode.Clamp,
+                postWrapMode = WrapMode.Clamp
+            };
 
             orbEffect.movementCurve = curve;
             orbEffect.faceMovement = true;
@@ -1324,9 +1300,11 @@ namespace RobDriver.Modules
 
             var shaderAlpha = coinOrbEffect.transform.Find("Trail").gameObject.AddComponent<AnimateShaderAlpha>();
 
-            curve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 0));
-            curve.preWrapMode = WrapMode.Clamp;
-            curve.postWrapMode = WrapMode.Clamp;
+            curve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 0))
+            {
+                preWrapMode = WrapMode.Clamp,
+                postWrapMode = WrapMode.Clamp
+            };
 
             shaderAlpha.alphaCurve = curve;
             shaderAlpha.timeMax = 0.75f;
@@ -1346,14 +1324,14 @@ namespace RobDriver.Modules
             // i hate this but i dont care enough to fix it properly
             ammoPickupModel.transform.Find("ammoBox").localScale = new Vector3(500, 500, 500);
 
-            GameObject textShit5 = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
+            var textShit5 = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
             MonoBehaviour.Destroy(textShit5.GetComponent<EffectComponent>());
             textShit5.transform.parent = ammoPickupModel.transform;
             textShit5.transform.localPosition = Vector3.zero;
             textShit5.transform.localRotation = Quaternion.identity;
 
-            ObjectScaleCurve whatTheFuckIsThis5 = textShit5.GetComponentInChildren<ObjectScaleCurve>();
-            Transform helpMe5 = whatTheFuckIsThis5.transform;
+            var whatTheFuckIsThis5 = textShit5.GetComponentInChildren<ObjectScaleCurve>();
+            var helpMe5 = whatTheFuckIsThis5.transform;
             MonoBehaviour.DestroyImmediate(whatTheFuckIsThis5);
             helpMe5.transform.localScale = Vector3.one * 1.25f;
 
@@ -1368,7 +1346,7 @@ namespace RobDriver.Modules
             consumeOrb = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/Effects/OrbEffects/InfusionOrbEffect"), "RavagerConsumeOrbEffect", true);
             if (!consumeOrb.GetComponent<NetworkIdentity>()) consumeOrb.AddComponent<NetworkIdentity>();
 
-            TrailRenderer trail = consumeOrb.transform.Find("TrailParent").Find("Trail").GetComponent<TrailRenderer>();
+            var trail = consumeOrb.transform.Find("TrailParent").Find("Trail").GetComponent<TrailRenderer>();
             trail.widthMultiplier = 0.35f;
             trail.material = Addressables.LoadAssetAsync<Material>("RoR2/Base/moon2/matBloodSiphon.mat").WaitForCompletion();
 
@@ -1386,7 +1364,7 @@ namespace RobDriver.Modules
 
         private static GameObject CreateTracer(string originalTracerName, string newTracerName)
         {
-            GameObject newTracer = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/Tracers/" + originalTracerName), newTracerName, true);
+            var newTracer = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/Tracers/" + originalTracerName), newTracerName, true);
 
             if (!newTracer.GetComponent<EffectComponent>()) newTracer.AddComponent<EffectComponent>();
             if (!newTracer.GetComponent<VFXAttributes>()) newTracer.AddComponent<VFXAttributes>();
@@ -1403,23 +1381,23 @@ namespace RobDriver.Modules
         internal static GameObject CreatePickupObject(DriverWeaponDef weaponDef)
         {
             // nuclear solution...... i fucking hate modding
-            GameObject newPickup = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Bandolier/AmmoPack.prefab").WaitForCompletion().InstantiateClone("DriverWeaponPickup" + weaponDef.index, true);
+            var newPickup = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Bandolier/AmmoPack.prefab").WaitForCompletion().InstantiateClone("DriverWeaponPickup" + weaponDef.index, true);
 
-            AmmoPickup ammoPickupComponent = newPickup.GetComponentInChildren<AmmoPickup>();
-            Components.WeaponPickup weaponPickupComponent = ammoPickupComponent.gameObject.AddComponent<Components.WeaponPickup>();
+            var ammoPickupComponent = newPickup.GetComponentInChildren<AmmoPickup>();
+            var weaponPickupComponent = ammoPickupComponent.gameObject.AddComponent<Components.WeaponPickup>();
 
             weaponPickupComponent.baseObject = ammoPickupComponent.baseObject;
             weaponPickupComponent.pickupEffect = weaponPickupEffect;
             weaponPickupComponent.teamFilter = ammoPickupComponent.teamFilter;
             weaponPickupComponent.weaponDef = weaponDef;
 
-            Material uncommonPickupMat = Material.Instantiate(Addressables.LoadAssetAsync<Material>("RoR2/Base/Bandolier/matPickups.mat").WaitForCompletion());
+            var uncommonPickupMat = Material.Instantiate(Addressables.LoadAssetAsync<Material>("RoR2/Base/Bandolier/matPickups.mat").WaitForCompletion());
             uncommonPickupMat.SetColor("_TintColor", new Color(0f, 80f / 255f, 0f, 1f));
 
             newPickup.GetComponentInChildren<MeshRenderer>().enabled = false;
 
             GameObject pickupModel = null;
-            float duration = 60f;
+            var duration = 60f;
             
             switch (weaponDef.tier)
             {
@@ -1454,7 +1432,7 @@ namespace RobDriver.Modules
             pickupModel.transform.localPosition = new Vector3(0f, -0.35f, 0f);
             pickupModel.transform.localRotation = Quaternion.identity;
 
-            MeshRenderer pickupMesh = pickupModel.GetComponentInChildren<MeshRenderer>();
+            var pickupMesh = pickupModel.GetComponentInChildren<MeshRenderer>();
 
             switch (weaponDef.tier)
             {
@@ -1478,7 +1456,7 @@ namespace RobDriver.Modules
                     break;
             }
 
-            GameObject textShit = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
+            var textShit = GameObject.Instantiate(RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc"));
             MonoBehaviour.Destroy(textShit.GetComponent<EffectComponent>());
             textShit.transform.parent = pickupModel.transform;
             textShit.transform.localPosition = Vector3.zero;
@@ -1486,8 +1464,8 @@ namespace RobDriver.Modules
 
             textShit.GetComponent<DestroyOnTimer>().enabled = false;
 
-            ObjectScaleCurve whatTheFuckIsThis = textShit.GetComponentInChildren<ObjectScaleCurve>();
-            Transform helpMe = whatTheFuckIsThis.transform;
+            var whatTheFuckIsThis = textShit.GetComponentInChildren<ObjectScaleCurve>();
+            var helpMe = whatTheFuckIsThis.transform;
             MonoBehaviour.DestroyImmediate(whatTheFuckIsThis);
             helpMe.transform.localScale = Vector3.one * 1.25f;
 
@@ -1507,7 +1485,7 @@ namespace RobDriver.Modules
         internal static void InitWeaponDefs()
         {
             // ignore this one, this is the default
-            pistolWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.Pistol = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_PISTOL_NAME",
                 descriptionToken = "ROB_DRIVER_PISTOL_DESC",
@@ -1520,10 +1498,9 @@ namespace RobDriver.Modules
                 material = Assets.pistolMat,
                 animationSet = DriverWeaponDef.AnimationSet.Default
             });
-            DriverWeaponCatalog.AddWeapon(pistolWeaponDef);
-            DriverWeaponCatalog.Pistol = pistolWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.Pistol);
 
-            lunarPistolWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.LunarPistol = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_LUNAR_PISTOL_NAME",
                 descriptionToken = "ROB_DRIVER_LUNAR_PISTOL_DESC",
@@ -1536,10 +1513,9 @@ namespace RobDriver.Modules
                 material = Addressables.LoadAssetAsync<Material>("RoR2/Base/LunarGolem/matLunarGolem.mat").WaitForCompletion(),
                 animationSet = DriverWeaponDef.AnimationSet.Default
             });
-            DriverWeaponCatalog.AddWeapon(lunarPistolWeaponDef);
-            DriverWeaponCatalog.LunarPistol = lunarPistolWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.LunarPistol);
 
-            voidPistolWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.VoidPistol = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_VOID_PISTOL_NAME",
                 descriptionToken = "ROB_DRIVER_VOID_PISTOL_DESC",
@@ -1552,10 +1528,9 @@ namespace RobDriver.Modules
                 material = Addressables.LoadAssetAsync<Material>("RoR2/DLC1/VoidJailer/matVoidJailer.mat").WaitForCompletion(),
                 animationSet = DriverWeaponDef.AnimationSet.Default
             });
-            DriverWeaponCatalog.AddWeapon(voidPistolWeaponDef);
-            DriverWeaponCatalog.VoidPistol = voidPistolWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.VoidPistol);
 
-            needlerWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.Needler = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_NEEDLER_NAME",
                 descriptionToken = "ROB_DRIVER_NEEDLER_DESC",
@@ -1568,10 +1543,9 @@ namespace RobDriver.Modules
                 material = Assets.needlerMat,
                 animationSet = DriverWeaponDef.AnimationSet.Default
             });
-            DriverWeaponCatalog.AddWeapon(needlerWeaponDef);
-            DriverWeaponCatalog.Needler = needlerWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.Needler);
 
-            goldenGunWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.GoldenGun = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_GOLDENGUN_NAME",
                 descriptionToken = "ROB_DRIVER_GOLDENGUN_DESC",
@@ -1588,10 +1562,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Golden Gun",
                 dropChance = 100f
             });
-            DriverWeaponCatalog.AddWeapon(goldenGunWeaponDef);
-            DriverWeaponCatalog.GoldenGun = goldenGunWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.GoldenGun);
 
-            pyriteGunWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.PyriteGun = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_PYRITEGUN_NAME",
                 descriptionToken = "ROB_DRIVER_PYRITEGUN_DESC",
@@ -1604,10 +1577,9 @@ namespace RobDriver.Modules
                 material = Assets.pyriteGunMat,
                 animationSet = DriverWeaponDef.AnimationSet.Default
             });
-            DriverWeaponCatalog.AddWeapon(pyriteGunWeaponDef);
-            DriverWeaponCatalog.PyriteGun = pyriteGunWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.PyriteGun);
 
-            beetleShieldWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.BeetleShield = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_BEETLESHIELD_NAME",
                 descriptionToken = "ROB_DRIVER_BEETLESHIELD_DESC",
@@ -1624,11 +1596,10 @@ namespace RobDriver.Modules
                 configIdentifier = "Chitin Shield",
                 dropChance = 2f
             });
-            DriverWeaponCatalog.AddWeapon(beetleShieldWeaponDef);
-            DriverWeaponCatalog.BeetleShield = beetleShieldWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.BeetleShield);
 
             // example of creating a WeaponDef through code and adding it to the catalog for driver to obtain
-            shotgunWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.Shotgun = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_SHOTGUN_NAME",
                 descriptionToken = "ROB_DRIVER_SHOTGUN_DESC",
@@ -1645,9 +1616,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Shotgun",
                 buffType = DriverWeaponDef.BuffType.Damage
             });// now add it to the catalog here; catalog is necessary for networking
-            DriverWeaponCatalog.AddWeapon(shotgunWeaponDef);
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.Shotgun);
 
-            riotShotgunWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.RiotShotgun = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_RIOT_SHOTGUN_NAME",
                 descriptionToken = "ROB_DRIVER_RIOT_SHOTGUN_DESC",
@@ -1664,9 +1635,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Riot Shotgun",
                 buffType = DriverWeaponDef.BuffType.AttackSpeed
             });
-            DriverWeaponCatalog.AddWeapon(riotShotgunWeaponDef);
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.RiotShotgun);
 
-            slugShotgunWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.SlugShotgun = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_SLUG_SHOTGUN_NAME",
                 descriptionToken = "ROB_DRIVER_SLUG_SHOTGUN_DESC",
@@ -1683,9 +1654,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Slug Shotgun",
                 buffType = DriverWeaponDef.BuffType.Damage
             });
-            DriverWeaponCatalog.AddWeapon(slugShotgunWeaponDef);
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.SlugShotgun);
 
-            machineGunWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.MachineGun = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_MACHINEGUN_NAME",
                 descriptionToken = "ROB_DRIVER_MACHINEGUN_DESC",
@@ -1702,9 +1673,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Machine Gun",
                 buffType = DriverWeaponDef.BuffType.AttackSpeed
             });
-            DriverWeaponCatalog.AddWeapon(machineGunWeaponDef);
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.MachineGun);
 
-            heavyMachineGunWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.HeavyMachineGun = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_HEAVY_MACHINEGUN_NAME",
                 descriptionToken = "ROB_DRIVER_HEAVY_MACHINEGUN_DESC",
@@ -1721,9 +1692,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Heavy Machine Gun",
                 buffType = DriverWeaponDef.BuffType.AttackSpeed
             });
-            DriverWeaponCatalog.AddWeapon(heavyMachineGunWeaponDef);
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.HeavyMachineGun);
 
-            sniperWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.Sniper = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_SNIPER_NAME",
                 descriptionToken = "ROB_DRIVER_SNIPER_DESC",
@@ -1740,9 +1711,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Sniper Rifle",
                 buffType = DriverWeaponDef.BuffType.Damage
             });
-            DriverWeaponCatalog.AddWeapon(sniperWeaponDef);
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.Sniper);
 
-            bazookaWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.Bazooka = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_BAZOOKA_NAME",
                 descriptionToken = "ROB_DRIVER_BAZOOKA_DESC",
@@ -1759,9 +1730,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Bazooka",
                 buffType = DriverWeaponDef.BuffType.Damage
             });
-            DriverWeaponCatalog.AddWeapon(bazookaWeaponDef);
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.Bazooka);
 
-            grenadeLauncherWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.GrenadeLauncher = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_GRENADELAUNCHER_NAME",
                 descriptionToken = "ROB_DRIVER_GRENADELAUNCHER_DESC",
@@ -1778,9 +1749,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Grenade Launcher",
                 buffType = DriverWeaponDef.BuffType.Damage
             });
-            DriverWeaponCatalog.AddWeapon(grenadeLauncherWeaponDef);
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.GrenadeLauncher);
 
-            rocketLauncherWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.RocketLauncher = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_ROCKETLAUNCHER_NAME",
                 descriptionToken = "ROB_DRIVER_ROCKETLAUNCHER_DESC",
@@ -1797,9 +1768,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Rocket Launcher",
                 buffType = DriverWeaponDef.BuffType.AttackSpeed
             });
-            DriverWeaponCatalog.AddWeapon(rocketLauncherWeaponDef);
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.RocketLauncher);
 
-            behemothWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.Behemoth = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_BEHEMOTH_NAME",
                 descriptionToken = "ROB_DRIVER_BEHEMOTH_DESC",
@@ -1816,10 +1787,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Brilliant Behemoth",
                 buffType = DriverWeaponDef.BuffType.AttackSpeed
             });
-            DriverWeaponCatalog.AddWeapon(behemothWeaponDef);
-            DriverWeaponCatalog.Behemoth = behemothWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.Behemoth);
 
-            rocketLauncherAltWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.PrototypeRocketLauncher = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_ROCKETLAUNCHER_ALT_NAME",
                 descriptionToken = "ROB_DRIVER_ROCKETLAUNCHER_ALT_DESC",
@@ -1836,10 +1806,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Prototype Rocket Launcher",
                 buffType = DriverWeaponDef.BuffType.AttackSpeed
             });
-            DriverWeaponCatalog.AddWeapon(rocketLauncherAltWeaponDef);
-            DriverWeaponCatalog.PrototypeRocketLauncher = rocketLauncherAltWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.PrototypeRocketLauncher);
 
-            armCannonWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.ArmCannon = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_ARMCANNON_NAME",
                 descriptionToken = "ROB_DRIVER_ARMCANNON_DESC",
@@ -1857,10 +1826,9 @@ namespace RobDriver.Modules
                 dropChance = 25f,
                 buffType = DriverWeaponDef.BuffType.AttackSpeed
             });
-            DriverWeaponCatalog.AddWeapon(armCannonWeaponDef);
-            DriverWeaponCatalog.ArmCannon = armCannonWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.ArmCannon);
 
-            plasmaCannonWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.PlasmaCannon = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_PLASMACANNON_NAME",
                 descriptionToken = "ROB_DRIVER_PLASMACANNON_DESC",
@@ -1877,10 +1845,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Super Plasma Cannon",
                 buffType = DriverWeaponDef.BuffType.AttackSpeed
             });
-            DriverWeaponCatalog.AddWeapon(plasmaCannonWeaponDef);
-            DriverWeaponCatalog.PlasmaCannon = plasmaCannonWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.PlasmaCannon);
 
-            badassShotgunWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.BadassShotgun = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_BADASS_SHOTGUN_NAME",
                 descriptionToken = "ROB_DRIVER_BADASS_SHOTGUN_DESC",
@@ -1897,9 +1864,9 @@ namespace RobDriver.Modules
                 configIdentifier = "Badass Shotgun",
                 buffType = DriverWeaponDef.BuffType.Damage
             });
-            DriverWeaponCatalog.AddWeapon(badassShotgunWeaponDef);
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.BadassShotgun);
 
-            lunarRifleWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.LunarRifle = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_LUNARRIFLE_NAME",
                 descriptionToken = "ROB_DRIVER_LUNARRIFLE_DESC",
@@ -1917,10 +1884,9 @@ namespace RobDriver.Modules
                 dropChance = 5f,
                 buffType = DriverWeaponDef.BuffType.AttackSpeed
             });
-            DriverWeaponCatalog.AddWeapon(lunarRifleWeaponDef);
-            DriverWeaponCatalog.LunarRifle = lunarRifleWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.LunarRifle);
 
-            lunarHammerWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.LunarHammer = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_LUNARHAMMER_NAME",
                 descriptionToken = "ROB_DRIVER_LUNARHAMMER_DESC",
@@ -1936,10 +1902,9 @@ namespace RobDriver.Modules
                 dropChance = 100f,
                 buffType = DriverWeaponDef.BuffType.Damage
             });
-            DriverWeaponCatalog.AddWeapon(lunarHammerWeaponDef);
-            DriverWeaponCatalog.LunarHammer = lunarHammerWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.LunarHammer);
 
-            nemmandoGunWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.NemmandoGun = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_NEMMANDO_NAME",
                 descriptionToken = "ROB_DRIVER_NEMMANDO_DESC",
@@ -1955,10 +1920,9 @@ namespace RobDriver.Modules
                 calloutSoundString = "sfx_driver_callout_generic",
                 dropChance = 100f
             });
-            DriverWeaponCatalog.AddWeapon(nemmandoGunWeaponDef);
-            DriverWeaponCatalog.NemmandoGun = nemmandoGunWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.NemmandoGun);
 
-            nemmercGunWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.NemmercGun = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_NEMMERC_NAME",
                 descriptionToken = "ROB_DRIVER_NEMMERC_DESC",
@@ -1975,10 +1939,9 @@ namespace RobDriver.Modules
                 dropChance = 100f,
                 buffType = DriverWeaponDef.BuffType.Damage
             });
-            DriverWeaponCatalog.AddWeapon(nemmercGunWeaponDef);
-            DriverWeaponCatalog.NemmercGun = nemmercGunWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.NemmercGun);
 
-            golemGunWeaponDef = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
+            DriverWeaponCatalog.GolemRifle = DriverWeaponDef.CreateWeaponDefFromInfo(new DriverWeaponDefInfo
             {
                 nameToken = "ROB_DRIVER_GOLEMGUN_NAME",
                 descriptionToken = "ROB_DRIVER_GOLEMGUN_DESC",
@@ -1996,41 +1959,40 @@ namespace RobDriver.Modules
                 dropChance = 5f,
                 buffType = DriverWeaponDef.BuffType.Damage
             });
-            DriverWeaponCatalog.AddWeapon(golemGunWeaponDef);
-            DriverWeaponCatalog.GolemRifle = golemGunWeaponDef;
+            DriverWeaponCatalog.AddWeapon(DriverWeaponCatalog.GolemRifle);
 
-            DriverWeaponCatalog.AddWeaponDrop("Beetle", beetleShieldWeaponDef);
-            DriverWeaponCatalog.AddWeaponDrop("Golem", golemGunWeaponDef);
-            DriverWeaponCatalog.AddWeaponDrop("LunarGolem", lunarRifleWeaponDef);
-            DriverWeaponCatalog.AddWeaponDrop("TitanGold", goldenGunWeaponDef);
-            DriverWeaponCatalog.AddWeaponDrop("Brother", lunarRifleWeaponDef);
-            DriverWeaponCatalog.AddWeaponDrop("BrotherHurt", lunarHammerWeaponDef);
+            DriverWeaponCatalog.AddWeaponDrop("Beetle", DriverWeaponCatalog.BeetleShield);
+            DriverWeaponCatalog.AddWeaponDrop("Golem", DriverWeaponCatalog.GolemRifle);
+            DriverWeaponCatalog.AddWeaponDrop("LunarGolem", DriverWeaponCatalog.LunarRifle);
+            DriverWeaponCatalog.AddWeaponDrop("TitanGold", DriverWeaponCatalog.GoldenGun);
+            DriverWeaponCatalog.AddWeaponDrop("Brother", DriverWeaponCatalog.LunarRifle);
+            DriverWeaponCatalog.AddWeaponDrop("BrotherHurt", DriverWeaponCatalog.LunarHammer);
 
-            DriverWeaponCatalog.AddWeaponDrop("Mechorilla", armCannonWeaponDef);
+            DriverWeaponCatalog.AddWeaponDrop("Mechorilla", DriverWeaponCatalog.ArmCannon);
 
-            DriverWeaponCatalog.AddWeaponDrop("NemCommando", nemmandoGunWeaponDef);
-            DriverWeaponCatalog.AddWeaponDrop("NemMerc", nemmercGunWeaponDef);
+            DriverWeaponCatalog.AddWeaponDrop("NemCommando", DriverWeaponCatalog.NemmandoGun);
+            DriverWeaponCatalog.AddWeaponDrop("NemMerc", DriverWeaponCatalog.NemmercGun);
         }
 
         private static GameObject CreateCrosshair()
         {
-            GameObject crosshairPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Bandit2/Bandit2CrosshairPrepRevolver.prefab").WaitForCompletion().InstantiateClone("AliemCrosshair", false);
-            CrosshairController crosshair = crosshairPrefab.GetComponent<CrosshairController>();
-            crosshair.skillStockSpriteDisplays = new CrosshairController.SkillStockSpriteDisplay[0];
+            var crosshairPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Bandit2/Bandit2CrosshairPrepRevolver.prefab").WaitForCompletion().InstantiateClone("AliemCrosshair", false);
+            var crosshair = crosshairPrefab.GetComponent<CrosshairController>();
+            crosshair.skillStockSpriteDisplays = [];
 
             DriverPlugin.DestroyImmediate(crosshairPrefab.transform.Find("Outer").GetComponent<ObjectScaleCurve>());
             crosshairPrefab.transform.Find("Outer").GetComponent<Image>().sprite = Addressables.LoadAssetAsync<Sprite>("RoR2/Base/UI/texCrosshairTridant.png").WaitForCompletion();
-            RectTransform rectR = crosshairPrefab.transform.Find("Outer").GetComponent<RectTransform>();
+            var rectR = crosshairPrefab.transform.Find("Outer").GetComponent<RectTransform>();
             rectR.localScale = Vector3.one * 0.75f;
 
-            GameObject nibL = GameObject.Instantiate(crosshair.transform.Find("Outer").gameObject);
+            var nibL = GameObject.Instantiate(crosshair.transform.Find("Outer").gameObject);
             nibL.transform.parent = crosshairPrefab.transform;
             //nibL.GetComponent<Image>().sprite = Addressables.LoadAssetAsync<Sprite>("RoR2/DLC1/Railgunner/texCrosshairRailgunSniperCenter.png").WaitForCompletion();
-            RectTransform rectL = nibL.GetComponent<RectTransform>();
+            var rectL = nibL.GetComponent<RectTransform>();
             rectL.localEulerAngles = new Vector3(0f, 0f, 180f);
 
-            crosshair.spriteSpreadPositions = new CrosshairController.SpritePosition[]
-            {
+            crosshair.spriteSpreadPositions =
+            [
                 new CrosshairController.SpritePosition
                 {
                     target = rectR,
@@ -2043,7 +2005,7 @@ namespace RobDriver.Modules
                     zeroPosition = new Vector3(0f, 0f, 0f),
                     onePosition = new Vector3(-10f, -10f, 0f)
                 }
-            };
+            ];
 
             crosshairPrefab.AddComponent<RobDriver.Modules.Components.CrosshairRotator>();
 
@@ -2052,7 +2014,7 @@ namespace RobDriver.Modules
 
         internal static GameObject CreateTextPopupEffect(string prefabName, string token, Color color)
         {
-            GameObject i = CreateTextPopupEffect(prefabName, token);
+            var i = CreateTextPopupEffect(prefabName, token);
 
             i.GetComponentInChildren<TMP_Text>().color = color;
 
@@ -2061,7 +2023,7 @@ namespace RobDriver.Modules
 
         internal static GameObject CreateTextPopupEffect(string prefabName, string token, string soundName = "")
         {
-            GameObject i = RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc").InstantiateClone(prefabName, true);
+            var i = RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/BearProc").InstantiateClone(prefabName, true);
 
             i.GetComponent<EffectComponent>().soundName = soundName;
             if (!i.GetComponent<NetworkIdentity>()) i.AddComponent<NetworkIdentity>();
@@ -2075,7 +2037,7 @@ namespace RobDriver.Modules
 
         internal static NetworkSoundEventDef CreateNetworkSoundEventDef(string eventName)
         {
-            NetworkSoundEventDef networkSoundEventDef = ScriptableObject.CreateInstance<NetworkSoundEventDef>();
+            var networkSoundEventDef = ScriptableObject.CreateInstance<NetworkSoundEventDef>();
             networkSoundEventDef.akId = AkSoundEngine.GetIDFromString(eventName);
             networkSoundEventDef.eventName = eventName;
 
@@ -2086,7 +2048,7 @@ namespace RobDriver.Modules
 
         internal static void ConvertAllRenderersToHopooShader(GameObject objectToConvert)
         {
-            foreach (Renderer i in objectToConvert.GetComponentsInChildren<Renderer>())
+            foreach (var i in objectToConvert.GetComponentsInChildren<Renderer>())
             {
                 if (i)
                 {
@@ -2100,10 +2062,10 @@ namespace RobDriver.Modules
 
         internal static CharacterModel.RendererInfo[] SetupRendererInfos(GameObject obj)
         {
-            MeshRenderer[] meshes = obj.GetComponentsInChildren<MeshRenderer>();
-            CharacterModel.RendererInfo[] rendererInfos = new CharacterModel.RendererInfo[meshes.Length];
+            var meshes = obj.GetComponentsInChildren<MeshRenderer>();
+            var rendererInfos = new CharacterModel.RendererInfo[meshes.Length];
 
-            for (int i = 0; i < meshes.Length; i++)
+            for (var i = 0; i < meshes.Length; i++)
             {
                 rendererInfos[i] = new CharacterModel.RendererInfo
                 {
@@ -2118,7 +2080,7 @@ namespace RobDriver.Modules
         }
 
         public static GameObject LoadSurvivorModel(string modelName) {
-            GameObject model = mainAssetBundle.LoadAsset<GameObject>(modelName);
+            var model = mainAssetBundle.LoadAsset<GameObject>(modelName);
             if (model == null) {
                 Log.Error("Trying to load a null model- check to see if the name in your code matches the name of the object in Unity");
                 return null;
@@ -2127,39 +2089,21 @@ namespace RobDriver.Modules
             return PrefabAPI.InstantiateClone(model, model.name, false);
         }
 
-        internal static Texture LoadCharacterIcon(string characterName)
-        {
-            return mainAssetBundle.LoadAsset<Texture>("tex" + characterName + "Icon");
-        }
+        internal static Texture LoadCharacterIcon(string characterName) => mainAssetBundle.LoadAsset<Texture>("tex" + characterName + "Icon");
 
-        internal static Mesh LoadMesh(string meshName)
-        {
-            return mainAssetBundle.LoadAsset<Mesh>(meshName);
-        }
+        internal static Mesh LoadMesh(string meshName) => mainAssetBundle.LoadAsset<Mesh>(meshName);
 
-        internal static GameObject LoadCrosshair(string crosshairName)
-        {
-            return Resources.Load<GameObject>("Prefabs/Crosshair/" + crosshairName + "Crosshair");
-        }
+        internal static GameObject LoadCrosshair(string crosshairName) => Resources.Load<GameObject>("Prefabs/Crosshair/" + crosshairName + "Crosshair");
 
-        private static GameObject LoadEffect(string resourceName)
-        {
-            return LoadEffect(resourceName, "", false);
-        }
+        private static GameObject LoadEffect(string resourceName) => LoadEffect(resourceName, "", false);
 
-        private static GameObject LoadEffect(string resourceName, string soundName)
-        {
-            return LoadEffect(resourceName, soundName, false);
-        }
+        private static GameObject LoadEffect(string resourceName, string soundName) => LoadEffect(resourceName, soundName, false);
 
-        private static GameObject LoadEffect(string resourceName, bool parentToTransform)
-        {
-            return LoadEffect(resourceName, "", parentToTransform);
-        }
+        private static GameObject LoadEffect(string resourceName, bool parentToTransform) => LoadEffect(resourceName, "", parentToTransform);
 
         private static GameObject LoadEffect(string resourceName, string soundName, bool parentToTransform)
         {
-            GameObject newEffect = mainAssetBundle.LoadAsset<GameObject>(resourceName);
+            var newEffect = mainAssetBundle.LoadAsset<GameObject>(resourceName);
 
             newEffect.AddComponent<DestroyOnTimer>().duration = 12;
             newEffect.AddComponent<NetworkIdentity>();
@@ -2176,19 +2120,18 @@ namespace RobDriver.Modules
             return newEffect;
         }
 
-        internal static void AddNewEffectDef(GameObject effectPrefab)
-        {
-            AddNewEffectDef(effectPrefab, "");
-        }
+        internal static void AddNewEffectDef(GameObject effectPrefab) => AddNewEffectDef(effectPrefab, "");
 
         internal static void AddNewEffectDef(GameObject effectPrefab, string soundName)
         {
-            EffectDef newEffectDef = new EffectDef();
-            newEffectDef.prefab = effectPrefab;
-            newEffectDef.prefabEffectComponent = effectPrefab.GetComponent<EffectComponent>();
-            newEffectDef.prefabName = effectPrefab.name;
-            newEffectDef.prefabVfxAttributes = effectPrefab.GetComponent<VFXAttributes>();
-            newEffectDef.spawnSoundEventName = soundName;
+            var newEffectDef = new EffectDef
+            {
+                prefab = effectPrefab,
+                prefabEffectComponent = effectPrefab.GetComponent<EffectComponent>(),
+                prefabName = effectPrefab.name,
+                prefabVfxAttributes = effectPrefab.GetComponent<VFXAttributes>(),
+                spawnSoundEventName = soundName
+            };
 
             effectDefs.Add(newEffectDef);
         }
@@ -2197,8 +2140,8 @@ namespace RobDriver.Modules
         {
             if (!commandoMat) commandoMat = Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<CharacterModel>().baseRendererInfos[0].defaultMaterial;
 
-            Material mat = UnityEngine.Object.Instantiate<Material>(commandoMat);
-            Material tempMat = Assets.mainAssetBundle.LoadAsset<Material>(materialName);
+            var mat = UnityEngine.Object.Instantiate<Material>(commandoMat);
+            var tempMat = Assets.mainAssetBundle.LoadAsset<Material>(materialName);
 
             if (!tempMat) return commandoMat;
 
@@ -2213,19 +2156,23 @@ namespace RobDriver.Modules
             return mat;
         }
 
-        public static Material CreateMaterial(string materialName)
-        {
-            return Assets.CreateMaterial(materialName, 0f);
-        }
+        public static Material CreateMaterial(string materialName) => Assets.CreateMaterial(materialName, 0f);
 
-        public static Material CreateMaterial(string materialName, float emission)
-        {
-            return Assets.CreateMaterial(materialName, emission, Color.black);
-        }
+        public static Material CreateMaterial(string materialName, float emission) => Assets.CreateMaterial(materialName, emission, Color.black);
 
-        public static Material CreateMaterial(string materialName, float emission, Color emissionColor)
+        public static Material CreateMaterial(string materialName, float emission, Color emissionColor) => Assets.CreateMaterial(materialName, emission, emissionColor, 0f);
+
+        internal static void CreateAndAddUnlockableDef(string identifier, string nameToken, string achievementIcon) => CreateAndAddUnlockableDef(identifier, nameToken, mainAssetBundle.LoadAsset<Sprite>(achievementIcon));
+
+        internal static UnlockableDef CreateAndAddUnlockableDef(string identifier, string nameToken, Sprite achievementIcon)
         {
-            return Assets.CreateMaterial(materialName, emission, emissionColor, 0f);
+            var unlockableDef = ScriptableObject.CreateInstance<UnlockableDef>();
+            unlockableDef.cachedName = identifier;
+            unlockableDef.nameToken = nameToken;
+            unlockableDef.achievementIcon = achievementIcon;
+            unlockableDefs.Add(unlockableDef);
+
+            return unlockableDef;
         }
     }
 }

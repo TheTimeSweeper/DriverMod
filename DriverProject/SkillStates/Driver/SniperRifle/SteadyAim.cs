@@ -58,10 +58,7 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
             });
         }
 
-        private void Inventory_onInventoryChanged()
-        {
-            this.shurikenComponent = this.GetComponent<PrimarySkillShurikenBehavior>();
-        }
+        private void Inventory_onInventoryChanged() => this.shurikenComponent = this.GetComponent<PrimarySkillShurikenBehavior>();
 
         public override void FixedUpdate()
         {
@@ -142,7 +139,7 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
                     return;
                 }
 
-                float value = Util.Remap(this.chargeTimer, 0f, this.chargeDuration, 0f, 1f);
+                var value = Util.Remap(this.chargeTimer, 0f, this.chargeDuration, 0f, 1f);
                 this.iDrive.chargeValue = value;
             }
         }
@@ -151,7 +148,7 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
         {
             if (this.shurikenComponent) shurikenComponent.OnSkillActivated(base.skillLocator.primary);
 
-            bool wasCharged = this.isCharged;
+            var wasCharged = this.isCharged;
 
             this.shotCooldown = this.baseShotDuration / this.attackSpeedStat;
             this.isCharged = false;
@@ -161,18 +158,18 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
             base.characterBody.AddSpreadBloom(1f);
             EffectManager.SimpleMuzzleFlash(EntityStates.Commando.CommandoWeapon.FirePistol2.muzzleEffectPrefab, base.gameObject, "ShotgunMuzzle", false);
 
-            string soundString = "sfx_driver_sniper_shoot";
+            var soundString = "sfx_driver_sniper_shoot";
             if (wasCharged)
             {
                 soundString = "sfx_driver_sniper_shoot_charged";
             }
 
-            string animString = "SteadyAimFireCharged";
+            var animString = "SteadyAimFireCharged";
 
             Util.PlaySound(soundString, this.gameObject);
             base.PlayAnimation("Gesture, Override", animString, "Action.playbackRate", this.shotCooldown * 1.5f);
 
-            float value = Util.Remap(this.chargeTimer, 0f, this.chargeDuration, 0f, 1f);
+            var value = Util.Remap(this.chargeTimer, 0f, this.chargeDuration, 0f, 1f);
 
             this.chargeTimer = 0f;
 
@@ -180,10 +177,10 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
 
             if (base.isAuthority)
             {
-                Ray aimRay = base.GetAimRay();
+                var aimRay = base.GetAimRay();
                 base.AddRecoil(-1f * SteadyAim.recoil, -2f * SteadyAim.recoil, -0.5f * SteadyAim.recoil, 0.5f * SteadyAim.recoil);
 
-                float dmg = Shoot.damageCoefficient;
+                var dmg = Shoot.damageCoefficient;
                 if (this.skillLocator.secondary.stock > 0) dmg = Util.Remap(value, 0f, 1f, Shoot.damageCoefficient, SteadyAim.damageCoefficient);
 
                 if (value >= 0.25f)
@@ -191,10 +188,10 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
                     this.skillLocator.secondary.DeductStock(1);
                 }
 
-                GameObject tracerPrefab = Modules.Assets.sniperTracer;
+                var tracerPrefab = Modules.Assets.sniperTracer;
                 //if (this.isCrit) tracerPrefab = Modules.Assets.sniperTracer;
 
-                BulletAttack bulletAttack = new BulletAttack
+                var bulletAttack = new BulletAttack
                 {
                     bulletCount = 1,
                     aimVector = aimRay.direction,
@@ -232,7 +229,7 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
                         damageInfo.damage *= 2f;
                         damageInfo.damageColorIndex = DamageColorIndex.Sniper;
 
-                        EffectData effectData = new EffectData
+                        var effectData = new EffectData
                         {
                             origin = hitInfo.point,
                             rotation = Quaternion.LookRotation(-hitInfo.direction)
@@ -277,9 +274,6 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.PrioritySkill;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.PrioritySkill;
     }
 }

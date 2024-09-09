@@ -35,14 +35,14 @@ namespace RobDriver.Modules.Components
 
         public void OnReceived()
         {
-            GameObject bodyObject = Util.FindNetworkObject(this.netId);
+            var bodyObject = Util.FindNetworkObject(this.netId);
             if (!bodyObject) return;
 
-            DriverController iDrive = bodyObject.GetComponent<DriverController>();
+            var iDrive = bodyObject.GetComponent<DriverController>();
             if (iDrive)
             {
-                DriverWeaponDef weaponDef = DriverWeaponCatalog.GetWeaponFromIndex(this.weaponIndex);
-                DriverBulletDef bulletDef = DriverBulletCatalog.GetBulletDefFromIndex(this.bulletIndex);
+                var weaponDef = DriverWeaponCatalog.GetWeaponFromIndex(this.weaponIndex);
+                var bulletDef = DriverBulletCatalog.GetBulletDefFromIndex(this.bulletIndex);
 
                 // yes, this is a dumb way to do it
                 float ammoVal = this.ammo;

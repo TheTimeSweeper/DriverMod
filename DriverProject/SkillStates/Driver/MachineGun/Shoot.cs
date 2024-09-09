@@ -67,13 +67,13 @@ namespace RobDriver.SkillStates.Driver.MachineGun
 
             if (base.isAuthority)
             {
-                Ray aimRay = base.GetAimRay();
+                var aimRay = base.GetAimRay();
 
-                float recoilAmplitude = Shoot.recoil / this.attackSpeedStat;
+                var recoilAmplitude = Shoot.recoil / this.attackSpeedStat;
 
                 base.AddRecoil2(-1f * recoilAmplitude, -2f * recoilAmplitude, -0.5f * recoilAmplitude, 0.5f * recoilAmplitude);
 
-                BulletAttack bulletAttack = new BulletAttack
+                var bulletAttack = new BulletAttack
                 {
                     bulletCount = 1,
                     aimVector = aimRay.direction,
@@ -140,7 +140,7 @@ namespace RobDriver.SkillStates.Driver.MachineGun
 
         public override InterruptPriority GetMinimumInterruptPriority()
         {
-            float kek = 0.5f;
+            var kek = 0.5f;
 
             if (base.fixedAge >= kek * this.duration)
             {

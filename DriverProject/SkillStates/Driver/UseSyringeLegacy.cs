@@ -52,7 +52,7 @@ namespace RobDriver.SkillStates.Driver
 
         protected virtual void ApplyBuff()
         {
-            int i = Random.Range(0, 3);
+            var i = Random.Range(0, 3);
             switch (i)
             {
                 case 0:
@@ -70,7 +70,7 @@ namespace RobDriver.SkillStates.Driver
                     }, true);
                     if (this.modelTransform)
                     {
-                        TemporaryOverlay temporaryOverlay = this.modelTransform.gameObject.AddComponent<TemporaryOverlay>();
+                        var temporaryOverlay = this.modelTransform.gameObject.AddComponent<TemporaryOverlay>();
                         temporaryOverlay.duration = 12f;
                         temporaryOverlay.animateShaderAlpha = true;
                         temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
@@ -94,7 +94,7 @@ namespace RobDriver.SkillStates.Driver
                     }, true);
                     if (this.modelTransform)
                     {
-                        TemporaryOverlay temporaryOverlay = this.modelTransform.gameObject.AddComponent<TemporaryOverlay>();
+                        var temporaryOverlay = this.modelTransform.gameObject.AddComponent<TemporaryOverlay>();
                         temporaryOverlay.duration = 12f;
                         temporaryOverlay.animateShaderAlpha = true;
                         temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
@@ -118,7 +118,7 @@ namespace RobDriver.SkillStates.Driver
                     }, true);
                     if (this.modelTransform)
                     {
-                        TemporaryOverlay temporaryOverlay = this.modelTransform.gameObject.AddComponent<TemporaryOverlay>();
+                        var temporaryOverlay = this.modelTransform.gameObject.AddComponent<TemporaryOverlay>();
                         temporaryOverlay.duration = 12f;
                         temporaryOverlay.animateShaderAlpha = true;
                         temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
@@ -130,9 +130,6 @@ namespace RobDriver.SkillStates.Driver
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Pain;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Pain;
     }
 }

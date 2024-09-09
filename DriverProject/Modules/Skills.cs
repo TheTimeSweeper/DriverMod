@@ -1,31 +1,30 @@
 ﻿using EntityStates;
-using R2API;
 using RobDriver.Modules.Components;
 using RoR2;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 namespace RobDriver.Modules
 {
     internal static class Skills
     {
-        internal static List<SkillFamily> skillFamilies = new List<SkillFamily>();
-        internal static List<SkillDef> skillDefs = new List<SkillDef>();
-        internal static List<UnlockableDef> unlockableDefs = new List<UnlockableDef>();
+        internal static List<SkillFamily> skillFamilies = [];
+        internal static List<SkillDef> skillDefs = [];
 
         #region genericskills
-        public static void CreateSkillFamilies(GameObject targetPrefab, int families = 15, bool destroyExisting = true) {
-
-            if (destroyExisting) {
-                foreach (GenericSkill obj in targetPrefab.GetComponentsInChildren<GenericSkill>()) {
+        public static void CreateSkillFamilies(GameObject targetPrefab, int families = 15, bool destroyExisting = true)
+        {
+            if (destroyExisting)
+            {
+                foreach (var obj in targetPrefab.GetComponentsInChildren<GenericSkill>())
+                {
                     UnityEngine.Object.DestroyImmediate(obj);
                 }
             }
 
-            SkillLocator skillLocator = targetPrefab.GetComponent<SkillLocator>();
+            var skillLocator = targetPrefab.GetComponent<SkillLocator>();
 
             if (targetPrefab.TryGetComponent<DriverPassive>(out var passive))
             {
@@ -34,35 +33,36 @@ namespace RobDriver.Modules
 
             if (Modules.Config.enableArsenal.Value)
             {
-                if (targetPrefab.TryGetComponent<DriverArsenal>(out var arsenal))
-                {
-                    arsenal.weaponSkillSlot = CreateGenericSkillWithSkillFamily(targetPrefab, "Arsenal");
-                }
+                targetPrefab.AddComponent<DriverArsenal>().weaponSkillSlot = CreateGenericSkillWithSkillFamily(targetPrefab, "Arsenal");
             }
 
-            if ((families & (1 << 0)) != 0) {
+            if ((families & (1 << 0)) != 0)
+            {
                 skillLocator.primary = CreateGenericSkillWithSkillFamily(targetPrefab, "Primary");
             }
-            if ((families & (1 << 1)) != 0) {
+            if ((families & (1 << 1)) != 0)
+            {
                 skillLocator.secondary = CreateGenericSkillWithSkillFamily(targetPrefab, "Secondary");
             }
-            if ((families & (1 << 2)) != 0) {
+            if ((families & (1 << 2)) != 0)
+            {
                 skillLocator.utility = CreateGenericSkillWithSkillFamily(targetPrefab, "Utility");
             }
-            if ((families & (1 << 3)) != 0) {
+            if ((families & (1 << 3)) != 0)
+            {
                 skillLocator.special = CreateGenericSkillWithSkillFamily(targetPrefab, "Special");
             }
         }
 
-        public static GenericSkill CreateGenericSkillWithSkillFamily(GameObject targetPrefab, string familyName, bool hidden = false) {
-
-            GenericSkill skill = targetPrefab.AddComponent<GenericSkill>();
+        public static GenericSkill CreateGenericSkillWithSkillFamily(GameObject targetPrefab, string familyName, bool hidden = false)
+        {
+            var skill = targetPrefab.AddComponent<GenericSkill>();
             skill.skillName = familyName;
             skill.hideInCharacterSelect = hidden;
 
-            SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
+            var newFamily = ScriptableObject.CreateInstance<SkillFamily>();
             (newFamily as ScriptableObject).name = targetPrefab.name + familyName + "Family";
-            newFamily.variants = new SkillFamily.Variant[0];
+            newFamily.variants = [];
 
             skill._skillFamily = newFamily;
 
@@ -74,40 +74,30 @@ namespace RobDriver.Modules
         #region skillfamilies
 
         //everything calls this
-        public static void AddSkillToFamily(SkillFamily skillFamily, SkillDef skillDef, UnlockableDef unlockableDef = null) {
-
+        public static void AddSkillToFamily(SkillFamily skillFamily, SkillDef skillDef, UnlockableDef unlockableDef = null)
+        {
             Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
 
-            skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant {
+            skillFamily.variants[^1] = new SkillFamily.Variant
+            {
                 skillDef = skillDef,
                 unlockableDef = unlockableDef,
                 viewableNode = new ViewablesCatalog.Node(skillDef.skillNameToken, false, null)
             };
         }
 
-        public static void AddSkillsToFamily(SkillFamily skillFamily, params SkillDef[] skillDefs) 
+        public static void AddSkillsToFamily(SkillFamily skillFamily, params SkillDef[] skillDefs)
         {
-            foreach (SkillDef skillDef in skillDefs)
+            foreach (var skillDef in skillDefs)
             {
                 AddSkillToFamily(skillFamily, skillDef);
             }
         }
-        public static void AddPrimarySkills(GameObject targetPrefab, params SkillDef[] skillDefs) {
-            AddSkillsToFamily(targetPrefab.GetComponent<SkillLocator>().primary.skillFamily, skillDefs);
-        }
-        public static void AddSecondarySkills(GameObject targetPrefab, params SkillDef[] skillDefs) {
-            AddSkillsToFamily(targetPrefab.GetComponent<SkillLocator>().secondary.skillFamily, skillDefs);
-        }
-        public static void AddUtilitySkills(GameObject targetPrefab, params SkillDef[] skillDefs) {
-            AddSkillsToFamily(targetPrefab.GetComponent<SkillLocator>().utility.skillFamily, skillDefs);
-        }
-        public static void AddSpecialSkills(GameObject targetPrefab, params SkillDef[] skillDefs) {
-            AddSkillsToFamily(targetPrefab.GetComponent<SkillLocator>().special.skillFamily, skillDefs);
-        }
-        public static void AddPassiveSkills(GameObject targetPrefab, params SkillDef[] skillDefs)
-        {
-            AddSkillsToFamily(targetPrefab.GetComponent<DriverPassive>().passiveSkillSlot.skillFamily, skillDefs);
-        }
+        public static void AddPrimarySkills(GameObject targetPrefab, params SkillDef[] skillDefs) => AddSkillsToFamily(targetPrefab.GetComponent<SkillLocator>().primary.skillFamily, skillDefs);
+        public static void AddSecondarySkills(GameObject targetPrefab, params SkillDef[] skillDefs) => AddSkillsToFamily(targetPrefab.GetComponent<SkillLocator>().secondary.skillFamily, skillDefs);
+        public static void AddUtilitySkills(GameObject targetPrefab, params SkillDef[] skillDefs) => AddSkillsToFamily(targetPrefab.GetComponent<SkillLocator>().utility.skillFamily, skillDefs);
+        public static void AddSpecialSkills(GameObject targetPrefab, params SkillDef[] skillDefs) => AddSkillsToFamily(targetPrefab.GetComponent<SkillLocator>().special.skillFamily, skillDefs);
+        public static void AddPassiveSkills(GameObject targetPrefab, params SkillDef[] skillDefs) => AddSkillsToFamily(targetPrefab.GetComponent<DriverPassive>().passiveSkillSlot.skillFamily, skillDefs);
         /// <summary>
         /// Adds a group of weapons to the default weapon skill family
         /// </summary>
@@ -115,7 +105,7 @@ namespace RobDriver.Modules
         public static void AddWeaponSkills(GameObject targetPrefab, IEnumerable<DriverWeaponDef> weaponDefs, bool locked)
         {
             var family = targetPrefab.GetComponent<DriverArsenal>().weaponSkillSlot.skillFamily;
-            foreach (DriverWeaponDef weapon in weaponDefs)
+            foreach (var weapon in weaponDefs)
             {
                 AddSkillToFamily(family, CreateWeaponSkillDef(weapon), locked ? CreateUnlockableDef(weapon) : null);
             }
@@ -126,7 +116,7 @@ namespace RobDriver.Modules
         /// <param name="locked">If true, weapon will need to be randomly encountered before they are selectable</param>
         public static void AddWeaponSkill(GameObject targetPrefab, DriverWeaponDef weaponDef, bool locked)
         {
-            AddSkillToFamily(targetPrefab.GetComponent<DriverArsenal>().weaponSkillSlot.skillFamily, 
+            AddSkillToFamily(targetPrefab.GetComponent<DriverArsenal>().weaponSkillSlot.skillFamily,
                 CreateWeaponSkillDef(weaponDef), locked ? CreateUnlockableDef(weaponDef) : null);
         }
 
@@ -136,9 +126,9 @@ namespace RobDriver.Modules
         /// AddUnlockablesToFamily(skillLocator.primary, null, skill2UnlockableDef, null, skill4UnlockableDef);
         /// </code>
         /// </summary>
-        public static void AddUnlockablesToFamily(SkillFamily skillFamily, params UnlockableDef[] unlockableDefs) {
-
-            for (int i = 0; i < unlockableDefs.Length; i++) 
+        public static void AddUnlockablesToFamily(SkillFamily skillFamily, params UnlockableDef[] unlockableDefs)
+        {
+            for (var i = 0; i < unlockableDefs.Length; i++)
             {
                 skillFamily.variants[i].unlockableDef = unlockableDefs[i];
             }
@@ -147,23 +137,21 @@ namespace RobDriver.Modules
         #endregion
 
         #region skilldefs
-        public static SkillDef CreateSkillDef(SkillDefInfo skillDefInfo) {
+        public static SkillDef CreateSkillDef(SkillDefInfo skillDefInfo) => CreateSkillDef<SkillDef>(skillDefInfo);
 
-            return CreateSkillDef<SkillDef>(skillDefInfo);
-        }
+        public static T CreateSkillDef<T>(SkillDefInfo skillDefInfo) where T : SkillDef
+        {
+            var skillDef = ScriptableObject.CreateInstance<T>();
 
-        public static T CreateSkillDef<T>(SkillDefInfo skillDefInfo) where T : SkillDef {
-
-            T skillDef = ScriptableObject.CreateInstance<T>();
-
-            popuplateSKillDef(skillDefInfo, skillDef);
+            PopulateSkillDef(skillDefInfo, skillDef);
 
             skillDefs.Add(skillDef);
 
             return skillDef;
         }
 
-        private static void popuplateSKillDef(SkillDefInfo skillDefInfo, SkillDef skillDef) {
+        private static void PopulateSkillDef(SkillDefInfo skillDefInfo, SkillDef skillDef)
+        {
             skillDef.skillName = skillDefInfo.skillName;
             (skillDef as ScriptableObject).name = skillDefInfo.skillName;
             skillDef.skillNameToken = skillDefInfo.skillNameToken;
@@ -192,7 +180,7 @@ namespace RobDriver.Modules
 
         internal static SkillDef CreatePrimarySkillDef(SerializableEntityStateType state, string stateMachine, string skillNameToken, string skillDescriptionToken, Sprite skillIcon, bool agile)
         {
-            SkillDefInfo info = new SkillDefInfo(skillNameToken, skillNameToken, skillDescriptionToken, skillIcon, state, stateMachine, agile);
+            var info = new SkillDefInfo(skillNameToken, skillNameToken, skillDescriptionToken, skillIcon, state, stateMachine, agile);
 
             return CreateSkillDef(info);
         }
@@ -232,7 +220,7 @@ namespace RobDriver.Modules
             unlockableDef.achievementIcon = Sprite.Create(weaponDef.icon as Texture2D,
                 new Rect(0, 0, weaponDef.icon.width, weaponDef.icon.height), new Vector2(0.5f, 0.5f));
 
-            unlockableDefs.Add(unlockableDef);
+            Assets.unlockableDefs.Add(unlockableDef);
             return unlockableDef;
         }
 
@@ -240,93 +228,94 @@ namespace RobDriver.Modules
     }
 }
 
-    /// <summary>
-    /// class for easily creating skilldefs with default values, and with a field for UnlockableDef
-    /// </summary>
+/// <summary>
+/// class for easily creating skilldefs with default values, and with a field for UnlockableDef
+/// </summary>
 internal class SkillDefInfo
 {
-        public string skillName;
-        public string skillNameToken;
-        public string skillDescriptionToken;
-        public string[] keywordTokens = new string[0];
-        public Sprite skillIcon;
+    public string skillName;
+    public string skillNameToken;
+    public string skillDescriptionToken;
+    public string[] keywordTokens = [];
+    public Sprite skillIcon;
 
-        public SerializableEntityStateType activationState;
-        public InterruptPriority interruptPriority;
-        public string activationStateMachineName;
+    public SerializableEntityStateType activationState;
+    public InterruptPriority interruptPriority;
+    public string activationStateMachineName;
 
-        public float baseRechargeInterval;
+    public float baseRechargeInterval;
 
-        public int baseMaxStock = 1;
-        public int rechargeStock = 1;
-        public int requiredStock = 1;
-        public int stockToConsume = 1;
+    public int baseMaxStock = 1;
+    public int rechargeStock = 1;
+    public int requiredStock = 1;
+    public int stockToConsume = 1;
 
-        public bool isCombatSkill = true;
-        public bool canceledFromSprinting;
-        public bool forceSprintDuringState;
-        public bool cancelSprintingOnActivation = true;
+    public bool isCombatSkill = true;
+    public bool canceledFromSprinting;
+    public bool forceSprintDuringState;
+    public bool cancelSprintingOnActivation = true;
 
-        public bool beginSkillCooldownOnSkillEnd;
-        public bool fullRestockOnAssign = true;
-        public bool resetCooldownTimerOnUse;
-        public bool mustKeyPress;
+    public bool beginSkillCooldownOnSkillEnd;
+    public bool fullRestockOnAssign = true;
+    public bool resetCooldownTimerOnUse;
+    public bool mustKeyPress;
 
-        #region building
-        public SkillDefInfo() { }
+    #region building
+    public SkillDefInfo() { }
 
-        public SkillDefInfo(string skillName,
-                              string skillNameToken,
-                              string skillDescriptionToken,
-                              Sprite skillIcon,
+    public SkillDefInfo(string skillName,
+                          string skillNameToken,
+                          string skillDescriptionToken,
+                          Sprite skillIcon,
 
-                              SerializableEntityStateType activationState,
-                              string activationStateMachineName,
-                              InterruptPriority interruptPriority,
-                              bool isCombatSkill,
+                          SerializableEntityStateType activationState,
+                          string activationStateMachineName,
+                          InterruptPriority interruptPriority,
+                          bool isCombatSkill,
 
-                              float baseRechargeInterval) {
-            this.skillName = skillName;
-            this.skillNameToken = skillNameToken;
-            this.skillDescriptionToken = skillDescriptionToken;
-            this.skillIcon = skillIcon;
-            this.activationState = activationState;
-            this.activationStateMachineName = activationStateMachineName;
-            this.interruptPriority = interruptPriority;
-            this.isCombatSkill = isCombatSkill;
-            this.baseRechargeInterval = baseRechargeInterval;
-        }
-        /// <summary>
-        /// Creates a skilldef for a typical primary.
-        /// <para>combat skill, cooldown: 0, required stock: 0, InterruptPriority: Any</para>
-        /// </summary>
-        public SkillDefInfo(string skillName,
-                              string skillNameToken,
-                              string skillDescriptionToken,
-                              Sprite skillIcon,
+                          float baseRechargeInterval)
+    {
+        this.skillName = skillName;
+        this.skillNameToken = skillNameToken;
+        this.skillDescriptionToken = skillDescriptionToken;
+        this.skillIcon = skillIcon;
+        this.activationState = activationState;
+        this.activationStateMachineName = activationStateMachineName;
+        this.interruptPriority = interruptPriority;
+        this.isCombatSkill = isCombatSkill;
+        this.baseRechargeInterval = baseRechargeInterval;
+    }
+    /// <summary>
+    /// Creates a skilldef for a typical primary.
+    /// <para>combat skill, cooldown: 0, required stock: 0, InterruptPriority: Any</para>
+    /// </summary>
+    public SkillDefInfo(string skillName,
+                          string skillNameToken,
+                          string skillDescriptionToken,
+                          Sprite skillIcon,
 
-                              SerializableEntityStateType activationState,
-                              string activationStateMachineName = "Weapon",
-                              bool agile = false) {
+                          SerializableEntityStateType activationState,
+                          string activationStateMachineName = "Weapon",
+                          bool agile = false)
+    {
+        this.skillName = skillName;
+        this.skillNameToken = skillNameToken;
+        this.skillDescriptionToken = skillDescriptionToken;
+        this.skillIcon = skillIcon;
 
-            this.skillName = skillName;
-            this.skillNameToken = skillNameToken;
-            this.skillDescriptionToken = skillDescriptionToken;
-            this.skillIcon = skillIcon;
+        this.activationState = activationState;
+        this.activationStateMachineName = activationStateMachineName;
 
-            this.activationState = activationState;
-            this.activationStateMachineName = activationStateMachineName;
+        this.interruptPriority = InterruptPriority.Any;
+        this.isCombatSkill = true;
+        this.baseRechargeInterval = 0;
 
-            this.interruptPriority = InterruptPriority.Any;
-            this.isCombatSkill = true;
-            this.baseRechargeInterval = 0;
+        this.requiredStock = 0;
+        this.stockToConsume = 0;
 
-            this.requiredStock = 0;
-            this.stockToConsume = 0;
+        this.cancelSprintingOnActivation = !agile;
 
-            this.cancelSprintingOnActivation = !agile;
-
-            if (agile) this.keywordTokens = new string[] { "KEYWORD_AGILE" };
-        }
-        #endregion construction complete
+        if (agile) this.keywordTokens = ["KEYWORD_AGILE"];
+    }
+    #endregion construction complete
 }

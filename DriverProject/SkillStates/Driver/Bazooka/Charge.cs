@@ -23,7 +23,7 @@ namespace RobDriver.SkillStates.Driver.Bazooka
 
             this.chargePlayID = Util.PlayAttackSpeedSound("HenryBazookaCharge", this.gameObject, this.attackSpeedStat);
 
-            Transform muzzleTransform = base.FindModelChild("ShotgunMuzzle");
+            var muzzleTransform = base.FindModelChild("ShotgunMuzzle");
             if (muzzleTransform)
             {
                 this.chargeEffectInstance = UnityEngine.Object.Instantiate<GameObject>(EntityStates.LemurianBruiserMonster.ChargeMegaFireball.chargeEffectPrefab, muzzleTransform.position, muzzleTransform.rotation);
@@ -39,10 +39,7 @@ namespace RobDriver.SkillStates.Driver.Bazooka
             base.PlayCrossfade("Gesture, Override", "AimTwohand", 0.6f);
         }
 
-        private float CalcCharge()
-        {
-            return Mathf.Clamp01(base.fixedAge / this.duration);
-        }
+        private float CalcCharge() => Mathf.Clamp01(base.fixedAge / this.duration);
 
         public override void FixedUpdate()
         {
@@ -51,11 +48,11 @@ namespace RobDriver.SkillStates.Driver.Bazooka
             this.characterBody.isSprinting = false;
             base.characterBody.SetAimTimer(0.2f);
 
-            float charge = this.CalcCharge();
+            var charge = this.CalcCharge();
 
             if (this.iDrive) this.iDrive.chargeValue = charge;
 
-            bool shit = false;
+            var shit = false;
 
             if (base.isAuthority && ((!base.IsKeyDownAuthority() && base.fixedAge >= Charge.minChargeDuration) || base.fixedAge >= this.duration))shit = true;
             if (this.iDrive && this.iDrive.weaponDef.nameToken != this.cachedWeaponDef.nameToken) shit = true;
@@ -63,7 +60,7 @@ namespace RobDriver.SkillStates.Driver.Bazooka
             if (shit)
             {
                 shit = true;
-                Fire nextState = new Fire()
+                var nextState = new Fire()
                 {
                     charge = charge
                 };
@@ -88,9 +85,6 @@ namespace RobDriver.SkillStates.Driver.Bazooka
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Frozen;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Frozen;
     }
 }

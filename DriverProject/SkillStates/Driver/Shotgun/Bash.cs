@@ -48,14 +48,14 @@ namespace RobDriver.SkillStates.Driver.Shotgun
 
                 Util.PlaySound("sfx_driver_swing", this.gameObject);
 
-                Vector3 center = this.FindModelChild(Bash.hitboxString).position;
+                var center = this.FindModelChild(Bash.hitboxString).position;
 
                 if (base.isAuthority)
                 {
                     //EffectManager.SimpleMuzzleFlash(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Loader/LoaderSwingBasic.prefab").WaitForCompletion(), base.gameObject, hitboxString, true);
                     base.AddRecoil2(-0.5f * Bash.recoilAmplitude * 3f, -0.5f * Bash.recoilAmplitude * 3f, -0.5f * Bash.recoilAmplitude * 8f, 0.5f * Bash.recoilAmplitude * 3f);
 
-                    BlastAttack blastAttack = new BlastAttack();
+                    var blastAttack = new BlastAttack();
                     blastAttack.radius = Bash.hitboxRadius;
                     blastAttack.procCoefficient = Bash.procCoefficient;
                     blastAttack.position = center;
@@ -71,11 +71,11 @@ namespace RobDriver.SkillStates.Driver.Shotgun
                     blastAttack.Fire();
 
                     // spawn hit effect on targets, play hit sound, do the funny melee hop thing
-                    BlastAttack.HitPoint[] hitPoints = blastAttack.CollectHits();
+                    var hitPoints = blastAttack.CollectHits();
                     if (hitPoints.Length > 0)
                     {
-                        GameObject j = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Loader/OmniImpactVFXLoader.prefab").WaitForCompletion();
-                        foreach (BlastAttack.HitPoint i in hitPoints)
+                        var j = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Loader/OmniImpactVFXLoader.prefab").WaitForCompletion();
+                        foreach (var i in hitPoints)
                         {
                             EffectManager.SpawnEffect(j, new EffectData
                             {
@@ -91,38 +91,38 @@ namespace RobDriver.SkillStates.Driver.Shotgun
 
                 if (NetworkServer.active)
                 {
-                    Ray aimRay = this.GetAimRay();
-                    Vector3 pushForce = ((aimRay.origin + 200 * aimRay.direction) - center + (75 * Vector3.up)) * Bash.knockbackForce;
+                    var aimRay = this.GetAimRay();
+                    var pushForce = ((aimRay.origin + 200 * aimRay.direction) - center + (75 * Vector3.up)) * Bash.knockbackForce;
 
-                    List<HealthComponent> affectedTargets = new List<HealthComponent>();
+                    var affectedTargets = new List<HealthComponent>();
 
-                    Collider[] array = Physics.OverlapSphere(center, Bash.hitboxRadius, LayerIndex.entityPrecise.mask);
-                    for (int i = 0; i < array.Length; i++)
+                    var array = Physics.OverlapSphere(center, Bash.hitboxRadius, LayerIndex.entityPrecise.mask);
+                    for (var i = 0; i < array.Length; i++)
                     {
-                        HurtBox hb = array[i].GetComponent<HurtBox>();
+                        var hb = array[i].GetComponent<HurtBox>();
                         if (hb && hb.healthComponent && base.healthComponent != hb.healthComponent && !affectedTargets.Contains(hb.healthComponent))
                         {
                             affectedTargets.Add(hb.healthComponent);
-                            HealthComponent healthComponent = hb.healthComponent;
-                            TeamComponent teamComponent = healthComponent.body.teamComponent;
+                            var healthComponent = hb.healthComponent;
+                            var teamComponent = healthComponent.body.teamComponent;
 
-                            bool enemyTeam = teamComponent.teamIndex != base.teamComponent.teamIndex;
+                            var enemyTeam = teamComponent.teamIndex != base.teamComponent.teamIndex;
 
                             if (enemyTeam)
                             {
                                 //Util.PlaySound(Sounds.BashHitEnemy, healthComponent.gameObject);
 
-                                CharacterBody hitCharacterBody = healthComponent.body;
+                                var hitCharacterBody = healthComponent.body;
                                 if (hitCharacterBody)
                                 {
-                                    CharacterMotor hitCharacterMotor = hitCharacterBody.characterMotor;
-                                    Rigidbody hitRigidbody = hitCharacterBody.rigidbody;
-                                    Vector3 force = pushForce;
+                                    var hitCharacterMotor = hitCharacterBody.characterMotor;
+                                    var hitRigidbody = hitCharacterBody.rigidbody;
+                                    var force = pushForce;
 
-                                    float bossMult = 0.1f;
-                                    float mass = 0f;
+                                    var bossMult = 0.1f;
+                                    var mass = 0f;
 
-                                    bool isGrounded = false;
+                                    var isGrounded = false;
 
                                     if (hitCharacterMotor)
                                     {
@@ -191,9 +191,6 @@ namespace RobDriver.SkillStates.Driver.Shotgun
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.PrioritySkill;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.PrioritySkill;
     }
 }

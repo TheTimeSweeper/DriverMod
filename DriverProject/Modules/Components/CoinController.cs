@@ -26,7 +26,7 @@ namespace RobDriver.Modules.Components
         private float coolStopwatchScale = 0.01f;
         private bool startCoolStopwatch = false;
         public float ricochetMultiplier = 2f;
-        private Vector3 rotationSpeed = new Vector3(2000f, 0f, 0f);
+        private Vector3 rotationSpeed = new(2000f, 0f, 0f);
         public int bounceCountStored = 0;
         private DamageInfo damageInfo;
 
@@ -45,7 +45,7 @@ namespace RobDriver.Modules.Components
         {
             if (!impactInfo.collider.GetComponent<HurtBox>() && !impactInfo.collider.GetComponent<CoinController>())
             {
-                EffectData effectData = new EffectData
+                var effectData = new EffectData
                 {
                     origin = base.transform.position,
                     scale = 1f
@@ -57,7 +57,7 @@ namespace RobDriver.Modules.Components
 
         private void Start()
         {
-            float speed = UnityEngine.Random.Range(500f, 2000f);
+            var speed = UnityEngine.Random.Range(500f, 2000f);
             this.rotationSpeed = new Vector3(speed, 0f, 0f);
 
             iDrive = controller.owner.GetComponent<DriverController>();
@@ -73,9 +73,9 @@ namespace RobDriver.Modules.Components
                 if (damageInfo.attacker && this.coolStopwatchScale <= 0f)
                 {
                     this.canRicochet = false;
-                    TeamComponent teamComponent = damageInfo.attacker.GetComponent<TeamComponent>();
-                    float co = damageInfo.damage / teamComponent.body.damage;
-                    CoinRicochetOrb orb = new CoinRicochetOrb
+                    var teamComponent = damageInfo.attacker.GetComponent<TeamComponent>();
+                    var co = damageInfo.damage / teamComponent.body.damage;
+                    var orb = new CoinRicochetOrb
                     {
                         coinPosition = base.transform.position,
                         origin = base.transform.position,
@@ -95,7 +95,7 @@ namespace RobDriver.Modules.Components
 
                     OrbManager.instance.AddOrb(orb);
 
-                    EffectData effectData = new EffectData
+                    var effectData = new EffectData
                     {
                         origin = base.transform.position,
                         scale = 1f
@@ -148,8 +148,8 @@ namespace RobDriver.Modules.Components
 
         public static List<CoinController> OverlapAttackGetCoins(OverlapAttack attack)
         {
-            List<CoinController> coinList = new List<CoinController>();
-            foreach (HealthComponent healthComponent in attack.ignoredHealthComponentList)
+            var coinList = new List<CoinController>();
+            foreach (var healthComponent in attack.ignoredHealthComponentList)
             {
                 if (healthComponent && healthComponent.TryGetComponent<CoinController>(out var coin))
                 {

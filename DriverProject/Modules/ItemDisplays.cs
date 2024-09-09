@@ -8,7 +8,7 @@ namespace RobDriver.Modules
 {
     internal static class ItemDisplays
     {
-        private static Dictionary<string, GameObject> itemDisplayPrefabs = new Dictionary<string, GameObject>();
+        private static Dictionary<string, GameObject> itemDisplayPrefabs = new();
 
         internal static void PopulateDisplays()
         {
@@ -17,11 +17,11 @@ namespace RobDriver.Modules
 
             // i forgot this cursed code was lying here
             // waht the fuck dude?
-            GameObject fuckYou = Assets.mainAssetBundle.LoadAsset<GameObject>("DriverStunGrenadeGhost").InstantiateClone("DriverStunGrenadeGhost", true);//ItemDisplays.LoadDisplay("DisplayStunGrenade").InstantiateClone("DriverStunGrenadeGhost", true);
+            var fuckYou = Assets.mainAssetBundle.LoadAsset<GameObject>("DriverStunGrenadeGhost").InstantiateClone("DriverStunGrenadeGhost", true);//ItemDisplays.LoadDisplay("DisplayStunGrenade").InstantiateClone("DriverStunGrenadeGhost", true);
             fuckYou.AddComponent<RoR2.Projectile.ProjectileGhostController>();
             fuckYou.AddComponent<NetworkIdentity>();
 
-            GameObject model = GameObject.Instantiate(ItemDisplays.LoadDisplay("DisplayStunGrenade"));
+            var model = GameObject.Instantiate(ItemDisplays.LoadDisplay("DisplayStunGrenade"));
             model.transform.parent = fuckYou.transform;
             model.transform.localPosition = Vector3.zero;
             model.transform.localRotation = Quaternion.identity;
@@ -33,21 +33,21 @@ namespace RobDriver.Modules
 
         private static void PopulateFromBody(string bodyName)
         {
-            ItemDisplayRuleSet itemDisplayRuleSet = Resources.Load<GameObject>("Prefabs/CharacterBodies/" + bodyName + "Body").GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet;
+            var itemDisplayRuleSet = Resources.Load<GameObject>("Prefabs/CharacterBodies/" + bodyName + "Body").GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet;
 
-            ItemDisplayRuleSet.KeyAssetRuleGroup[] item = itemDisplayRuleSet.keyAssetRuleGroups;
+            var item = itemDisplayRuleSet.keyAssetRuleGroups;
 
-            for (int i = 0; i < item.Length; i++)
+            for (var i = 0; i < item.Length; i++)
             {
-                ItemDisplayRule[] rules = item[i].displayRuleGroup.rules;
+                var rules = item[i].displayRuleGroup.rules;
 
-                for (int j = 0; j < rules.Length; j++)
+                for (var j = 0; j < rules.Length; j++)
                 {
-                    GameObject followerPrefab = rules[j].followerPrefab;
+                    var followerPrefab = rules[j].followerPrefab;
                     if (followerPrefab)
                     {
-                        string name = followerPrefab.name;
-                        string key = (name != null) ? name.ToLower() : null;
+                        var name = followerPrefab.name;
+                        var key = (name != null) ? name.ToLower() : null;
                         if (!itemDisplayPrefabs.ContainsKey(key))
                         {
                             itemDisplayPrefabs[key] = followerPrefab;

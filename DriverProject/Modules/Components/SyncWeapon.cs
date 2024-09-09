@@ -38,12 +38,12 @@ namespace RobDriver.Modules.Components
 
         public void OnReceived()
         {
-            GameObject bodyObject = Util.FindNetworkObject(this.netId);
+            var bodyObject = Util.FindNetworkObject(this.netId);
             if (!bodyObject) return;
 
-            DriverController iDrive = bodyObject.GetComponent<DriverController>();
-            DriverWeaponDef weaponDef = DriverWeaponCatalog.GetWeaponFromIndex(this.weaponIndex);
-            DriverBulletDef bulletDef = DriverBulletCatalog.GetBulletDefFromIndex(this.bulletIndex);
+            var iDrive = bodyObject.GetComponent<DriverController>();
+            var weaponDef = DriverWeaponCatalog.GetWeaponFromIndex(this.weaponIndex);
+            var bulletDef = DriverBulletCatalog.GetBulletDefFromIndex(this.bulletIndex);
 
             if (iDrive) iDrive.PickUpWeaponDrop(weaponDef, bulletDef, -1, this.cutAmmo, this.isNewAmmoType);
         }

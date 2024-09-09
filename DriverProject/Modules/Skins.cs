@@ -1,37 +1,29 @@
 ﻿using R2API;
 using RoR2;
-using System;
 using UnityEngine;
 
 namespace RobDriver.Modules
 {
     public static class Skins
     {
-        public static SkinDef CreateSkinDef(string skinName, Sprite skinIcon, CharacterModel.RendererInfo[] rendererInfos, SkinnedMeshRenderer mainRenderer, GameObject root)
+        public static SkinDef CreateSkinDef(string skinName, Sprite skinIcon, CharacterModel.RendererInfo[] rendererInfos, SkinnedMeshRenderer mainRenderer, GameObject root, UnlockableDef unlockableDef = null)
         {
-            return CreateSkinDef(skinName, skinIcon, rendererInfos, mainRenderer, root, null);
-        }
-
-        public static SkinDef CreateSkinDef(string skinName, Sprite skinIcon, CharacterModel.RendererInfo[] rendererInfos, SkinnedMeshRenderer mainRenderer, GameObject root, UnlockableDef unlockableDef)
-        {
-            LoadoutAPI.SkinDefInfo skinDefInfo = new LoadoutAPI.SkinDefInfo
+            var skinDefInfo = new SkinDefInfo
             {
-                BaseSkins = Array.Empty<SkinDef>(),
-                GameObjectActivations = new SkinDef.GameObjectActivation[0],
+                BaseSkins = [],
+                GameObjectActivations = [],
                 Icon = skinIcon,
-                MeshReplacements = new SkinDef.MeshReplacement[0],
-                MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0],
+                MeshReplacements = [],
+                MinionSkinReplacements = [],
                 Name = skinName,
                 NameToken = skinName,
-                ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0],
+                ProjectileGhostReplacements = [],
                 RendererInfos = rendererInfos,
                 RootObject = root,
                 UnlockableDef = unlockableDef
             };
 
-            SkinDef skin = LoadoutAPI.CreateNewSkinDef(skinDefInfo);
-
-            return skin;
+            return R2API.Skins.CreateNewSkinDef(skinDefInfo);
         }
     }
 }

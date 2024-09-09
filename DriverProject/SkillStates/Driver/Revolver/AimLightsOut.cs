@@ -80,10 +80,7 @@ namespace RobDriver.SkillStates.Driver.Revolver
             }
         }
 
-        protected virtual void SetNextState()
-        {
-            this.outer.SetNextState(new LightsOut());
-        }
+        protected virtual void SetNextState() => this.outer.SetNextState(new LightsOut());
 
         public override void OnExit()
         {
@@ -102,9 +99,6 @@ namespace RobDriver.SkillStates.Driver.Revolver
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Pain;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Pain;
     }
 }

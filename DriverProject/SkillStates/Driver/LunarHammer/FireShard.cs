@@ -24,9 +24,9 @@ namespace RobDriver.SkillStates.Driver.LunarHammer
 
             if (base.isAuthority)
             {
-                Ray aimRay = base.GetAimRay();
+                var aimRay = base.GetAimRay();
 
-                FireProjectileInfo fireProjectileInfo = new FireProjectileInfo
+                var fireProjectileInfo = new FireProjectileInfo
                 {
                     position = aimRay.origin,
                     rotation = Quaternion.LookRotation(aimRay.direction),
@@ -48,7 +48,7 @@ namespace RobDriver.SkillStates.Driver.LunarHammer
 
             base.PlayAnimation("LeftArm, Override", "FireShard", "Shard.playbackRate", this.duration * 5f);
 
-            float recoil = FireShard.recoilAmplitude / this.attackSpeedStat;
+            var recoil = FireShard.recoilAmplitude / this.attackSpeedStat;
             base.AddRecoil2(-0.4f * recoil, -0.8f * recoil, -0.3f * recoil, 0.3f * recoil);
             base.characterBody.AddSpreadBloom(FireShard.spreadBloomValue);
 
@@ -68,9 +68,6 @@ namespace RobDriver.SkillStates.Driver.LunarHammer
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.PrioritySkill;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.PrioritySkill;
     }
 }

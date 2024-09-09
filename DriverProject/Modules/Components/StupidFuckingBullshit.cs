@@ -10,8 +10,5 @@ public class StupidFuckingBullshit : MonoBehaviour
         this.faggot.transform.SetParent(null);
     }
 
-    private void FixedUpdate()
-    {
-        this.faggot.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
-    }
+    private void FixedUpdate() => this.faggot.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
 }

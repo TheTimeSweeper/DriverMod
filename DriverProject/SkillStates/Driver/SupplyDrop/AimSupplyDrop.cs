@@ -71,8 +71,8 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop
 
             if (this.areaIndicatorInstance)
             {
-                float value = Mathf.Clamp(base.fixedAge, 0f, 0.5f);
-                float size = Util.Remap(value, 0f, 0.5f, 0f, AimSupplyDrop.radius);
+                var value = Mathf.Clamp(base.fixedAge, 0f, 0.5f);
+                var size = Util.Remap(value, 0f, 0.5f, 0f, AimSupplyDrop.radius);
                 this.areaIndicatorInstance.transform.localScale = new Vector3(size, size, size);
             }
 
@@ -96,9 +96,9 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop
 
         protected virtual void Fire()
         {
-            FireSupplyDrop nextState = new FireSupplyDrop();
+            var nextState = new FireSupplyDrop();
 
-            Transform indicatorTransform = this.areaIndicatorInstance ? this.areaIndicatorInstance.transform : transform;
+            var indicatorTransform = this.areaIndicatorInstance ? this.areaIndicatorInstance.transform : transform;
 
             nextState.dropPosition = indicatorTransform.position;
             nextState.dropRotation = indicatorTransform.rotation;
@@ -106,18 +106,15 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop
             this.outer.SetNextState(nextState);
         }
 
-        protected virtual void Cancel()
-        {
-            this.outer.SetNextState(new CancelSupplyDrop());
-        }
+        protected virtual void Cancel() => this.outer.SetNextState(new CancelSupplyDrop());
 
         private void UpdateAreaIndicator()
         {
             if (this.areaIndicatorInstance)
             {
-                float maxDistance = 128f;
+                var maxDistance = 128f;
 
-                Ray aimRay = base.GetAimRay();
+                var aimRay = base.GetAimRay();
                 RaycastHit raycastHit;
                 if (Physics.Raycast(aimRay, out raycastHit, maxDistance, LayerIndex.CommonMasks.bullet))
                 {
@@ -159,14 +156,8 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop
             this.skillLocator.secondary.rechargeStopwatch = this.storedSecondaryRechargeStopwatch;
         }
 
-        protected virtual void HideButton()
-        {
-            this.FindModelChild("ButtonModel").gameObject.SetActive(false);
-        }
+        protected virtual void HideButton() => this.FindModelChild("ButtonModel").gameObject.SetActive(false);
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Pain;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Pain;
     }
 }

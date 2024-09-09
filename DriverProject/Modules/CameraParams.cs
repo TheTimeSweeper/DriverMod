@@ -26,14 +26,11 @@ namespace RobDriver.Modules
             emoteCameraParams = NewCameraParams("ccpRobDriverEmote", 70f, 0.4f, new Vector3(0f, 0f, -6f));
         }
 
-        private static CharacterCameraParamsData NewCameraParams(string name, float pitch, float pivotVerticalOffset, Vector3 standardPosition)
-        {
-            return NewCameraParams(name, pitch, pivotVerticalOffset, standardPosition, 0.1f);
-        }
+        private static CharacterCameraParamsData NewCameraParams(string name, float pitch, float pivotVerticalOffset, Vector3 standardPosition) => NewCameraParams(name, pitch, pivotVerticalOffset, standardPosition, 0.1f);
 
         private static CharacterCameraParamsData NewCameraParams(string name, float pitch, float pivotVerticalOffset, Vector3 idealPosition, float wallCushion)
         {
-            CharacterCameraParamsData newParams = new CharacterCameraParamsData();
+            var newParams = new CharacterCameraParamsData();
 
             newParams.maxPitch = pitch;
             newParams.minPitch = -pitch;
@@ -46,9 +43,9 @@ namespace RobDriver.Modules
 
         internal static CameraTargetParams.CameraParamsOverrideHandle OverrideCameraParams(CameraTargetParams camParams, DriverCameraParams camera, float transitionDuration = 0.5f)
         {
-            CharacterCameraParamsData paramsData = GetNewParams(camera);
+            var paramsData = GetNewParams(camera);
 
-            CameraTargetParams.CameraParamsOverrideRequest request = new CameraTargetParams.CameraParamsOverrideRequest
+            var request = new CameraTargetParams.CameraParamsOverrideRequest
             {
                 cameraParamsData = paramsData,
                 priority = 0,
@@ -60,7 +57,7 @@ namespace RobDriver.Modules
         internal static CharacterCameraParams CreateCameraParamsWithData(DriverCameraParams camera)
         {
 
-            CharacterCameraParams newPaladinCameraParams = ScriptableObject.CreateInstance<CharacterCameraParams>();
+            var newPaladinCameraParams = ScriptableObject.CreateInstance<CharacterCameraParams>();
 
             newPaladinCameraParams.name = camera.ToString().ToLower() + "Params";
 
@@ -71,7 +68,7 @@ namespace RobDriver.Modules
 
         internal static CharacterCameraParamsData GetNewParams(DriverCameraParams camera)
         {
-            CharacterCameraParamsData paramsData = defaultCameraParams;
+            var paramsData = defaultCameraParams;
 
             switch (camera)
             {

@@ -67,7 +67,7 @@ namespace RobDriver.SkillStates.Driver
             }, true);
             if (this.modelTransform)
             {
-                TemporaryOverlay temporaryOverlay = this.modelTransform.gameObject.AddComponent<TemporaryOverlay>();
+                var temporaryOverlay = this.modelTransform.gameObject.AddComponent<TemporaryOverlay>();
                 temporaryOverlay.duration = 12f;
                 temporaryOverlay.animateShaderAlpha = true;
                 temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
@@ -77,9 +77,6 @@ namespace RobDriver.SkillStates.Driver
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Pain;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Pain;
     }
 }

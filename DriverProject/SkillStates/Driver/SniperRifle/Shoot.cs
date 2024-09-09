@@ -51,30 +51,30 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
 
                 if (this.iDrive) this.iDrive.machineGunVFX.Play();
 
-                float recoilAmplitude = Shoot.bulletRecoil / this.attackSpeedStat;
+                var recoilAmplitude = Shoot.bulletRecoil / this.attackSpeedStat;
 
                 base.AddRecoil2(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
                 this.characterBody.AddSpreadBloom(4f);
                 EffectManager.SimpleMuzzleFlash(EntityStates.Commando.CommandoWeapon.FireBarrage.effectPrefab, gameObject, muzzleString, false);
 
-                GameObject tracer = Modules.Assets.shotgunTracer;
+                var tracer = Modules.Assets.shotgunTracer;
                 if (this.isCrit) tracer = Modules.Assets.shotgunTracerCrit;
 
                 if (base.isAuthority)
                 {
-                    float damage = Shoot.damageCoefficient * this.damageStat;
+                    var damage = Shoot.damageCoefficient * this.damageStat;
 
-                    Ray aimRay = GetAimRay();
+                    var aimRay = GetAimRay();
 
                     float force = 2500;
 
-                    float maxSpread = 6f;
-                    float minSpread = 3f;
+                    var maxSpread = 6f;
+                    var minSpread = 3f;
 
-                    float radius = 1f;
+                    var radius = 1f;
 
-                    LayerMask stopperMask = LayerIndex.CommonMasks.bullet;
-                    DamageType damageType = iDrive.DamageType;
+                    var stopperMask = LayerIndex.CommonMasks.bullet;
+                    var damageType = iDrive.DamageType;
                     if (this.aiming)
                     {
                         maxSpread = 0f;
@@ -85,7 +85,7 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
                         radius = 0.25f;
                     }
 
-                    BulletAttack bulletAttack = new BulletAttack
+                    var bulletAttack = new BulletAttack
                     {
                         aimVector = aimRay.direction,
                         origin = aimRay.origin,
@@ -128,7 +128,7 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
                                 damageInfo.damage *= 2f;
                                 damageInfo.damageColorIndex = DamageColorIndex.Sniper;
 
-                                EffectData effectData = new EffectData
+                                var effectData = new EffectData
                                 {
                                     origin = hitInfo.point,
                                     rotation = Quaternion.LookRotation(-hitInfo.direction)

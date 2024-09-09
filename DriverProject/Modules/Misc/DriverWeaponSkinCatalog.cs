@@ -8,10 +8,7 @@ namespace RobDriver.Modules.Misc
     {
         internal static Dictionary<SkinIndex, Dictionary<ushort, DriverWeaponSkinDef>> driverSkinDefs { get; private set; } = new Dictionary<SkinIndex, Dictionary<ushort, DriverWeaponSkinDef>>();
 
-        internal static void AddSkin(SkinIndex index, Dictionary<ushort, DriverWeaponSkinDef> skinDef)
-        {
-            driverSkinDefs.Add(index, skinDef);
-        }
+        internal static void AddSkin(SkinIndex index, Dictionary<ushort, DriverWeaponSkinDef> skinDef) => driverSkinDefs.Add(index, skinDef);
 
         internal static Dictionary<ushort, DriverWeaponSkinDef> GetWeaponSkinCatalog(ModelSkinController skinController)
         {

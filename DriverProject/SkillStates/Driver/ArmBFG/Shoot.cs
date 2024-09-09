@@ -50,7 +50,7 @@ namespace RobDriver.SkillStates.Driver.ArmBFG
             {
                 this.hasFired = true;
 
-                float recoilAmplitude = Shoot.recoil / this.attackSpeedStat;
+                var recoilAmplitude = Shoot.recoil / this.attackSpeedStat;
 
                 base.AddRecoil2(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
                 this.characterBody.AddSpreadBloom(4f);
@@ -58,7 +58,7 @@ namespace RobDriver.SkillStates.Driver.ArmBFG
 
                 if (base.isAuthority)
                 {
-                    Ray aimRay = this.GetAimRay();
+                    var aimRay = this.GetAimRay();
 
                     ProjectileManager.instance.FireProjectile(new FireProjectileInfo
                     {
@@ -101,10 +101,7 @@ namespace RobDriver.SkillStates.Driver.ArmBFG
             }
         }
 
-        public override void OnExit()
-        {
-            base.OnExit();
-        }
+        public override void OnExit() => base.OnExit();
 
         public override InterruptPriority GetMinimumInterruptPriority()
         {

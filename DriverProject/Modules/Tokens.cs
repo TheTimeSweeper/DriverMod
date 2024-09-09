@@ -7,18 +7,18 @@ namespace RobDriver.Modules
     {
         internal static void AddTokens()
         {
-            string prefix = DriverPlugin.developerPrefix + "_DRIVER_BODY_";
+            var prefix = DriverPlugin.developerBodyPrefix + "_";
 
-            string desc = "The Driver is literally me.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine;
+            var desc = "The Driver is literally me.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine;
             desc = desc + "< ! > Each weapon has its own unique strengths and weaknesses so be sure to pick the right tool for the job." + Environment.NewLine + Environment.NewLine;
             desc = desc + "< ! > Focus greatly increases your damage output, but be careful not to get flanked while aiming." + Environment.NewLine + Environment.NewLine;
             desc = desc + "< ! > Combat Slide while shooting to make sure your damage has no downtime." + Environment.NewLine + Environment.NewLine;
             desc = desc + "< ! > Flashbang can be used to make a clean getaway in a pinch." + Environment.NewLine + Environment.NewLine;
 
-            string outro = "..and so he left, still the same as he was when he began.";
-            string outroFailure = "..and so he vanished, never to become a real human being.";
+            var outro = "..and so he left, still the same as he was when he began.";
+            var outroFailure = "..and so he vanished, never to become a real human being.";
 
-            string lore = "Back against the wall and odds\n";
+            var lore = "Back against the wall and odds\n";
             lore += "With the strength of a will and a cause\n";
             lore += "Your pursuits are called outstanding\n";
             lore += "You’re emotionally complex\n\n";
@@ -160,7 +160,7 @@ namespace RobDriver.Modules
             LanguageAPI.Add(prefix + "SECONDARY_SLUG_SHOTGUN_DESCRIPTION", $"Throw a knife that gets stuck in the first enemy hit for <style=cIsDamage>{100f * SkillStates.Driver.Shotgun.Bash.damageCoefficient}% damage</style>. Shoot this knife to deal an additional <style=cIsDamage>{100f * SkillStates.Driver.Shotgun.Bash.damageCoefficient}% damage</style> and inflict <style=cIsHealth>Bleed</style>.");
 
             LanguageAPI.Add(prefix + "SECONDARY_MACHINEGUN_NAME", "Zap");
-            LanguageAPI.Add(prefix + "SECONDARY_MACHINEGUN_DESCRIPTION", $"<style=cIsDamage>Shocking.</style> Fire a quick laser for <style=cIsDamage>{100f * SkillStates.Driver.MachineGun.Zap.damageCoefficient}% damage</style>.");
+            LanguageAPI.Add(prefix + "SECONDARY_MACHINEGUN_DESCRIPTION", $"<style=cIsDamage>Shocking.</style> Fire a quick laser for <style=cIsDamage>{100f * SkillStates.Driver.MachineGun.Zap.damage}% damage</style>.");
 
             LanguageAPI.Add(prefix + "SECONDARY_HEAVY_MACHINEGUN_NAME", "Grenade");
             LanguageAPI.Add(prefix + "SECONDARY_HEAVY_MACHINEGUN_DESCRIPTION", $"Launch a grenade that <style=cIsUtility>stuns</style> enemies for <style=cIsDamage>{100f * SkillStates.Driver.HeavyMachineGun.ShootGrenade.damageCoefficient}% damage</style>.");
@@ -181,10 +181,10 @@ namespace RobDriver.Modules
             LanguageAPI.Add(prefix + "SECONDARY_GOLDENGUN_DESCRIPTION", $"Take aim and fire a devastating shot for <style=cIsDamage>{100f * SkillStates.Driver.GoldenGun.LightsOut.damageCoefficient}% damage</style>. <style=cIsHealth>Consumes the gun on use.</style>");
 
             LanguageAPI.Add(prefix + "SECONDARY_LUNARHAMMER_NAME", "Shards");
-            LanguageAPI.Add(prefix + "SECONDARY_LUNARHAMMER_DESCRIPTION", $"<style=cIsUtility>Agile.</style> Fire a volley of <style=cIsUtility>lunar shards</style>, dealing <style=cIsDamage>" + 100f * SkillStates.Driver.LunarHammer.FireShard.damageCoefficient + "% damage</style> each.");
+            LanguageAPI.Add(prefix + "SECONDARY_LUNARHAMMER_DESCRIPTION", $"<style=cIsUtility>Agile.</style> Fire a volley of <style=cIsUtility>lunar shards</style>, dealing <style=cIsDamage>{100f * SkillStates.Driver.LunarHammer.FireShard.damageCoefficient}% damage</style> each.");
 
             LanguageAPI.Add(prefix + "SECONDARY_NEMMANDO_NAME", "Submission");
-            LanguageAPI.Add(prefix + "SECONDARY_NEMMANDO_DESCRIPTION", $"<style=cIsDamage>Stunning.</style> Fire repeatedly for <style=cIsDamage>" + 100f * SkillStates.Driver.Compat.NemmandoGun.Submission.damageCoefficient + "% damage</style> per shot.");
+            LanguageAPI.Add(prefix + "SECONDARY_NEMMANDO_DESCRIPTION", $"<style=cIsDamage>Stunning.</style> Fire repeatedly for <style=cIsDamage>{100f * SkillStates.Driver.Compat.NemmandoGun.Submission.damageCoefficient}% damage</style> per shot.");
 
             LanguageAPI.Add(prefix + "PRIMARY_NEMMANDOSWORD_NAME", "Blade of Cessation");
             LanguageAPI.Add(prefix + "PRIMARY_NEMMANDOSWORD_DESCRIPTION", $"<style=cIsDamage>Gouging</style>. <style=cIsUtility>Agile</style>. Slice enemies in front for <style=cIsDamage>160% damage</style>.");
@@ -215,10 +215,10 @@ namespace RobDriver.Modules
 
             #region Special
             LanguageAPI.Add(prefix + "SPECIAL_GRENADE_NAME", "Flashbang");
-            LanguageAPI.Add(prefix + "SPECIAL_GRENADE_DESCRIPTION", $"Throw a grenade that <style=cIsUtility>dazes</style> enemies for <style=cIsDamage>{100f * SkillStates.Driver.ThrowGrenade.damageCoefficient}% damage</style>. <style=cIsUtility>Dazed enemies aim in random directions for 10 seconds.</style>");
+            LanguageAPI.Add(prefix + "SPECIAL_GRENADE_DESCRIPTION", $"Throw a grenade that <style=cIsUtility>dazes</style> enemies for <style=cIsDamage>{100f * SkillStates.Driver.ThrowGrenade.DamageCoefficient}% damage</style>. <style=cIsUtility>Dazed enemies aim in random directions for 10 seconds.</style>");
 
             LanguageAPI.Add(prefix + "SPECIAL_GRENADE_SCEPTER_NAME", "Molotov");
-            LanguageAPI.Add(prefix + "SPECIAL_GRENADE_SCEPTER_DESCRIPTION", $"Throw a grenade that <style=cIsUtility>dazes</style> enemies for <style=cIsDamage>{100f * SkillStates.Driver.ThrowGrenade.damageCoefficient}% damage</style>. <style=cIsUtility>Dazed enemies aim in random directions for 10 seconds.</style>" + Helpers.ScepterDescription("Throw a molotov that bursts into flames instead."));
+            LanguageAPI.Add(prefix + "SPECIAL_GRENADE_SCEPTER_DESCRIPTION", $"Throw a grenade that <style=cIsUtility>dazes</style> enemies for <style=cIsDamage>{100f * SkillStates.Driver.ThrowGrenade.DamageCoefficient}% damage</style>. <style=cIsUtility>Dazed enemies aim in random directions for 10 seconds.</style>" + Helpers.ScepterDescription("Throw a molotov that bursts into flames instead."));
 
             LanguageAPI.Add(prefix + "SPECIAL_SUPPLY_DROP_NAME", "Supply Drop");
             LanguageAPI.Add(prefix + "SPECIAL_SUPPLY_DROP_DESCRIPTION", $"Call down a briefcase containing a <color=#{Helpers.greenItemHex}>random weapon</color>. <style=cIsHealth>Weapon comes with only half its ammo.</style>");
@@ -261,33 +261,33 @@ namespace RobDriver.Modules
             #endregion
 
             #region Achievements
-            LanguageAPI.Add(prefix + "UNLOCKABLE_UNLOCKABLE_NAME", "A Real Hero");
-            LanguageAPI.Add(prefix + "UNLOCKABLE_ACHIEVEMENT_NAME", "A Real Hero");
-            LanguageAPI.Add(prefix + "UNLOCKABLE_ACHIEVEMENT_DESC", "Reach stage 3 in less than 15 minutes.");
+            LanguageAPI.Add(prefix + "CHARACTER_UNLOCKABLE_NAME", "A Real Hero");
+            LanguageAPI.Add(GetAchievementNameToken(prefix + "CHARACTER_ACHIEVEMENT"), "A Real Hero");
+            LanguageAPI.Add(GetAchievementDescToken(prefix + "CHARACTER_ACHIEVEMENT"), "Reach stage 3 in less than 15 minutes.");
 
-            LanguageAPI.Add(prefix + "MONSOONUNLOCKABLE_UNLOCKABLE_NAME", "Driver: Mastery");
-            LanguageAPI.Add(prefix + "MONSOONUNLOCKABLE_ACHIEVEMENT_NAME", "Driver: Mastery");
-            LanguageAPI.Add(prefix + "MONSOONUNLOCKABLE_ACHIEVEMENT_DESC", "As Driver, beat the game or obliterate on Monsoon.");
+            LanguageAPI.Add(prefix + "MONSOON_UNLOCKABLE_NAME", "Driver: Mastery");
+            LanguageAPI.Add(GetAchievementNameToken(prefix + "MONSOON_ACHIEVEMENT"), "Driver: Mastery");
+            LanguageAPI.Add(GetAchievementDescToken(prefix + "MONSOON_ACHIEVEMENT"), "As Driver, beat the game or obliterate on Monsoon.");
 
-            LanguageAPI.Add(prefix + "TYPHOON_UNLOCKABLE_UNLOCKABLE_NAME", "Driver: Grand Mastery");
-            LanguageAPI.Add(prefix + "TYPHOON_UNLOCKABLE_ACHIEVEMENT_NAME", "Driver: Grand Mastery");
-            LanguageAPI.Add(prefix + "TYPHOON_UNLOCKABLE_ACHIEVEMENT_DESC", "As Driver, beat the game or obliterate on Typhoon or Eclipse.\n<color=#8888>(Counts any difficulty Typhoon or higher)</color>");
+            LanguageAPI.Add(prefix + "TYPHOON_UNLOCKABLE_NAME", "Driver: Grand Mastery");
+            LanguageAPI.Add(GetAchievementNameToken(prefix + "TYPHOON_ACHIEVEMENT"), "Driver: Grand Mastery");
+            LanguageAPI.Add(GetAchievementDescToken(prefix + "TYPHOON_ACHIEVEMENT"), "As Driver, beat the game or obliterate on Typhoon or Eclipse.\n<color=#8888>(Counts any difficulty Typhoon or higher)</color>");
 
-            LanguageAPI.Add(prefix + "SUPPLY_DROP_UNLOCKABLE_UNLOCKABLE_NAME", "Driver: Locked and Loaded");
-            LanguageAPI.Add(prefix + "SUPPLY_DROP_UNLOCKABLE_ACHIEVEMENT_NAME", "Driver: Locked and Loaded");
-            LanguageAPI.Add(prefix + "SUPPLY_DROP_UNLOCKABLE_ACHIEVEMENT_DESC", "As Driver, complete a teleporter event without letting any briefcases despawn.");
+            LanguageAPI.Add(prefix + "SUPPLY_DROP_UNLOCKABLE_NAME", "Driver: Locked and Loaded");
+            LanguageAPI.Add(GetAchievementNameToken(prefix + "SUPPLY_DROP_ACHIEVEMENT"), "Driver: Locked and Loaded");
+            LanguageAPI.Add(GetAchievementDescToken(prefix + "SUPPLY_DROP_ACHIEVEMENT"), "As Driver, complete a teleporter event without letting any briefcases despawn.");
 
-            LanguageAPI.Add(prefix + "PISTOLPASSIVE_UNLOCKABLE_UNLOCKABLE_NAME", "Driver: Professional Killer");
-            LanguageAPI.Add(prefix + "PISTOLPASSIVE_UNLOCKABLE_ACHIEVEMENT_NAME", "Driver: Professional Killer");
-            LanguageAPI.Add(prefix + "PISTOLPASSIVE_UNLOCKABLE_ACHIEVEMENT_DESC", "As Driver, complete a teleporter event without picking up any weapons.");
+            LanguageAPI.Add(prefix + "PISTOLPASSIVE_UNLOCKABLE_NAME", "Driver: Professional Killer");
+            LanguageAPI.Add(GetAchievementNameToken(prefix + "PISTOLPASSIVE_ACHIEVEMENT"), "Driver: Professional Killer");
+            LanguageAPI.Add(GetAchievementDescToken(prefix + "PISTOLPASSIVE_ACHIEVEMENT"), "As Driver, complete a teleporter event without picking up any weapons.");
 
-            LanguageAPI.Add(prefix + "GODSLING_UNLOCKABLE_UNLOCKABLE_NAME", "Driver: Ryan Godsling");
-            LanguageAPI.Add(prefix + "GODSLING_UNLOCKABLE_ACHIEVEMENT_NAME", "Driver: Ryan Godsling");
-            LanguageAPI.Add(prefix + "GODSLING_UNLOCKABLE_ACHIEVEMENT_DESC", "As Driver, beat the game or obliterate on Monsoon or higher without picking up any weapons or bullets.");
+            LanguageAPI.Add(prefix + "GODSLING_UNLOCKABLE_NAME", "Driver: Ryan Godsling");
+            LanguageAPI.Add(GetAchievementNameToken(prefix + "GODSLING_ACHIEVEMENT"), "Driver: Ryan Godsling");
+            LanguageAPI.Add(GetAchievementDescToken(prefix + "GODSLING_ACHIEVEMENT"), "As Driver, beat the game or obliterate on Monsoon or higher without picking up any weapons or bullets.");
 
-            LanguageAPI.Add(prefix + "SUIT_UNLOCKABLE_UNLOCKABLE_NAME", "Driver: Dressed to Kill");
-            LanguageAPI.Add(prefix + "SUIT_UNLOCKABLE_ACHIEVEMENT_NAME", "Driver: Dressed to Kill");
-            LanguageAPI.Add(prefix + "SUIT_UNLOCKABLE_ACHIEVEMENT_DESC", "As Driver, land the killing blow on a boss with a Sniper Rifle.");
+            LanguageAPI.Add(prefix + "SUIT_UNLOCKABLE_NAME", "Driver: Dressed to Kill");
+            LanguageAPI.Add(GetAchievementNameToken(prefix + "SUIT_ACHIEVEMENT"), "Driver: Dressed to Kill");
+            LanguageAPI.Add(GetAchievementDescToken(prefix + "SUIT_ACHIEVEMENT"), "As Driver, land the killing blow on a boss with a Sniper Rifle.");
 
             LanguageAPI.Add(prefix + "WEAPON_UNLOCKABLE_NAME", "Weapon Unlocked");
             LanguageAPI.Add(prefix + "WEAPON_UNLOCKABLE_DESC", "This weapon can now be selected at any time from Driver's Arsenal.");
@@ -391,5 +391,14 @@ namespace RobDriver.Modules
             LanguageAPI.Add("ROB_DRIVER_GOLEMGUN_DESC", "Harness the intense beams of a Stone Golem.");
             #endregion
         }
+
+        /// <summary>
+        /// gets langauge token from achievement's registered identifier
+        /// </summary>
+        public static string GetAchievementNameToken(string identifier) => $"ACHIEVEMENT_{identifier.ToUpperInvariant()}_NAME";
+        /// <summary>
+        /// gets langauge token from achievement's registered identifier
+        /// </summary>
+        public static string GetAchievementDescToken(string identifier) => $"ACHIEVEMENT_{identifier.ToUpperInvariant()}_DESCRIPTION";
     }
 }

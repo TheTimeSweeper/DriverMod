@@ -14,7 +14,7 @@ namespace RobDriver.SkillStates.Driver
 
             base.PlayAnimation("Gesture, Override", "GunJammed", "Action.playbackRate", this.duration);
 
-            EffectData effectData = new EffectData
+            var effectData = new EffectData
             {
                 origin = this.FindModelChild("PistolMuzzle").position,
                 rotation = Quaternion.identity
@@ -41,9 +41,6 @@ namespace RobDriver.SkillStates.Driver
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Death;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Death;
     }
 }

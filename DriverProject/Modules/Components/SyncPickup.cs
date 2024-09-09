@@ -18,10 +18,7 @@ namespace RobDriver.Modules.Components
         }
 
         [Command]
-        public void CmdUpdateVisuals()
-        {
-            RpcUpdateVisuals(this.bulletDef.index, this.cutAmmo, this.isNewAmmoType);
-        }
+        public void CmdUpdateVisuals() => RpcUpdateVisuals(this.bulletDef.index, this.cutAmmo, this.isNewAmmoType);
 
         [ClientRpc]
         public void RpcUpdateVisuals(ushort bulletIndex, bool cutAmmo, bool isNewAmmoType)

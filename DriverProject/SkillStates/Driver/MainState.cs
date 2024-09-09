@@ -28,7 +28,7 @@ namespace RobDriver.SkillStates.Driver
 
             if (this.animator)
             {
-                bool cock = false;
+                var cock = false;
                 if (!this.characterBody.outOfDanger || !this.characterBody.outOfCombat) cock = true;
 
                 this.animator.SetBool("inCombat", cock);
@@ -75,7 +75,7 @@ namespace RobDriver.SkillStates.Driver
 			{
 				if (base.characterBody)
 				{
-					foreach (LocalUser lu in LocalUserManager.readOnlyLocalUsersList)
+					foreach (var lu in LocalUserManager.readOnlyLocalUsersList)
 					{
 						if (lu.cachedBody == base.characterBody)
 						{
@@ -91,14 +91,14 @@ namespace RobDriver.SkillStates.Driver
         {
 			if (this.hasCharacterMotor)
 			{
-				bool hopooFeather = false;
-				bool waxQuail = false;
+				var hopooFeather = false;
+				var waxQuail = false;
 
 				if (this.jumpInputReceived && base.characterBody && base.characterMotor.jumpCount < base.characterBody.maxJumpCount)
 				{
-					int waxQuailCount = base.characterBody.inventory.GetItemCount(RoR2Content.Items.JumpBoost);
-					float horizontalBonus = 1f;
-					float verticalBonus = 1f;
+					var waxQuailCount = base.characterBody.inventory.GetItemCount(RoR2Content.Items.JumpBoost);
+					var horizontalBonus = 1f;
+					var verticalBonus = 1f;
 
 					if (base.characterMotor.jumpCount >= base.characterBody.baseJumpCount)
 					{
@@ -109,13 +109,13 @@ namespace RobDriver.SkillStates.Driver
 					}
 					else if (waxQuailCount > 0 && base.characterBody.isSprinting)
 					{
-						float v = base.characterBody.acceleration * base.characterMotor.airControl;
+						var v = base.characterBody.acceleration * base.characterMotor.airControl;
 
 						if (base.characterBody.moveSpeed > 0f && v > 0f)
 						{
 							waxQuail = true;
-							float num2 = Mathf.Sqrt(10f * (float)waxQuailCount / v);
-							float num3 = base.characterBody.moveSpeed / v;
+							var num2 = Mathf.Sqrt(10f * (float)waxQuailCount / v);
+							var num3 = base.characterBody.moveSpeed / v;
 							horizontalBonus = (num2 + num3) / num3;
 						}
 					}
@@ -124,7 +124,7 @@ namespace RobDriver.SkillStates.Driver
 
 					if (this.hasModelAnimator)
 					{
-						int layerIndex = base.modelAnimator.GetLayerIndex("Body");
+						var layerIndex = base.modelAnimator.GetLayerIndex("Body");
 						if (layerIndex >= 0)
 						{
 							if (this.characterBody.isSprinting)
@@ -175,8 +175,8 @@ namespace RobDriver.SkillStates.Driver
 					// set up double jump anim
 					if (this.animator)
 					{
-						float x = this.animatorWalkParamCalculator.animatorWalkSpeed.y;
-						float y = this.animatorWalkParamCalculator.animatorWalkSpeed.x;
+						var x = this.animatorWalkParamCalculator.animatorWalkSpeed.y;
+						var y = this.animatorWalkParamCalculator.animatorWalkSpeed.x;
 
 						// neutral jump
 						if (Mathf.Abs(x) <= 0.45f && Mathf.Abs(y) <= 0.45f || this.inputBank.moveVector == Vector3.zero)

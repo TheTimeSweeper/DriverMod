@@ -49,15 +49,15 @@ namespace RobDriver.Modules.Components
         private void Start()
         {
             eventFunctions = GetComponent<EventFunctions>();
-            EffectComponent component = GetComponent<EffectComponent>();
+            var component = GetComponent<EffectComponent>();
             endPos = component.effectData.origin;
-            Transform transform = component.effectData.ResolveChildLocatorTransformReference();
+            var transform = component.effectData.ResolveChildLocatorTransformReference();
             startPos = (transform ? transform.position : component.effectData.start);
             if (reverse)
             {
                 Util.Swap(ref endPos, ref startPos);
             }
-            Vector3 vector = endPos - startPos;
+            var vector = endPos - startPos;
             distanceTraveled = 0f;
             totalDistance = Vector3.Magnitude(vector);
             if (totalDistance != 0f)
@@ -72,10 +72,10 @@ namespace RobDriver.Modules.Components
             if ((bool)beamObject)
             {
                 beamObject.transform.position = startPos + vector * 0.5f;
-                ParticleSystem component2 = beamObject.GetComponent<ParticleSystem>();
+                var component2 = beamObject.GetComponent<ParticleSystem>();
                 if ((bool)component2)
                 {
-                    ParticleSystem.ShapeModule shape = component2.shape;
+                    var shape = component2.shape;
                     shape.radius = totalDistance * 0.5f;
                     component2.Emit(Mathf.FloorToInt(totalDistance * beamDensity) - 1);
                 }
@@ -95,8 +95,8 @@ namespace RobDriver.Modules.Components
                 return;
             }
             distanceTraveled += speed * Time.deltaTime;
-            float num = Mathf.Clamp(distanceTraveled, 0f, totalDistance);
-            float num2 = Mathf.Clamp(distanceTraveled - length, 0f, totalDistance);
+            var num = Mathf.Clamp(distanceTraveled, 0f, totalDistance);
+            var num2 = Mathf.Clamp(distanceTraveled - length, 0f, totalDistance);
             if ((bool)headTransform)
             {
                 headTransform.position = startPos + num * normal;
@@ -107,9 +107,6 @@ namespace RobDriver.Modules.Components
             }
         }
 
-        private void DestroySelf()
-        {
-            eventFunctions.DestroySelf();
-        }
+        private void DestroySelf() => eventFunctions.DestroySelf();
     }
 }

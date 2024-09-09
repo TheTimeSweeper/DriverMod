@@ -3,16 +3,15 @@ using System.Security;
 using System.Security.Permissions;
 
 [module: UnverifiableCode]
+#pragma warning disable CS0618 // Type or member is obsolete
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
+#pragma warning restore CS0618 // Type or member is obsolete
 
 internal static class Log
 {
     internal static ManualLogSource _logSource;
 
-    internal static void Init(ManualLogSource logSource)
-    {
-        _logSource = logSource;
-    }
+    internal static void Init(ManualLogSource logSource) => _logSource = logSource;
 
     internal static void Debug(object data) => _logSource.LogDebug(data);
     internal static void Error(object data) => _logSource.LogError(data);

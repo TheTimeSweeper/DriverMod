@@ -9,10 +9,7 @@ namespace RobDriver.Modules.Components
 
         private RectTransform rectTransform;
 
-        private void Awake()
-        {
-            this.rectTransform = this.GetComponent<RectTransform>();
-        }
+        private void Awake() => this.rectTransform = this.GetComponent<RectTransform>();
 
         private void FixedUpdate()
         {

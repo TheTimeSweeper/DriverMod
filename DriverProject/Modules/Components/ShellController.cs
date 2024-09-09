@@ -16,10 +16,7 @@ namespace RobDriver.Modules.Components
             this.transform.rotation = Quaternion.Euler(new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360)));
         }
 
-        private void OnEnable()
-        {
-            this.triggered = false;
-        }
+        private void OnEnable() => this.triggered = false;
 
         private void OnCollisionEnter()
         {

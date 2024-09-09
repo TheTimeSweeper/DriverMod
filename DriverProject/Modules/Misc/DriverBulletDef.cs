@@ -21,7 +21,7 @@ public class DriverBulletDef : ScriptableObject
 
     public static DriverBulletDef CreateBulletDefFromInfo(DriverBulletDefInfo bulletDefInfo)
     {
-        DriverBulletDef bulletDef = (DriverBulletDef)ScriptableObject.CreateInstance(typeof(DriverBulletDef));
+        var bulletDef = (DriverBulletDef)ScriptableObject.CreateInstance(typeof(DriverBulletDef));
         bulletDef.name = bulletDefInfo.nameToken;
         bulletDef.nameToken = bulletDefInfo.nameToken;
         bulletDef.bulletType = bulletDefInfo.driverBulletType;

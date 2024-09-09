@@ -22,10 +22,7 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop
             this.HideButton();
         }
 
-        protected virtual void HideButton()
-        {
-            this.FindModelChild("ButtonModel").gameObject.SetActive(false);
-        }
+        protected virtual void HideButton() => this.FindModelChild("ButtonModel").gameObject.SetActive(false);
 
         public override void FixedUpdate()
         {
@@ -37,9 +34,6 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Pain;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Pain;
     }
 }

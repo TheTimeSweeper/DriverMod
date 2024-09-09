@@ -38,7 +38,7 @@ namespace RobDriver.Modules.Components
         {
             if (this.iDrive && this.iDrive.maxWeaponTimer > 0f)
             {
-                float fill = Util.Remap(this.iDrive.weaponTimer, 0f, this.iDrive.maxWeaponTimer, 0f, 1f);
+                var fill = Util.Remap(this.iDrive.weaponTimer, 0f, this.iDrive.maxWeaponTimer, 0f, 1f);
 
                 if (this.durationBarRed)
                 {

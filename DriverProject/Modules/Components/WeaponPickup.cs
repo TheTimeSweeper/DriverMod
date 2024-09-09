@@ -41,13 +41,13 @@ namespace RobDriver.Modules.Components
             // disable visuals for non driver
             if (!Modules.Config.sharedPickupVisuals.Value)
             {
-                BeginRapidlyActivatingAndDeactivating blinker = this.transform.parent.GetComponentInChildren<BeginRapidlyActivatingAndDeactivating>();
+                var blinker = this.transform.parent.GetComponentInChildren<BeginRapidlyActivatingAndDeactivating>();
                 if (blinker)
                 {
-                    bool isDriver = false;
+                    var isDriver = false;
 
                     var localPlayers = LocalUserManager.readOnlyLocalUsersList;
-                    foreach (LocalUser i in localPlayers)
+                    foreach (var i in localPlayers)
                     {
                         if (i.cachedBody.baseNameToken == Modules.Survivors.Driver.bodyNameToken) isDriver = true;
                     }
@@ -85,7 +85,7 @@ namespace RobDriver.Modules.Components
             if (NetworkServer.active && this.alive/* && TeamComponent.GetObjectTeam(collider.gameObject) == this.teamFilter.teamIndex*/)
             {
                 // well it can but it's not a fix.
-                DriverController iDrive = collider.GetComponent<DriverController>();
+                var iDrive = collider.GetComponent<DriverController>();
                 if (iDrive)
                 {
                     this.alive = false;
@@ -107,7 +107,7 @@ namespace RobDriver.Modules.Components
             if (!blinker) return;
 
             // swap to ammo visuals
-            foreach (LocalUser i in LocalUserManager.readOnlyLocalUsersList)
+            foreach (var i in LocalUserManager.readOnlyLocalUsersList)
             {
                 if (i?.cachedBody && i.cachedBody.hasEffectiveAuthority)
                 {
@@ -117,7 +117,7 @@ namespace RobDriver.Modules.Components
                         {
                             if (!ammoPickup)
                             {
-                                foreach (MeshRenderer h in blinker.blinkingRootObject.GetComponentsInChildren<MeshRenderer>())
+                                foreach (var h in blinker.blinkingRootObject.GetComponentsInChildren<MeshRenderer>())
                                 {
                                     h.enabled = false;
                                 }

@@ -16,7 +16,7 @@ namespace RobDriver.SkillStates.BaseStates
     {
         public int swingIndex;
 
-        protected string hitboxName = "Sword";
+        protected string hitboxName = "Knife";
 
         protected DamageType damageType = DamageType.Generic;
         protected float damageCoefficient = 3.5f;
@@ -51,7 +51,7 @@ namespace RobDriver.SkillStates.BaseStates
         protected BaseState.HitStopCachedState hitStopCachedState;
         protected Vector3 storedVelocity;
 
-        protected List<HurtBox> hitResults = new List<HurtBox>();
+        protected List<HurtBox> hitResults = new();
 
         protected bool ammoConsumed = false;
 
@@ -76,7 +76,7 @@ namespace RobDriver.SkillStates.BaseStates
         protected virtual void InitializeAttack()
         {
             HitBoxGroup hitBoxGroup = null;
-            Transform modelTransform = base.GetModelTransform();
+            var modelTransform = base.GetModelTransform();
 
             if (modelTransform)
             {
@@ -102,14 +102,11 @@ namespace RobDriver.SkillStates.BaseStates
 
         protected virtual void FireShuriken()
         {
-            PrimarySkillShurikenBehavior shurikenComponent = this.GetComponent<PrimarySkillShurikenBehavior>();
+            var shurikenComponent = this.GetComponent<PrimarySkillShurikenBehavior>();
             if (shurikenComponent) shurikenComponent.OnSkillActivated(this.skillLocator.primary);
         }
 
-        protected virtual void PlayAttackAnimation()
-        {
-            base.PlayCrossfade("Gesture, Override", "Slash" + (1 + swingIndex), "Slash.playbackRate", this.duration, 0.05f);
-        }
+        protected virtual void PlayAttackAnimation() => base.PlayCrossfade("Gesture, Override", "Slash" + (1 + swingIndex), "Slash.playbackRate", this.duration, 0.05f);
 
         public override void OnExit()
         {
@@ -123,10 +120,7 @@ namespace RobDriver.SkillStates.BaseStates
             base.OnExit();
         }
 
-        protected virtual void PlaySwingEffect()
-        {
-            EffectManager.SimpleMuzzleFlash(this.swingEffectPrefab, base.gameObject, this.muzzleString, false);
-        }
+        protected virtual void PlaySwingEffect() => EffectManager.SimpleMuzzleFlash(this.swingEffectPrefab, base.gameObject, this.muzzleString, false);
 
         protected virtual void OnHitEnemyAuthority(int amount)
         {
@@ -148,7 +142,7 @@ namespace RobDriver.SkillStates.BaseStates
             }
             if (base.isAuthority)
             {
-                foreach (CoinController coin in CoinController.OverlapAttackGetCoins(attack).Where(c => c.canRicochet))
+                foreach (var coin in CoinController.OverlapAttackGetCoins(attack).Where(c => c.canRicochet))
                 {
                     coin.CmdRicochetBullet(attack.attacker,
                         attack.inflictor, 
@@ -199,7 +193,7 @@ namespace RobDriver.SkillStates.BaseStates
 
         protected virtual void SetNextState()
         {
-            int index = this.swingIndex;
+            var index = this.swingIndex;
             if (index == 0) index = 1;
             else index = 0;
 
@@ -263,10 +257,7 @@ namespace RobDriver.SkillStates.BaseStates
             base.characterMotor.velocity = this.storedVelocity;
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Skill;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Skill;
 
         public override void OnSerialize(NetworkWriter writer)
         {

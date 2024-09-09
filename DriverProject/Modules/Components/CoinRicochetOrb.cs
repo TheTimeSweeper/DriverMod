@@ -26,9 +26,9 @@ namespace RobDriver.Modules.Components
 
             this.duration = this.distanceToTarget / this.speed;
 
-            Color color = Color.Lerp(Color.yellow, Color.red, damageCoefficient / redDamageCoefficient);
-            float scale = Mathf.Lerp(1, 2f, damageCoefficient / redDamageCoefficient);
-            EffectData effectData = new EffectData
+            var color = Color.Lerp(Color.yellow, Color.red, damageCoefficient / redDamageCoefficient);
+            var scale = Mathf.Lerp(1, 2f, damageCoefficient / redDamageCoefficient);
+            var effectData = new EffectData
             {
                 scale = this.scale * scale,
                 origin = this.coinPosition,
@@ -44,12 +44,12 @@ namespace RobDriver.Modules.Components
         {
             if (this.target)
             {
-                HealthComponent healthComponent = target.healthComponent;
+                var healthComponent = target.healthComponent;
                 if (healthComponent)
                 {
                     if (!target.TryGetComponent<CoinController>(out var iCoin) && bounceCount > 2)
                     {
-                        BlastAttack blastAttack = new BlastAttack
+                        var blastAttack = new BlastAttack
                         {
                             baseDamage = this.damageValue,
                             attacker = this.attacker,
@@ -70,7 +70,7 @@ namespace RobDriver.Modules.Components
                         blastAttack.AddModdedDamageType(DamageTypes.bloodExplosionIdentifier);
                         blastAttack.Fire();
 
-                        EffectData effectData = new EffectData
+                        var effectData = new EffectData
                         {
                             origin = target.transform.position,
                             scale = bounceCount
@@ -79,7 +79,7 @@ namespace RobDriver.Modules.Components
                     }
                     else
                     {
-                        DamageInfo damageInfo = new DamageInfo
+                        var damageInfo = new DamageInfo
                         {
                             damage = this.damageValue,
                             attacker = this.attacker,
@@ -124,13 +124,13 @@ namespace RobDriver.Modules.Components
                 origin = position
             };
 
-            TeamMask teamMask = TeamMask.GetUnprotectedTeams(teamIndex);
-            HurtBox[] hurtBoxes = search.RefreshCandidates().OrderCandidatesByDistance().FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes();
+            var teamMask = TeamMask.GetUnprotectedTeams(teamIndex);
+            var hurtBoxes = search.RefreshCandidates().OrderCandidatesByDistance().FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes();
             var prio = CoinController.RicochetPriority.None;
 
-            foreach (HurtBox hurtBox in hurtBoxes)
+            foreach (var hurtBox in hurtBoxes)
             {
-                List<CoinController> coins = new List<CoinController>();
+                var coins = new List<CoinController>();
                 hurtBox.healthComponent.GetComponents(coins);
                 foreach (var coin in coins)
                 {
@@ -141,7 +141,7 @@ namespace RobDriver.Modules.Components
                     }
                 }
 
-                CharacterBody body = hurtBox.healthComponent.body;
+                var body = hurtBox.healthComponent.body;
                 if (body && teamMask.HasTeam(body.teamComponent.teamIndex) && prio < CoinController.RicochetPriority.Body)
                 {
                     target = hurtBox;

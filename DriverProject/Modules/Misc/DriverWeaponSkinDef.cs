@@ -12,7 +12,7 @@ public class DriverWeaponSkinDef : ScriptableObject
 
     public static DriverWeaponSkinDef CreateWeaponSkinDefFromInfo(DriverWeaponSkinDefInfo skinDefInfo)
     {
-        DriverWeaponSkinDef weaponSkinDef = (DriverWeaponSkinDef)ScriptableObject.CreateInstance(typeof(DriverWeaponSkinDef));
+        var weaponSkinDef = (DriverWeaponSkinDef)ScriptableObject.CreateInstance(typeof(DriverWeaponSkinDef));
         weaponSkinDef.nameToken = skinDefInfo.nameToken;
         weaponSkinDef.mainSkinName = skinDefInfo.mainSkinName;
         weaponSkinDef.weaponDefIndex = skinDefInfo.weaponDefIndex;

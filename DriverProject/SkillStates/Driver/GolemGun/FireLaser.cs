@@ -25,11 +25,11 @@ namespace RobDriver.SkillStates.Driver.GolemGun
 			this.duration = FireLaser.baseDuration / this.attackSpeedStat;
 			this.modifiedAimRay = base.GetAimRay();
 			this.modifiedAimRay.direction = this.laserDirection;
-			Transform modelTransform = this.GetModelTransform();
+			var modelTransform = this.GetModelTransform();
 
 			Util.PlaySound(EntityStates.GolemMonster.FireLaser.attackSoundString, this.gameObject);
 
-			string text = "ShotgunMuzzle";
+			var text = "ShotgunMuzzle";
 			this.characterBody.SetAimTimer(2f);
 
 			base.PlayAnimation("Gesture, Override", "FireTwohand", "Shoot.playbackRate", this.duration);
@@ -42,8 +42,8 @@ namespace RobDriver.SkillStates.Driver.GolemGun
 
 			if (base.isAuthority)
 			{
-				float num = 1000f;
-				Vector3 vector = this.modifiedAimRay.origin + this.modifiedAimRay.direction * num;
+				var num = 1000f;
+				var vector = this.modifiedAimRay.origin + this.modifiedAimRay.direction * num;
 
 				RaycastHit raycastHit;
 				if (Physics.Raycast(this.modifiedAimRay, out raycastHit, num, LayerIndex.world.mask | LayerIndex.defaultLayer.mask | LayerIndex.entityPrecise.mask))
@@ -51,7 +51,7 @@ namespace RobDriver.SkillStates.Driver.GolemGun
 					vector = raycastHit.point;
 				}
 
-				BlastAttack blastAttack = new BlastAttack
+				var blastAttack = new BlastAttack
 				{
 					attacker = base.gameObject,
 					inflictor = base.gameObject,
@@ -67,16 +67,16 @@ namespace RobDriver.SkillStates.Driver.GolemGun
 				blastAttack.AddModdedDamageType(iDrive.ModdedDamageType);
 				blastAttack.Fire();
 
-				Vector3 origin = this.modifiedAimRay.origin;
+				var origin = this.modifiedAimRay.origin;
 				if (modelTransform)
 				{
-					ChildLocator component = modelTransform.GetComponent<ChildLocator>();
+					var component = modelTransform.GetComponent<ChildLocator>();
 					if (component)
 					{
-						int childIndex = component.FindChildIndex(text);
+						var childIndex = component.FindChildIndex(text);
 						if (EntityStates.GolemMonster.FireLaser.tracerEffectPrefab)
 						{
-							EffectData effectData = new EffectData
+							var effectData = new EffectData
 							{
 								origin = vector,
 								start = this.modifiedAimRay.origin
@@ -91,7 +91,7 @@ namespace RobDriver.SkillStates.Driver.GolemGun
 
 			if (this.iDrive) this.iDrive.ConsumeAmmo(2f);
 
-			float recoilAmplitude = FireLaser.recoil / this.attackSpeedStat;
+			var recoilAmplitude = FireLaser.recoil / this.attackSpeedStat;
 
 			base.AddRecoil2(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
 			this.characterBody.AddSpreadBloom(4f);
@@ -122,9 +122,6 @@ namespace RobDriver.SkillStates.Driver.GolemGun
 			}
 		}
 
-		public override InterruptPriority GetMinimumInterruptPriority()
-		{
-			return InterruptPriority.Skill;
-		}
-	}
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Skill;
+    }
 }

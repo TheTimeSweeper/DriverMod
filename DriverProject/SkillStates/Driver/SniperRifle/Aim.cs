@@ -53,7 +53,7 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
             {
                 if (this.inputBank.skill1.down)
                 {
-                    PrimarySkillShurikenBehavior shurikenComponent = this.GetComponent<PrimarySkillShurikenBehavior>();
+                    var shurikenComponent = this.GetComponent<PrimarySkillShurikenBehavior>();
                     if (shurikenComponent) shurikenComponent.OnSkillActivated(this.skillLocator.primary);
 
                     if (this.iDrive.weaponTimer <= 0)
@@ -101,9 +101,6 @@ namespace RobDriver.SkillStates.Driver.SniperRifle
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.PrioritySkill;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.PrioritySkill;
     }
 }

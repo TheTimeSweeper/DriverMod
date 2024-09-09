@@ -24,16 +24,13 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop.Scepter
             if (this.effectInstance) Destroy(this.effectInstance);
         }
 
-        protected override void Cancel()
-        {
-            this.outer.SetNextState(new CancelVoidDrop());
-        }
+        protected override void Cancel() => this.outer.SetNextState(new CancelVoidDrop());
 
         protected override void Fire()
         {
-            FireVoidDrop nextState = new FireVoidDrop();
+            var nextState = new FireVoidDrop();
 
-            Transform indicatorTransform = this.areaIndicatorInstance ? this.areaIndicatorInstance.transform : transform;
+            var indicatorTransform = this.areaIndicatorInstance ? this.areaIndicatorInstance.transform : transform;
 
             nextState.dropPosition = indicatorTransform.position;
             nextState.dropRotation = indicatorTransform.rotation;

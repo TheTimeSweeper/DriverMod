@@ -17,6 +17,8 @@ using TMPro;
 using RobDriver.Modules.Misc;
 using UnityEngine.UI;
 using System;
+using System.Runtime.CompilerServices;
+using RobDriver.Modules.Achievements;
 
 namespace RobDriver.Modules.Survivors
 {
@@ -34,7 +36,7 @@ namespace RobDriver.Modules.Survivors
 
         internal float pityMultiplier = 1f;
 
-        public static Color characterColor = new Color(145f / 255f, 0f, 1f);
+        public static Color characterColor = new(145f / 255f, 0f, 1f);
 
         public const string bodyName = "RobDriverBody";
 
@@ -185,7 +187,7 @@ namespace RobDriver.Modules.Survivors
             bodyNameToken = DriverPlugin.developerPrefix + "_DRIVER_BODY_NAME";
 
             #region Body
-            GameObject newPrefab = Modules.Prefabs.CreatePrefab("RobDriverBody", "mdlDriver", new BodyInfo
+            var newPrefab = Modules.Prefabs.CreatePrefab("RobDriverBody", "mdlDriver", new BodyInfo
             {
                 armor = Config.baseArmor.Value,
                 armorGrowth = Config.armorGrowth.Value,
@@ -208,7 +210,7 @@ namespace RobDriver.Modules.Survivors
                 crit = Config.baseCrit.Value
             });
 
-            ChildLocator childLocator = newPrefab.GetComponentInChildren<ChildLocator>();
+            var childLocator = newPrefab.GetComponentInChildren<ChildLocator>();
 
             childLocator.gameObject.AddComponent<Modules.Components.DriverAnimationEvents>();
 
@@ -245,19 +247,19 @@ namespace RobDriver.Modules.Survivors
 
             //newPrefab.GetComponent<CharacterDirection>().turnSpeed = 720f;
 
-            foreach (EntityStateMachine i in newPrefab.GetComponents<EntityStateMachine>())
+            foreach (var i in newPrefab.GetComponents<EntityStateMachine>())
             {
                 if (i.customName == "Body") i.mainStateType = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Driver.MainState));
             }
 
-            EntityStateMachine passiveController = newPrefab.AddComponent<EntityStateMachine>();
+            var passiveController = newPrefab.AddComponent<EntityStateMachine>();
             passiveController.initialStateType = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Driver.Compat.WallJump));
             passiveController.mainStateType = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Driver.Compat.WallJump));
             passiveController.customName = "Passive";
             passiveController.enabled = false;
 
             // this is for the lunar shard skill..
-            EntityStateMachine stateMachine = newPrefab.AddComponent<EntityStateMachine>();
+            var stateMachine = newPrefab.AddComponent<EntityStateMachine>();
             stateMachine.customName = "Shard";
             stateMachine.initialStateType = new EntityStates.SerializableEntityStateType(typeof(EntityStates.Idle));
             stateMachine.mainStateType = new EntityStates.SerializableEntityStateType(typeof(EntityStates.Idle));
@@ -272,70 +274,58 @@ namespace RobDriver.Modules.Survivors
             #endregion
 
             #region Model
-            Material mainMat = Modules.Assets.CreateMaterial("matDriver", 1f, Color.white);
+            var mainMat = Modules.Assets.CreateMaterial("matDriver", 1f, Color.white);
 
-            Material clothMat = Modules.Assets.CreateMaterial("matSlugger", 1f, Color.white);
-            Material tieMat = Modules.Assets.CreateMaterial("matSuit", 1f, Color.white);
+            var clothMat = Modules.Assets.CreateMaterial("matSlugger", 1f, Color.white);
+            var tieMat = Modules.Assets.CreateMaterial("matSuit", 1f, Color.white);
 
             bodyRendererIndex = 0;
             var customRendererInfo = new CustomRendererInfo[] {
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "Model",
                     material = mainMat
                 },
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "KnifeModel",
                     material = Config.enableRevengence.Value ? Assets.nemKatanaMat : Assets.knifeMat
                 },
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "ButtonModel",
                     material = Modules.Assets.CreateMaterial("matButton")
                 },
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "SyringeModel",
                     material = Addressables.LoadAssetAsync<Material>("RoR2/Base/Syringe/matSyringe.mat").WaitForCompletion()
                 },
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "MedkitModel",
                     material = Addressables.LoadAssetAsync<Material>("RoR2/Base/Medkit/matMedkit.mat").WaitForCompletion()
                 },
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "SluggerClothModelL",
                     material = clothMat
                 },
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "SluggerClothModelR",
                     material = clothMat
                 },
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "TieModel",
                     material = tieMat
                 },
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "SkateboardModel",
                     material = Assets.skateboardMat
                 },
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "SkateboardBackModel",
                     material = Assets.skateboardMat
                 },
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "PistolModel",
                     material = Modules.Assets.pistolMat
                 },
-                new CustomRendererInfo
-                {
+                new() {
                     childName = "BackWeaponModel",
                     material = Modules.Assets.nemKatanaMat
                 } };
@@ -365,18 +355,19 @@ namespace RobDriver.Modules.Survivors
 
         private static void SetupHurtboxes(GameObject bodyPrefab)
         {
-            HurtBoxGroup hurtboxGroup = bodyPrefab.GetComponentInChildren<HurtBoxGroup>();
-            List<HurtBox> hurtboxes = new List<HurtBox>();
+            var hurtboxGroup = bodyPrefab.GetComponentInChildren<HurtBoxGroup>();
+            var hurtboxes = new List<HurtBox>
+            {
+                bodyPrefab.GetComponentInChildren<ChildLocator>().FindChild("MainHurtbox").GetComponent<HurtBox>()
+            };
 
-            hurtboxes.Add(bodyPrefab.GetComponentInChildren<ChildLocator>().FindChild("MainHurtbox").GetComponent<HurtBox>());
+            var healthComponent = bodyPrefab.GetComponent<HealthComponent>();
 
-            HealthComponent healthComponent = bodyPrefab.GetComponent<HealthComponent>();
-
-            foreach (Collider i in bodyPrefab.GetComponent<ModelLocator>().modelTransform.GetComponentsInChildren<Collider>())
+            foreach (var i in bodyPrefab.GetComponent<ModelLocator>().modelTransform.GetComponentsInChildren<Collider>())
             {
                 if (i.gameObject.name != "MainHurtbox")
                 {
-                    HurtBox hurtbox = i.gameObject.AddComponent<HurtBox>();
+                    var hurtbox = i.gameObject.AddComponent<HurtBox>();
                     hurtbox.gameObject.layer = LayerIndex.entityPrecise.intVal;
                     hurtbox.healthComponent = healthComponent;
                     hurtbox.isBullseye = false;
@@ -387,23 +378,23 @@ namespace RobDriver.Modules.Survivors
                 }
             }
 
-            hurtboxGroup.hurtBoxes = hurtboxes.ToArray();
+            hurtboxGroup.hurtBoxes = [.. hurtboxes];
         }
 
         private static GameObject CreateMaster(GameObject bodyPrefab, string masterName)
         {
-            GameObject newMaster = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterMasters/LemurianMaster"), masterName, true);
+            var newMaster = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterMasters/LemurianMaster"), masterName, true);
             newMaster.GetComponent<CharacterMaster>().bodyPrefab = bodyPrefab;
 
             #region AI
-            foreach (AISkillDriver ai in newMaster.GetComponentsInChildren<AISkillDriver>())
+            foreach (var ai in newMaster.GetComponentsInChildren<AISkillDriver>())
             {
                 DriverPlugin.DestroyImmediate(ai);
             }
 
             newMaster.GetComponent<BaseAI>().fullVision = true;
 
-            AISkillDriver revengeDriver = newMaster.AddComponent<AISkillDriver>();
+            var revengeDriver = newMaster.AddComponent<AISkillDriver>();
             revengeDriver.customName = "Revenge";
             revengeDriver.movementType = AISkillDriver.MovementType.ChaseMoveTarget;
             revengeDriver.moveTargetType = AISkillDriver.TargetType.CurrentEnemy;
@@ -424,7 +415,7 @@ namespace RobDriver.Modules.Survivors
             revengeDriver.maxUserHealthFraction = 0.5f;
             revengeDriver.skillSlot = SkillSlot.Utility;
 
-            AISkillDriver grabDriver = newMaster.AddComponent<AISkillDriver>();
+            var grabDriver = newMaster.AddComponent<AISkillDriver>();
             grabDriver.customName = "Grab";
             grabDriver.movementType = AISkillDriver.MovementType.ChaseMoveTarget;
             grabDriver.moveTargetType = AISkillDriver.TargetType.CurrentEnemy;
@@ -445,7 +436,7 @@ namespace RobDriver.Modules.Survivors
             grabDriver.maxUserHealthFraction = Mathf.Infinity;
             grabDriver.skillSlot = SkillSlot.Primary;
 
-            AISkillDriver stompDriver = newMaster.AddComponent<AISkillDriver>();
+            var stompDriver = newMaster.AddComponent<AISkillDriver>();
             stompDriver.customName = "Stomp";
             stompDriver.movementType = AISkillDriver.MovementType.ChaseMoveTarget;
             stompDriver.moveTargetType = AISkillDriver.TargetType.CurrentEnemy;
@@ -466,7 +457,7 @@ namespace RobDriver.Modules.Survivors
             stompDriver.maxUserHealthFraction = Mathf.Infinity;
             stompDriver.skillSlot = SkillSlot.Secondary;
 
-            AISkillDriver followCloseDriver = newMaster.AddComponent<AISkillDriver>();
+            var followCloseDriver = newMaster.AddComponent<AISkillDriver>();
             followCloseDriver.customName = "ChaseClose";
             followCloseDriver.movementType = AISkillDriver.MovementType.ChaseMoveTarget;
             followCloseDriver.moveTargetType = AISkillDriver.TargetType.CurrentEnemy;
@@ -485,7 +476,7 @@ namespace RobDriver.Modules.Survivors
             followCloseDriver.maxUserHealthFraction = Mathf.Infinity;
             followCloseDriver.skillSlot = SkillSlot.None;
 
-            AISkillDriver followDriver = newMaster.AddComponent<AISkillDriver>();
+            var followDriver = newMaster.AddComponent<AISkillDriver>();
             followDriver.customName = "Chase";
             followDriver.movementType = AISkillDriver.MovementType.ChaseMoveTarget;
             followDriver.moveTargetType = AISkillDriver.TargetType.CurrentEnemy;
@@ -513,31 +504,32 @@ namespace RobDriver.Modules.Survivors
 
         private static void CreateHitboxes(GameObject prefab)
         {
-            ChildLocator childLocator = prefab.GetComponentInChildren<ChildLocator>();
-            GameObject model = childLocator.gameObject;
+            var childLocator = prefab.GetComponentInChildren<ChildLocator>();
+            var model = childLocator.gameObject;
 
-            Transform hitboxTransform = childLocator.FindChild("HammerBaseHitbox");
-            Modules.Prefabs.SetupHitbox(model, new Transform[]
-                {
+            var hitboxTransform = childLocator.FindChild("HammerBaseHitbox");
+            hitboxTransform.localScale *= 1.4f;
+            Modules.Prefabs.SetupHitbox(model,
+                [
                     hitboxTransform
-                }, "Hammer");
+                ], "Hammer");
 
             hitboxTransform = childLocator.FindChild("KnifeHitbox");
-            Modules.Prefabs.SetupHitbox(model, new Transform[]
-                {
+            hitboxTransform.localScale *= 1.2f;
+            Modules.Prefabs.SetupHitbox(model,
+                [
                     hitboxTransform
-                }, "Knife");
+                ], "Knife");
         }
 
         private static void CreateSkills(GameObject prefab)
         {
-            bool hasArsenal = Modules.Config.enableArsenal.Value;
-            DriverPassive passive = prefab.AddComponent<DriverPassive>();
-            DriverArsenal arsenal = prefab.AddComponent<DriverArsenal>();
+            var hasArsenal = Modules.Config.enableArsenal.Value;
+            var passive = prefab.AddComponent<DriverPassive>();
             Modules.Skills.CreateSkillFamilies(prefab);
 
-            string prefix = DriverPlugin.developerPrefix;
-            SkillLocator skillLocator = prefab.GetComponent<SkillLocator>();
+            var prefix = DriverPlugin.developerPrefix;
+            var skillLocator = prefab.GetComponent<SkillLocator>();
 
             skillLocator.passiveSkill.enabled = false;
             //skillLocator.passiveSkill.skillNameToken = prefix + "_DRIVER_BODY_PASSIVE_NAME";
@@ -935,7 +927,7 @@ namespace RobDriver.Modules.Survivors
             #endregion
 
             #region Secondary
-            SkillDef steadyAimSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            var steadyAimSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_DRIVER_BODY_SECONDARY_PISTOL_NAME",
                 skillNameToken = prefix + "_DRIVER_BODY_SECONDARY_PISTOL_NAME",
@@ -1539,7 +1531,7 @@ namespace RobDriver.Modules.Survivors
             #endregion
 
             #region Utility
-            SkillDef slideSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            var slideSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_DRIVER_BODY_UTILITY_SLIDE_NAME",
                 skillNameToken = prefix + "_DRIVER_BODY_UTILITY_SLIDE_NAME",
@@ -1611,7 +1603,7 @@ namespace RobDriver.Modules.Survivors
                 stockToConsume = 1
             });
 
-            SkillDef dashSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            var dashSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_DRIVER_BODY_UTILITY_DASH_NAME",
                 skillNameToken = prefix + "_DRIVER_BODY_UTILITY_DASH_NAME",
@@ -1639,7 +1631,7 @@ namespace RobDriver.Modules.Survivors
             #endregion
 
             #region Special
-            SkillDef stunGrenadeSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            var stunGrenadeSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_DRIVER_BODY_SPECIAL_GRENADE_NAME",
                 skillNameToken = prefix + "_DRIVER_BODY_SPECIAL_GRENADE_NAME",
@@ -1735,7 +1727,7 @@ namespace RobDriver.Modules.Survivors
                 stockToConsume = 1
             });
 
-            SkillDef supplyDropSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            var supplyDropSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_DRIVER_BODY_SPECIAL_SUPPLY_DROP_NAME",
                 skillNameToken = prefix + "_DRIVER_BODY_SPECIAL_SUPPLY_DROP_NAME",
@@ -1783,7 +1775,7 @@ namespace RobDriver.Modules.Survivors
                 stockToConsume = 0
             });
 
-            SkillDef supplyDropLegacySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            var supplyDropLegacySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_DRIVER_BODY_SPECIAL_SUPPLY_DROP_LEGACY_NAME",
                 skillNameToken = prefix + "_DRIVER_BODY_SPECIAL_SUPPLY_DROP_LEGACY_NAME",
@@ -1831,7 +1823,7 @@ namespace RobDriver.Modules.Survivors
                 stockToConsume = 0
             });
 
-            SkillDef healSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            var healSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_DRIVER_BODY_SPECIAL_HEAL_NAME",
                 skillNameToken = prefix + "_DRIVER_BODY_SPECIAL_HEAL_NAME",
@@ -1855,7 +1847,7 @@ namespace RobDriver.Modules.Survivors
                 stockToConsume = 1
             });
 
-            SkillDef syringeSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            var syringeSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_DRIVER_BODY_SPECIAL_SYRINGE_NAME",
                 skillNameToken = prefix + "_DRIVER_BODY_SPECIAL_SYRINGE_NAME",
@@ -1903,7 +1895,7 @@ namespace RobDriver.Modules.Survivors
                 stockToConsume = 1
             });
 
-            SkillDef syringeLegacySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            var syringeLegacySkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_DRIVER_BODY_SPECIAL_SYRINGELEGACY_NAME",
                 skillNameToken = prefix + "_DRIVER_BODY_SPECIAL_SYRINGELEGACY_NAME",
@@ -1951,7 +1943,7 @@ namespace RobDriver.Modules.Survivors
                 stockToConsume = 1
             });
 
-            SkillDef coinSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            var coinSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = prefix + "_DRIVER_BODY_SPECIAL_DRIVERCOIN_NAME",
                 skillNameToken = prefix + "_DRIVER_BODY_SPECIAL_DRIVERCOIN_NAME",
@@ -1987,7 +1979,8 @@ namespace RobDriver.Modules.Survivors
             }
             #endregion
 
-            if (DriverPlugin.scepterInstalled) InitializeScepterSkills();
+            if (DriverPlugin.scepterInstalled)
+                InitializeScepterSkills();
 
             Assets.InitWeaponDefs();
 
@@ -1998,6 +1991,7 @@ namespace RobDriver.Modules.Survivors
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static void InitializeScepterSkills()
         {
             AncientScepter.AncientScepterItem.instance.RegisterScepterSkill(scepterGrenadeSkillDef, bodyName, SkillSlot.Special, 0);
@@ -2019,41 +2013,38 @@ namespace RobDriver.Modules.Survivors
 
         private static void CreateSkins(GameObject prefab)
         {
-            GameObject model = prefab.GetComponent<ModelLocator>().modelTransform.gameObject;
-            CharacterModel characterModel = model.GetComponent<CharacterModel>();
+            var model = prefab.GetComponent<ModelLocator>().modelTransform.gameObject;
+            var characterModel = model.GetComponent<CharacterModel>();
 
-            ModelSkinController skinController = model.AddComponent<ModelSkinController>();
-            ChildLocator childLocator = model.GetComponent<ChildLocator>();
+            var skinController = model.AddComponent<ModelSkinController>();
+            var childLocator = model.GetComponent<ChildLocator>();
 
-            SkinnedMeshRenderer mainRenderer = characterModel.mainSkinnedMeshRenderer;
+            var mainRenderer = characterModel.mainSkinnedMeshRenderer;
 
-            CharacterModel.RendererInfo[] defaultRenderers = characterModel.baseRendererInfos;
+            var defaultRenderers = characterModel.baseRendererInfos;
+            var skins = new List<SkinDef>();
 
-            Renderer[] renderers = prefab.GetComponentsInChildren<Renderer>(true);
-
-            List<SkinDef> skins = new List<SkinDef>();
-
-            GameObject sluggerCloth = childLocator.FindChild("SluggerCloth").gameObject;
-            GameObject tie = childLocator.FindChild("Tie").gameObject;
+            var sluggerCloth = childLocator.FindChild("SluggerCloth").gameObject;
+            var tie = childLocator.FindChild("Tie").gameObject;
 
             #region DefaultSkin
-            SkinDef defaultSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_DEFAULT_SKIN_NAME",
+            var defaultSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_DEFAULT_SKIN_NAME",
                 Assets.mainAssetBundle.LoadAsset<Sprite>("texMainSkin"),
                 defaultRenderers,
                 mainRenderer,
                 model);
 
-            defaultSkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
+            defaultSkin.meshReplacements =
+            [
                 new SkinDef.MeshReplacement
                 {
                     renderer = mainRenderer,
                     mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshDriver")
                 }
-            };
+            ];
 
-            defaultSkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
-            {
+            defaultSkin.gameObjectActivations =
+            [
                 new SkinDef.GameObjectActivation
                 {
                     gameObject = sluggerCloth,
@@ -2064,33 +2055,33 @@ namespace RobDriver.Modules.Survivors
                     gameObject = tie,
                     shouldActivate = false
                 }
-            };
+            ];
 
 
             #endregion
 
             #region MasterySkin
-            SkinDef masterySkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_MONSOON_SKIN_NAME",
+            var masterySkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_MONSOON_SKIN_NAME",
                 Assets.mainAssetBundle.LoadAsset<Sprite>("texMonsoonSkin"),
-                SkinRendererInfos(defaultRenderers, new Material[]
-                {
+                SkinRendererInfos(defaultRenderers,
+                [
                     Modules.Assets.CreateMaterial("matJacket", 1f, Color.white)
-                }),
+                ]),
                 mainRenderer,
                 model,
                 masteryUnlockableDef);
 
-            masterySkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
+            masterySkin.meshReplacements =
+            [
                 new SkinDef.MeshReplacement
                 {
                     renderer = mainRenderer,
                     mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshJacket")
                 }
-            };
+            ];
 
-            masterySkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
-            {
+            masterySkin.gameObjectActivations =
+            [
                 new SkinDef.GameObjectActivation
                 {
                     gameObject = sluggerCloth,
@@ -2101,33 +2092,33 @@ namespace RobDriver.Modules.Survivors
                     gameObject = tie,
                     shouldActivate = false
                 }
-            };
+            ];
 
 
             #endregion
 
             #region GrandMasterySkin
-            SkinDef grandMasterySkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_TYPHOON_SKIN_NAME",
+            var grandMasterySkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_TYPHOON_SKIN_NAME",
                 Assets.mainAssetBundle.LoadAsset<Sprite>("texTyphoonSkin"),
-                SkinRendererInfos(defaultRenderers, new Material[]
-                {
+                SkinRendererInfos(defaultRenderers,
+                [
                     Modules.Assets.CreateMaterial("matSlugger", 1f, Color.white)
-                }),
+                ]),
                 mainRenderer,
                 model,
                 grandMasteryUnlockableDef);
 
-            grandMasterySkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
+            grandMasterySkin.meshReplacements =
+            [
                 new SkinDef.MeshReplacement
                 {
                     renderer = mainRenderer,
                     mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshSlugger")
                 }
-            };
+            ];
 
-            grandMasterySkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
-            {
+            grandMasterySkin.gameObjectActivations =
+            [
                 new SkinDef.GameObjectActivation
                 {
                     gameObject = sluggerCloth,
@@ -2138,31 +2129,31 @@ namespace RobDriver.Modules.Survivors
                     gameObject = tie,
                     shouldActivate = false
                 }
-            };
+            ];
 
             #endregion
 
             #region SpecialForcesSkin
-            SkinDef specialForcesSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_SPECIALFORCES_SKIN_NAME",
+            var specialForcesSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_SPECIALFORCES_SKIN_NAME",
             Assets.mainAssetBundle.LoadAsset<Sprite>("texSpecialForcesSkin"),
-            SkinRendererInfos(defaultRenderers, new Material[]
-            {
+            SkinRendererInfos(defaultRenderers,
+            [
                 Modules.Assets.CreateMaterial("matSpecialForces", 1f, Color.white)
-            }),
+            ]),
             mainRenderer,
             model);
 
-            specialForcesSkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
+            specialForcesSkin.meshReplacements =
+            [
                 new SkinDef.MeshReplacement
                 {
                     renderer = mainRenderer,
                     mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshSpecialForces")
                 }
-            };
+            ];
 
-            specialForcesSkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
-            {
+            specialForcesSkin.gameObjectActivations =
+            [
                 new SkinDef.GameObjectActivation
                 {
                     gameObject = sluggerCloth,
@@ -2173,30 +2164,30 @@ namespace RobDriver.Modules.Survivors
                     gameObject = tie,
                     shouldActivate = false
                 }
-            };
+            ];
             #endregion
 
             #region GuerrillaSkin
-            SkinDef guerrillaSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_GUERRILLA_SKIN_NAME",
+            var guerrillaSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_GUERRILLA_SKIN_NAME",
             Assets.mainAssetBundle.LoadAsset<Sprite>("texGuerrillaSkin"),
-            SkinRendererInfos(defaultRenderers, new Material[]
-            {
+            SkinRendererInfos(defaultRenderers,
+            [
                             Modules.Assets.CreateMaterial("matGuerrilla", 1f, Color.white)
-            }),
+            ]),
             mainRenderer,
             model);
 
-            guerrillaSkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
+            guerrillaSkin.meshReplacements =
+            [
                 new SkinDef.MeshReplacement
                 {
                     renderer = mainRenderer,
                     mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshGuerrilla")
                 }
-            };
+            ];
 
-            guerrillaSkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
-            {
+            guerrillaSkin.gameObjectActivations =
+            [
                 new SkinDef.GameObjectActivation
                 {
                     gameObject = sluggerCloth,
@@ -2207,32 +2198,32 @@ namespace RobDriver.Modules.Survivors
                     gameObject = tie,
                     shouldActivate = false
                 }
-            };
+            ];
 
             #endregion
 
             #region SuitSkin
-            SkinDef suitSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_SUIT_SKIN_NAME",
+            var suitSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_SUIT_SKIN_NAME",
                 Assets.mainAssetBundle.LoadAsset<Sprite>("texSuitSkin"),
-                SkinRendererInfos(defaultRenderers, new Material[]
-                {
+                SkinRendererInfos(defaultRenderers,
+                [
                     Modules.Assets.CreateMaterial("matSuit", 1f, Color.white)
-                }),
+                ]),
                 mainRenderer,
                 model,
                 suitUnlockableDef);
 
-            suitSkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
+            suitSkin.meshReplacements =
+            [
                 new SkinDef.MeshReplacement
                 {
                     renderer = mainRenderer,
                     mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshSuit")
                 }
-            };
+            ];
 
-            suitSkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
-            {
+            suitSkin.gameObjectActivations =
+            [
                 new SkinDef.GameObjectActivation
                 {
                     gameObject = sluggerCloth,
@@ -2243,32 +2234,32 @@ namespace RobDriver.Modules.Survivors
                     gameObject = tie,
                     shouldActivate = true
                 }
-            };
+            ];
 
             #endregion
 
             #region Suit2Skin
-            SkinDef suit2Skin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_SUIT2_SKIN_NAME",
+            var suit2Skin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_SUIT2_SKIN_NAME",
                 Assets.mainAssetBundle.LoadAsset<Sprite>("texSuit2Skin"),
-                SkinRendererInfos(defaultRenderers, new Material[]
-                {
+                SkinRendererInfos(defaultRenderers,
+                [
                     Modules.Assets.CreateMaterial("matSuit", 1f, Color.white)
-                }),
+                ]),
                 mainRenderer,
                 model,
                 suitUnlockableDef);
 
-            suit2Skin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
+            suit2Skin.meshReplacements =
+            [
                 new SkinDef.MeshReplacement
                 {
                     renderer = mainRenderer,
                     mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshSuit2")
                 }
-            };
+            ];
 
-            suit2Skin.gameObjectActivations = new SkinDef.GameObjectActivation[]
-            {
+            suit2Skin.gameObjectActivations =
+            [
                 new SkinDef.GameObjectActivation
                 {
                     gameObject = sluggerCloth,
@@ -2279,31 +2270,31 @@ namespace RobDriver.Modules.Survivors
                     gameObject = tie,
                     shouldActivate = true
                 }
-            };
+            ];
 
             #endregion
 
             #region GreenSkin
-            SkinDef greenSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_GREEN_SKIN_NAME",
+            var greenSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_GREEN_SKIN_NAME",
                 Assets.mainAssetBundle.LoadAsset<Sprite>("texGreenSkin"),
-                SkinRendererInfos(defaultRenderers, new Material[]
-                {
+                SkinRendererInfos(defaultRenderers,
+                [
                     Modules.Assets.CreateMaterial("matDriverGreen", 1f, Color.white)
-                }),
+                ]),
                 mainRenderer,
                 model);
 
-            greenSkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
+            greenSkin.meshReplacements =
+            [
                 new SkinDef.MeshReplacement
                 {
                     renderer = mainRenderer,
                     mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshDriver")
                 }
-            };
+            ];
 
-            greenSkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
-            {
+            greenSkin.gameObjectActivations =
+            [
                 new SkinDef.GameObjectActivation
                 {
                     gameObject = sluggerCloth,
@@ -2314,32 +2305,32 @@ namespace RobDriver.Modules.Survivors
                     gameObject = tie,
                     shouldActivate = false
                 }
-            };
+            ];
 
             #endregion
 
             #region MinecraftSkin
 
-            SkinDef minecraftSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_MINECRAFT_SKIN_NAME",
+            var minecraftSkin = Modules.Skins.CreateSkinDef(DriverPlugin.developerPrefix + "_DRIVER_BODY_MINECRAFT_SKIN_NAME",
             Assets.mainAssetBundle.LoadAsset<Sprite>("texMinecraftSkin"),
-            SkinRendererInfos(defaultRenderers, new Material[]
-            {
+            SkinRendererInfos(defaultRenderers,
+            [
                             Modules.Assets.CreateMaterial("matMinecraftDriver", 1f, Color.white)
-            }),
+            ]),
             mainRenderer,
             model);
 
-            minecraftSkin.meshReplacements = new SkinDef.MeshReplacement[]
-            {
+            minecraftSkin.meshReplacements =
+            [
             new SkinDef.MeshReplacement
             {
                 renderer = mainRenderer,
                 mesh = Modules.Assets.mainAssetBundle.LoadAsset<Mesh>("meshMinecraftDriver")
             }
-            };
+            ];
 
-            minecraftSkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
-            {
+            minecraftSkin.gameObjectActivations =
+            [
                 new SkinDef.GameObjectActivation
                 {
                     gameObject = sluggerCloth,
@@ -2350,7 +2341,7 @@ namespace RobDriver.Modules.Survivors
                     gameObject = tie,
                     shouldActivate = false
                 }
-            };
+            ];
             #endregion
 
             skins.Add(defaultSkin);
@@ -2363,19 +2354,19 @@ namespace RobDriver.Modules.Survivors
             if (Modules.Config.cursed.Value) skins.Add(greenSkin);
             if (Modules.Config.cursed.Value) skins.Add(minecraftSkin);
 
-            skinController.skins = skins.ToArray();
+            skinController.skins = [.. skins];
             baseSkinCount = skinController.skins.Length;
         }
 
         internal static void LateSkinSetup()
         {
-            GameObject model = characterPrefab.GetComponent<ModelLocator>().modelTransform.gameObject;
-            ModelSkinController skinController = model.GetComponent<ModelSkinController>();
+            var model = characterPrefab.GetComponent<ModelLocator>().modelTransform.gameObject;
+            var skinController = model.GetComponent<ModelSkinController>();
 
             foreach (var skinDef in skinController.skins)
             {
                 var weaponReskins = new Dictionary<ushort, DriverWeaponSkinDef>();
-                for (int i = 0; i < skinDef.meshReplacements.Length; i++)
+                for (var i = 0; i < skinDef.meshReplacements.Length; i++)
                 {
                     var meshReplacement = skinDef.meshReplacements[i];
                     var rendererName = meshReplacement.renderer?.name;
@@ -2401,7 +2392,7 @@ namespace RobDriver.Modules.Survivors
 
         private static void InitializeItemDisplays(GameObject prefab)
         {
-            CharacterModel characterModel = prefab.GetComponentInChildren<CharacterModel>();
+            var characterModel = prefab.GetComponentInChildren<CharacterModel>();
 
             if (itemDisplayRuleSet == null)
             {
@@ -2412,7 +2403,7 @@ namespace RobDriver.Modules.Survivors
             characterModel.itemDisplayRuleSet = itemDisplayRuleSet;
             characterModel.itemDisplayRuleSet.keyAssetRuleGroups = Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody")
                 .GetComponentInChildren<CharacterModel>().itemDisplayRuleSet.keyAssetRuleGroups;// itemDisplayRuleSet;
-            itemDisplayRules = itemDisplayRuleSet.keyAssetRuleGroups.ToList();
+            itemDisplayRules = [.. itemDisplayRuleSet.keyAssetRuleGroups];
         }
 
         internal static void SetItemDisplays()
@@ -2420,8 +2411,8 @@ namespace RobDriver.Modules.Survivors
             // uhh
             Modules.ItemDisplays.PopulateDisplays();
 
-            ReplaceItemDisplay(RoR2Content.Items.SecondarySkillMagazine, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(RoR2Content.Items.SecondarySkillMagazine,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2432,10 +2423,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(39.35415F, 348.9445F, 164.0792F),
                     localScale = new Vector3(0.06F, 0.06F, 0.06F)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(RoR2Content.Items.CritGlasses, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(RoR2Content.Items.CritGlasses,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2446,12 +2437,12 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(314.7648F, 358.1459F, 0.48047F),
                     localScale = new Vector3(0.30902F, 0.09537F, 0.30934F)
                 }
-            });
+            ]);
 
             if (Modules.Config.predatoryOnHead.Value)
             {
-                ReplaceItemDisplay(RoR2Content.Items.AttackSpeedOnCrit, new ItemDisplayRule[] 
-                {
+                ReplaceItemDisplay(RoR2Content.Items.AttackSpeedOnCrit,
+                [
                     new ItemDisplayRule
                     {
                         ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2462,12 +2453,12 @@ namespace RobDriver.Modules.Survivors
                         localAngles = new Vector3(302.566F, 0F, 0F),
                         localScale = new Vector3(0.47332F, 0.47332F, 0.47332F)
                     }
-                });
+                ]);
             }
             else
             {
-                ReplaceItemDisplay(RoR2Content.Items.AttackSpeedOnCrit, new ItemDisplayRule[]
-                {
+                ReplaceItemDisplay(RoR2Content.Items.AttackSpeedOnCrit,
+                [
                     new ItemDisplayRule
                     {
                         ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2478,11 +2469,11 @@ namespace RobDriver.Modules.Survivors
                         localAngles = new Vector3(309.4066F, 250.1116F, 175.7708F),
                         localScale = new Vector3(0.363F, 0.363F, 0.363F)
                     }
-                });
+                ]);
             }
 
-            ReplaceItemDisplay(DLC1Content.Items.CritGlassesVoid, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(DLC1Content.Items.CritGlassesVoid,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2493,10 +2484,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(340.0668F, 0F, 0F),
                     localScale = new Vector3(0.30387F, 0.39468F, 0.46147F)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(DLC1Content.Items.LunarSun, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(DLC1Content.Items.LunarSun,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2527,10 +2518,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(0F, 0F, 0F),
                     localScale = new Vector3(0.90836F, 0.90836F, 0.90836F)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(RoR2Content.Items.GhostOnKill, new ItemDisplayRule[]
-{
+            ReplaceItemDisplay(RoR2Content.Items.GhostOnKill,
+[
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2541,10 +2532,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(355.7367F, 0.15F, 0F),
                     localScale = new Vector3(0.6F, 0.6F, 0.6F)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(RoR2Content.Items.GoldOnHit, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(RoR2Content.Items.GoldOnHit,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2555,10 +2546,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(8.52676F, 0F, 0F),
                     localScale = new Vector3(0.90509F, 0.90509F, 0.90509F)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(RoR2Content.Items.JumpBoost, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(RoR2Content.Items.JumpBoost,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2569,10 +2560,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(0F, 0F, 0F),
                     localScale = new Vector3(0.79857F, 0.79857F, 0.79857F)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(RoR2Content.Items.KillEliteFrenzy, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(RoR2Content.Items.KillEliteFrenzy,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2583,10 +2574,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(0F, 0F, 0F),
                     localScale = new Vector3(0.17982F, 0.17982F, 0.17982F)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(RoR2Content.Items.LunarPrimaryReplacement, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(RoR2Content.Items.LunarPrimaryReplacement,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2597,10 +2588,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(306.9798F, 180F, 180F),
                     localScale = new Vector3(0.31302F, 0.31302F, 0.31302F)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(DLC1Content.Items.FragileDamageBonus, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(DLC1Content.Items.FragileDamageBonus,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2611,10 +2602,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(84.24088f, 213.1651f, 131.5774f),
                     localScale = new Vector3(0.5f, 0.5f, 0.5f)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(RoR2Content.Items.BarrierOnOverHeal, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(RoR2Content.Items.BarrierOnOverHeal,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2625,10 +2616,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(90F, 270F, 0F),
                     localScale = new Vector3(0.3F, 0.3F, 0.3F)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(RoR2Content.Items.SprintArmor, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(RoR2Content.Items.SprintArmor,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2639,10 +2630,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(0F, 90F, 0F),
                     localScale = new Vector3(0.3F, 0.3F, 0.3F)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(RoR2Content.Items.ArmorPlate, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(RoR2Content.Items.ArmorPlate,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2653,10 +2644,10 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(90F, 180F, 0F),
                     localScale = new Vector3(-0.2958F, 0.2958F, 0.29581F)
                 }
-            });
+            ]);
 
-            ReplaceItemDisplay(DLC1Content.Items.CritDamage, new ItemDisplayRule[]
-            {
+            ReplaceItemDisplay(DLC1Content.Items.CritDamage,
+            [
                 new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2667,11 +2658,11 @@ namespace RobDriver.Modules.Survivors
                     localAngles = new Vector3(0F, 0F, 270F),
                     localScale = new Vector3(0.05261F, 0.05261F, 0.05261F)
                 }
-            });
+            ]);
 
             if (DriverPlugin.litInstalled) SetLITDisplays();
 
-            itemDisplayRuleSet.keyAssetRuleGroups = itemDisplayRules.ToArray();
+            itemDisplayRuleSet.keyAssetRuleGroups = [.. itemDisplayRules];
             //itemDisplayRuleSet.GenerateRuntimeValues();
         }
 
@@ -2683,8 +2674,8 @@ namespace RobDriver.Modules.Survivors
                 keyAsset = LostInTransit.LITContent.Items.Lopper,
                 displayRuleGroup = new DisplayRuleGroup
                 {
-                    rules = new ItemDisplayRule[]
-                    {
+                    rules =
+                    [
                         new ItemDisplayRule
                         {
                             ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2695,7 +2686,7 @@ namespace RobDriver.Modules.Survivors
                             localAngles = new Vector3(0F, 0F, 0F),
                             localScale = new Vector3(0.19059F, 0.19059F, 0.19059F)
                         }
-                    }
+                    ]
                 }
             });
 
@@ -2704,8 +2695,8 @@ namespace RobDriver.Modules.Survivors
                 keyAsset = LostInTransit.LITContent.Items.Chestplate,
                 displayRuleGroup = new DisplayRuleGroup
                 {
-                    rules = new ItemDisplayRule[]
-                    {
+                    rules =
+                    [
                         new ItemDisplayRule
                         {
                             ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -2716,15 +2707,15 @@ namespace RobDriver.Modules.Survivors
                             localAngles = new Vector3(349.1311F, 0F, 0F),
                             localScale = new Vector3(0.13457F, 0.19557F, 0.19557F)
                         }
-                    }
+                    ]
                 }
             });
         }
 
         internal static void ReplaceItemDisplay(UnityEngine.Object keyAsset, ItemDisplayRule[] newDisplayRules)
         {
-            ItemDisplayRuleSet.KeyAssetRuleGroup[] cock = itemDisplayRules.ToArray();
-            for (int i = 0; i < cock.Length; i++)
+            var cock = itemDisplayRules.ToArray();
+            for (var i = 0; i < cock.Length; i++)
             {
                 if (cock[i].keyAsset == keyAsset)
                 {
@@ -2732,12 +2723,12 @@ namespace RobDriver.Modules.Survivors
                     cock[i].displayRuleGroup.rules = newDisplayRules;
                 }
             }
-            itemDisplayRules = cock.ToList();
+            itemDisplayRules = [.. cock];
         }
 
         private static CharacterModel.RendererInfo[] SkinRendererInfos(CharacterModel.RendererInfo[] defaultRenderers, Material[] materials)
         {
-            CharacterModel.RendererInfo[] newRendererInfos = new CharacterModel.RendererInfo[defaultRenderers.Length];
+            var newRendererInfos = new CharacterModel.RendererInfo[defaultRenderers.Length];
             defaultRenderers.CopyTo(newRendererInfos, 0);
 
             newRendererInfos[0].defaultMaterial = materials[0];
@@ -2795,7 +2786,7 @@ namespace RobDriver.Modules.Survivors
             if (self.currentDisplayData.bodyIndex == BodyCatalog.FindBodyIndex("RobDriverBody"))
             {
                 // i made it worse, youre welcome
-                string newToken = "Passive";
+                var newToken = "Passive";
                 foreach (var label in self.gameObject.GetComponentsInChildren<LanguageTextMeshController>().Where(label => label && label.token == "LOADOUT_SKILL_MISC"))
                 {
                     if (newToken != null)
@@ -2904,8 +2895,8 @@ namespace RobDriver.Modules.Survivors
         {
             if (damageReport.attackerBody && damageReport.attackerMaster && damageReport.victim)
             {
-                bool isDriverOnPlayerTeam = false;
-                foreach (CharacterBody i in CharacterBody.readOnlyInstancesList)
+                var isDriverOnPlayerTeam = false;
+                foreach (var i in CharacterBody.readOnlyInstancesList)
                 {
                     if (i && i.teamComponent && i.teamComponent.teamIndex == TeamIndex.Player && i.baseNameToken == Driver.bodyNameToken)
                     {
@@ -2939,10 +2930,10 @@ namespace RobDriver.Modules.Survivors
                     }
 
                     // 7
-                    float chance = Modules.Config.baseDropRate.Value;
+                    var chance = Modules.Config.baseDropRate.Value;
                     if (chance <= 0) return; // drop nothing
 
-                    bool fuckMyAss = chance >= 100f;
+                    var fuckMyAss = chance >= 100f;
 
                     // higher chance if it's a big guy
                     if (damageReport.victimBody.hullClassification == HullClassification.Golem) chance = Mathf.Clamp(1.1f * chance, 0f, 100f);
@@ -2955,10 +2946,10 @@ namespace RobDriver.Modules.Survivors
 
                     chance *= Driver.instance.pityMultiplier;
 
-                    bool droppedWeapon = Util.CheckRoll(chance, damageReport.attackerMaster);
+                    var droppedWeapon = Util.CheckRoll(chance, damageReport.attackerMaster);
 
                     // guaranteed if the slain enemy is a boss
-                    bool isBoss = damageReport.victimBody.isChampion || damageReport.victimIsChampion;
+                    var isBoss = damageReport.victimBody.isChampion || damageReport.victimIsChampion;
 
                     // simulacrum boss wave fix
                     if ((damageReport.victimBody.isBoss || damageReport.victimIsBoss) && !InfiniteTowerRun.instance) isBoss = true;
@@ -2985,18 +2976,15 @@ namespace RobDriver.Modules.Survivors
                     {
                         Driver.instance.pityMultiplier = 0.8f;
 
-                        Vector3 position = damageReport.victim.transform ? damageReport.victim.transform.position : Vector3.zero;
+                        var position = damageReport.victim.transform ? damageReport.victim.transform.position : Vector3.zero;
 
                         //if (Modules.Config.oldPickupModel.Value) pickupPrefab = Modules.Assets.weaponPickupOld;
 
-                        DriverWeaponTier weaponTier = damageReport.victimBody.isChampion ? DriverWeaponTier.Legendary : DriverWeaponTier.Uncommon;
+                        var weaponTier = damageReport.victimBody.isChampion ? DriverWeaponTier.Legendary : DriverWeaponTier.Uncommon;
 
                         // use unique drop, otherwise roll random
-                        DriverWeaponDef weaponDef;
-                        if (uniqueDrop && Util.CheckRoll(uniqueDrop.dropChance)) weaponDef = uniqueDrop;
-                        else weaponDef = DriverWeaponCatalog.GetRandomWeaponFromTier(weaponTier);
-
-                        GameObject weaponPickup = UnityEngine.Object.Instantiate<GameObject>(weaponDef.pickupPrefab, position, UnityEngine.Random.rotation);
+                        var weaponDef = uniqueDrop && Util.CheckRoll(uniqueDrop.dropChance) ? uniqueDrop : DriverWeaponCatalog.GetRandomWeaponFromTier(weaponTier);
+                        var weaponPickup = UnityEngine.Object.Instantiate<GameObject>(weaponDef.pickupPrefab, position, UnityEngine.Random.rotation);
                         var weaponComponent = weaponPickup.GetComponent<SyncPickup>();
 
                         // add passive specific stuff
@@ -3041,7 +3029,7 @@ namespace RobDriver.Modules.Survivors
                     return;
                 }
 
-                Transform skillsContainer = hud.equipmentIcons[0].gameObject.transform.parent;
+                var skillsContainer = hud.equipmentIcons[0].gameObject.transform.parent;
 
                 // remove existing
                 if (skillsContainer.Find("WeaponSlot")) GameObject.Destroy(skillsContainer.Find("WeaponSlot").gameObject);
@@ -3053,11 +3041,11 @@ namespace RobDriver.Modules.Survivors
                 skillsContainer.Find("SprintCluster").gameObject.SetActive(false);
                 skillsContainer.Find("InventoryCluster").gameObject.SetActive(false);
 
-                GameObject weaponSlot = GameObject.Instantiate(skillsContainer.Find("EquipmentSlot").gameObject, skillsContainer);
+                var weaponSlot = GameObject.Instantiate(skillsContainer.Find("EquipmentSlot").gameObject, skillsContainer);
                 weaponSlot.name = "WeaponSlot";
 
-                EquipmentIcon equipmentIconComponent = weaponSlot.GetComponent<EquipmentIcon>();
-                Components.WeaponIcon weaponIconComponent = weaponSlot.AddComponent<Components.WeaponIcon>();
+                var equipmentIconComponent = weaponSlot.GetComponent<EquipmentIcon>();
+                var weaponIconComponent = weaponSlot.AddComponent<Components.WeaponIcon>();
 
                 weaponIconComponent.iconImage = equipmentIconComponent.iconImage;
                 weaponIconComponent.displayRoot = equipmentIconComponent.displayRoot;
@@ -3068,7 +3056,7 @@ namespace RobDriver.Modules.Survivors
                 weaponIconComponent.targetHUD = hud;
                 weaponSlot.GetComponent<RectTransform>().anchoredPosition = new Vector2(-480f, -17.1797f);
 
-                HGTextMeshProUGUI keyText = weaponSlot.transform.Find("DisplayRoot").Find("EquipmentTextBackgroundPanel").Find("EquipmentKeyText").gameObject.GetComponent<HGTextMeshProUGUI>();
+                var keyText = weaponSlot.transform.Find("DisplayRoot").Find("EquipmentTextBackgroundPanel").Find("EquipmentKeyText").gameObject.GetComponent<HGTextMeshProUGUI>();
                 keyText.gameObject.GetComponent<InputBindingDisplayController>().enabled = false;
                 keyText.text = "Weapon";
 
@@ -3076,10 +3064,10 @@ namespace RobDriver.Modules.Survivors
                 weaponSlot.transform.Find("DisplayRoot").Find("CooldownText").gameObject.SetActive(false);
 
                 // duration bar
-                GameObject chargeBar = GameObject.Instantiate(Assets.mainAssetBundle.LoadAsset<GameObject>("WeaponChargeBar"));
+                var chargeBar = GameObject.Instantiate(Assets.mainAssetBundle.LoadAsset<GameObject>("WeaponChargeBar"));
                 chargeBar.transform.SetParent(weaponSlot.transform.Find("DisplayRoot"));
 
-                RectTransform rect = chargeBar.GetComponent<RectTransform>();
+                var rect = chargeBar.GetComponent<RectTransform>();
 
                 rect.localScale = new Vector3(0.75f, 0.1f, 1f);
                 rect.anchorMin = new Vector2(0f, 0f);
@@ -3097,13 +3085,13 @@ namespace RobDriver.Modules.Survivors
 
                 // weapon pickup notification
 
-                GameObject notificationPanel = GameObject.Instantiate(hud.transform.Find("MainContainer").Find("NotificationArea").gameObject);
+                var notificationPanel = GameObject.Instantiate(hud.transform.Find("MainContainer").Find("NotificationArea").gameObject);
                 notificationPanel.transform.SetParent(hud.transform.Find("MainContainer"), true);
                 notificationPanel.GetComponent<RectTransform>().localPosition = new Vector3(0f, -265f, -150f);
                 notificationPanel.transform.localScale = Vector3.one;
 
-                NotificationUIController _old = notificationPanel.GetComponent<NotificationUIController>();
-                WeaponNotificationUIController _new = notificationPanel.AddComponent<WeaponNotificationUIController>();
+                var _old = notificationPanel.GetComponent<NotificationUIController>();
+                var _new = notificationPanel.AddComponent<WeaponNotificationUIController>();
 
                 _new.hud = _old.hud;
                 _new.genericNotificationPrefab = Modules.Assets.weaponNotificationPrefab;
@@ -3112,9 +3100,9 @@ namespace RobDriver.Modules.Survivors
                 _old.enabled = false;
 
                 // ammo display for alt passive
-                Transform healthbarContainer = hud.transform.Find("MainContainer").Find("MainUIArea").Find("SpringCanvas").Find("BottomLeftCluster").Find("BarRoots").Find("LevelDisplayCluster");
+                var healthbarContainer = hud.transform.Find("MainContainer").Find("MainUIArea").Find("SpringCanvas").Find("BottomLeftCluster").Find("BarRoots").Find("LevelDisplayCluster");
 
-                GameObject ammoTracker = GameObject.Instantiate(healthbarContainer.gameObject, hud.transform.Find("MainContainer").Find("MainUIArea").Find("SpringCanvas").Find("BottomLeftCluster"));
+                var ammoTracker = GameObject.Instantiate(healthbarContainer.gameObject, hud.transform.Find("MainContainer").Find("MainUIArea").Find("SpringCanvas").Find("BottomLeftCluster"));
                 ammoTracker.name = "AmmoTracker";
                 ammoTracker.transform.SetParent(hud.transform.Find("MainContainer").Find("MainUIArea").Find("CrosshairCanvas").Find("CrosshairExtras"));
 
@@ -3138,7 +3126,7 @@ namespace RobDriver.Modules.Survivors
                 rect.anchoredPosition = new Vector2(50f, 0f);
                 rect.localPosition = new Vector3(120f, -40f, 0f);
 
-                GameObject chargeBarAmmo = GameObject.Instantiate(Assets.mainAssetBundle.LoadAsset<GameObject>("WeaponChargeBar"));
+                var chargeBarAmmo = GameObject.Instantiate(Assets.mainAssetBundle.LoadAsset<GameObject>("WeaponChargeBar"));
                 chargeBarAmmo.name = "AmmoBar";
                 chargeBarAmmo.transform.SetParent(hud.transform.Find("MainContainer").Find("MainUIArea").Find("CrosshairCanvas").Find("CrosshairExtras"));
 
@@ -3152,7 +3140,7 @@ namespace RobDriver.Modules.Survivors
                 rect.localPosition = new Vector3(100f, 2f, 0f);
                 rect.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f));
 
-                AmmoDisplay ammoTrackerComponent = ammoTracker.AddComponent<AmmoDisplay>();
+                var ammoTrackerComponent = ammoTracker.AddComponent<AmmoDisplay>();
 
                 ammoTrackerComponent.targetHUD = hud;
                 ammoTrackerComponent.targetText = ammoTracker.transform.Find("LevelDisplayRoot").Find("PrefixText").gameObject.GetComponent<LanguageTextMeshController>();
@@ -3166,15 +3154,15 @@ namespace RobDriver.Modules.Survivors
         internal static void RiskUIHudSetup(RoR2.UI.HUD hud)
         {
             // Get rid of old hud, im tired of fighting this
-            GameObject weaponSlot = hud.equipmentIcons.First().transform.parent.Find("WeaponSlot")?.gameObject;
+            var weaponSlot = hud.equipmentIcons.First().transform.parent.Find("WeaponSlot")?.gameObject;
             if (weaponSlot) GameObject.Destroy(weaponSlot);
 
             weaponSlot = GameObject.Instantiate(hud.equipmentIcons.First().gameObject);
             weaponSlot.name = "WeaponSlot";
             MonoBehaviour.Destroy(weaponSlot.GetComponent<BepinConfigParentManager>());
 
-            EquipmentIcon equipmentIconComponent = weaponSlot.GetComponent<EquipmentIcon>();
-            Components.WeaponIcon weaponIconComponent = weaponSlot.AddComponent<Components.WeaponIcon>();
+            var equipmentIconComponent = weaponSlot.GetComponent<EquipmentIcon>();
+            var weaponIconComponent = weaponSlot.AddComponent<Components.WeaponIcon>();
 
             // whoever deleted the stock flash animations is a bad guy
             weaponIconComponent.iconImage = equipmentIconComponent.iconImage;
@@ -3193,7 +3181,7 @@ namespace RobDriver.Modules.Survivors
             weaponIcon.cooldownRing = weaponSlot.transform.Find("DisplayRoot").Find("Mask").Find("CooldownRing").gameObject.GetComponent<UnityEngine.UI.Image>();
             weaponIcon.cooldownRing.fillCenter = false;
 
-            RectTransform iconRect = weaponSlot.GetComponent<RectTransform>();
+            var iconRect = weaponSlot.GetComponent<RectTransform>();
             iconRect.localScale = new Vector3(2f, 2f, 2f);
             iconRect.anchoredPosition = new Vector2(-128f, 60f);
 
@@ -3239,13 +3227,13 @@ namespace RobDriver.Modules.Survivors
             **/
             // weapon pickup notification
 
-            GameObject notificationPanel = GameObject.Instantiate(hud.transform.Find("MainContainer").Find("NotificationArea").gameObject);
+            var notificationPanel = GameObject.Instantiate(hud.transform.Find("MainContainer").Find("NotificationArea").gameObject);
             notificationPanel.transform.SetParent(hud.transform.Find("MainContainer"), true);
             notificationPanel.GetComponent<RectTransform>().localPosition = new Vector3(0f, -210f, -50f);
             notificationPanel.transform.localScale = Vector3.one;
 
-            NotificationUIController _old = notificationPanel.GetComponent<NotificationUIController>();
-            WeaponNotificationUIController _new = notificationPanel.AddComponent<WeaponNotificationUIController>();
+            var _old = notificationPanel.GetComponent<NotificationUIController>();
+            var _new = notificationPanel.AddComponent<WeaponNotificationUIController>();
 
             _new.hud = _old.hud;
             _new.genericNotificationPrefab = Modules.Assets.weaponNotificationPrefab;

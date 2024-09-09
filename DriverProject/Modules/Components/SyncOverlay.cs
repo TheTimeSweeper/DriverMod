@@ -28,20 +28,20 @@ namespace RobDriver.Modules.Components
 
         public void OnReceived()
         {
-            GameObject bodyObject = Util.FindNetworkObject(this.netId);
+            var bodyObject = Util.FindNetworkObject(this.netId);
             if (!bodyObject)
             {
                 Chat.AddMessage("Fuck");
                 return;
             }
 
-            ModelLocator penis = bodyObject.GetComponent<ModelLocator>();
+            var penis = bodyObject.GetComponent<ModelLocator>();
             if (penis)
             {
-                Transform modelTransform = penis.modelTransform;
+                var modelTransform = penis.modelTransform;
                 if (modelTransform)
                 {
-                    TemporaryOverlay temporaryOverlay = modelTransform.gameObject.AddComponent<TemporaryOverlay>();
+                    var temporaryOverlay = modelTransform.gameObject.AddComponent<TemporaryOverlay>();
                     temporaryOverlay.duration = 4f;
                     temporaryOverlay.destroyComponentOnEnd = true;
                     temporaryOverlay.originalMaterial = Modules.Assets.woundOverlayMat;

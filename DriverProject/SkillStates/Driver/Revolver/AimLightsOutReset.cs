@@ -2,9 +2,6 @@
 {
     public class AimLightsOutReset : AimLightsOut
     {
-        protected override void SetNextState()
-        {
-            this.outer.SetNextState(new LightsOutReset());
-        }
+        protected override void SetNextState() => this.outer.SetNextState(new LightsOutReset());
     }
 }

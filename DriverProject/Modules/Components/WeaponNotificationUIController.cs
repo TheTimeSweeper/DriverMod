@@ -13,12 +13,9 @@ namespace RobDriver.Modules.Components
 		public CharacterMaster targetMaster;
 		public WeaponNotificationQueue notificationQueue;
 
-		public void OnEnable()
-		{
-			CharacterMaster.onCharacterMasterLost += this.OnCharacterMasterLost;
-		}
+        public void OnEnable() => CharacterMaster.onCharacterMasterLost += this.OnCharacterMasterLost;
 
-		public void OnDisable()
+        public void OnDisable()
 		{
 			CharacterMaster.onCharacterMasterLost -= this.OnCharacterMasterLost;
 			this.CleanUpCurrentMaster();
@@ -54,15 +51,12 @@ namespace RobDriver.Modules.Components
 			this.currentNotification.GetComponent<RectTransform>().SetParent(base.GetComponent<RectTransform>(), false);
 		}
 
-		private void OnCurrentNotificationChanged(WeaponNotificationQueue notificationQueue)
-		{
-			this.ShowCurrentNotification(notificationQueue);
-		}
+        private void OnCurrentNotificationChanged(WeaponNotificationQueue notificationQueue) => this.ShowCurrentNotification(notificationQueue);
 
-		private void ShowCurrentNotification(WeaponNotificationQueue notificationQueue)
+        private void ShowCurrentNotification(WeaponNotificationQueue notificationQueue)
 		{
 			this.DestroyCurrentNotification();
-			CharacterMasterNotificationQueue.NotificationInfo notificationInfo = notificationQueue.GetCurrentNotification();
+			var notificationInfo = notificationQueue.GetCurrentNotification();
 			if (notificationInfo != null)
 			{
 				this.SetUpNotification(notificationInfo);

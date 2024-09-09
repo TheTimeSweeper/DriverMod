@@ -46,7 +46,7 @@ namespace RobDriver.SkillStates.Driver.RocketLauncher
 
             Util.PlaySound("sfx_driver_rocket_launcher_shoot", base.gameObject);
 
-            float recoilAmplitude = Barrage.recoil / this.attackSpeedStat;
+            var recoilAmplitude = Barrage.recoil / this.attackSpeedStat;
 
             base.AddRecoil2(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
             this.characterBody.AddSpreadBloom(2f);
@@ -54,7 +54,7 @@ namespace RobDriver.SkillStates.Driver.RocketLauncher
 
             if (base.isAuthority)
             {
-                Ray aimRay = this.GetAimRay();
+                var aimRay = this.GetAimRay();
                 aimRay.direction = Util.ApplySpread(aimRay.direction, 0f, this.maxSpread, 1f, 1f, 0f, 0f);
 
                 var isCrit = base.RollCrit();
@@ -63,15 +63,15 @@ namespace RobDriver.SkillStates.Driver.RocketLauncher
                 // the fact that this item literally has to be hardcoded into character skillstates makes me so fucking angry you have no idea
                 if (this.characterBody.inventory && this.characterBody.inventory.GetItemCount(DLC1Content.Items.MoreMissile) > 0)
                 {
-                    float damageMult = DriverPlugin.GetICBMDamageMult(this.characterBody);
+                    var damageMult = DriverPlugin.GetICBMDamageMult(this.characterBody);
 
-                    Vector3 rhs = Vector3.Cross(Vector3.up, aimRay.direction);
-                    Vector3 axis = Vector3.Cross(aimRay.direction, rhs);
+                    var rhs = Vector3.Cross(Vector3.up, aimRay.direction);
+                    var axis = Vector3.Cross(aimRay.direction, rhs);
 
-                    Vector3 direction = Quaternion.AngleAxis(-1.5f, axis) * aimRay.direction;
-                    Quaternion rotation = Quaternion.AngleAxis(1.5f, axis);
-                    Ray aimRay2 = new Ray(aimRay.origin, direction);
-                    for (int i = 0; i < 3; i++)
+                    var direction = Quaternion.AngleAxis(-1.5f, axis) * aimRay.direction;
+                    var rotation = Quaternion.AngleAxis(1.5f, axis);
+                    var aimRay2 = new Ray(aimRay.origin, direction);
+                    for (var i = 0; i < 3; i++)
                     {
                         ProjectileManager.instance.FireProjectile(new FireProjectileInfo
                         {
@@ -150,9 +150,6 @@ namespace RobDriver.SkillStates.Driver.RocketLauncher
             this.GetModelAnimator().SetTrigger("endAim");
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.PrioritySkill;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.PrioritySkill;
     }
 }

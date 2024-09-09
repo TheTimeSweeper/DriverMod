@@ -59,26 +59,26 @@ namespace RobDriver.SkillStates.Driver.DualShotgun
                 this.iDrive.DropShell(-this.GetModelBaseTransform().transform.right * -Random.Range(4, 12));
             }
 
-            float recoilAmplitude = Shoot.bulletRecoil / this.attackSpeedStat;
+            var recoilAmplitude = Shoot.bulletRecoil / this.attackSpeedStat;
 
             base.AddRecoil2(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
             this.characterBody.AddSpreadBloom(4f);
             EffectManager.SimpleMuzzleFlash(EntityStates.Commando.CommandoWeapon.FireBarrage.effectPrefab, gameObject, muzzleString, false);
 
-            GameObject tracer = Modules.Assets.shotgunTracer;
+            var tracer = Modules.Assets.shotgunTracer;
             if (this.isCrit) tracer = Modules.Assets.shotgunTracerCrit;
 
             if (base.isAuthority)
             {
-                float damage = Shoot.damageCoefficient * this.damageStat;
+                var damage = Shoot.damageCoefficient * this.damageStat;
 
-                Ray aimRay = GetAimRay();
+                var aimRay = GetAimRay();
 
-                float spread = Shoot.bulletSpread;
-                float thiccness = Shoot.bulletThiccness;
+                var spread = Shoot.bulletSpread;
+                var thiccness = Shoot.bulletThiccness;
                 float force = 50;
 
-                BulletAttack bulletAttack = new BulletAttack
+                var bulletAttack = new BulletAttack
                 {
                     aimVector = aimRay.direction,
                     origin = aimRay.origin,
@@ -113,7 +113,7 @@ namespace RobDriver.SkillStates.Driver.DualShotgun
                 //bulletAttack.modifyOutgoingDamageCallback += RicochetUtils.BulletAttackShootableDamageCallback;
                 bulletAttack.Fire();
 
-                uint secondShot = (uint)Mathf.CeilToInt(bulletCount / 2f) - 1;
+                var secondShot = (uint)Mathf.CeilToInt(bulletCount / 2f) - 1;
                 bulletAttack.minSpread = 0;
                 bulletAttack.maxSpread = spread / 1.45f;
                 bulletAttack.bulletCount = secondShot;
@@ -155,10 +155,7 @@ namespace RobDriver.SkillStates.Driver.DualShotgun
             }
         }
 
-        public override void OnExit()
-        {
-            base.OnExit();
-        }
+        public override void OnExit() => base.OnExit();
 
         public override InterruptPriority GetMinimumInterruptPriority()
         {

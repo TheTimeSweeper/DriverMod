@@ -47,10 +47,7 @@ namespace RobDriver.SkillStates.Driver.Compat
             AkSoundEngine.StopPlayingID(playID);
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Pain;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Pain;
 
         public override void FixedUpdate()
         {
@@ -106,14 +103,14 @@ namespace RobDriver.SkillStates.Driver.Compat
                     {
                         this.characterBody.isSprinting = true;
 
-                        float recoil = 15f;
+                        var recoil = 15f;
                         base.AddRecoil(-1f * recoil, -2f * recoil, -0.5f * recoil, 0.5f * recoil);
 
-                        float charge = Mathf.Clamp01(Util.Remap(base.fixedAge, 0f, duration, 0f, 1f));
+                        var charge = Mathf.Clamp01(Util.Remap(base.fixedAge, 0f, duration, 0f, 1f));
 
                         jumpDir = this.GetAimRay().direction;
 
-                        float movespeed = Mathf.Clamp(this.characterBody.moveSpeed, 1f, 18f);
+                        var movespeed = Mathf.Clamp(this.characterBody.moveSpeed, 1f, 18f);
 
                         jumpForce = Util.Remap(charge, 0f, 1f, 0.17733990147f, 0.37334975369f) * this.characterBody.jumpPower * movespeed * 0.5f;
 
@@ -139,7 +136,7 @@ namespace RobDriver.SkillStates.Driver.Compat
         {
             jumpTime = 0.25f;
 
-            EffectData effectData = new EffectData
+            var effectData = new EffectData
             {
                 origin = this.transform.position + Vector3.up * 0.75f,
                 rotation = Util.QuaternionSafeLookRotation(this.GetAimRay().direction),

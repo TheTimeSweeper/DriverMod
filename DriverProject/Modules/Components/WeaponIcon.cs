@@ -42,7 +42,7 @@ namespace RobDriver.Modules.Components
             {
                 this.durationDisplay.SetActive(true);
 
-                float fill = Util.Remap(this.iDrive.weaponTimer, 0f, this.iDrive.maxWeaponTimer, 0f, 1f);
+                var fill = Util.Remap(this.iDrive.weaponTimer, 0f, this.iDrive.maxWeaponTimer, 0f, 1f);
 
                 if (this.durationBarRed)
                 {
@@ -87,7 +87,7 @@ namespace RobDriver.Modules.Components
 		{
 			if (this.reminderFlashPanelObject)
 			{
-				AnimateUIAlpha animateUI = this.reminderFlashPanelObject.GetComponent<AnimateUIAlpha>();
+				var animateUI = this.reminderFlashPanelObject.GetComponent<AnimateUIAlpha>();
 				if (animateUI) animateUI.time = 0f;
 				this.reminderFlashPanelObject.SetActive(true);
 			}
@@ -98,7 +98,7 @@ namespace RobDriver.Modules.Components
 			this.DoReminderFlash();
 			if (this.flashPanelObject)
 			{
-				AnimateUIAlpha animateUI = this.flashPanelObject.GetComponent<AnimateUIAlpha>();
+				var animateUI = this.flashPanelObject.GetComponent<AnimateUIAlpha>();
 				if (animateUI) animateUI.time = 0f;
 				this.flashPanelObject.SetActive(true);
 			}

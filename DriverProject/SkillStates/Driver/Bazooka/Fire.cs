@@ -54,7 +54,7 @@ namespace RobDriver.SkillStates.Driver.Bazooka
                 this.characterBody.AddSpreadBloom(4f);
                 EffectManager.SimpleMuzzleFlash(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/VFX/MuzzleflashSmokeRing.prefab").WaitForCompletion(), this.gameObject, "ShotgunMuzzle", false);
 
-                bool isCrit = this.RollCrit();
+                var isCrit = this.RollCrit();
 
                 if (isCrit) Util.PlaySound("sfx_driver_bazooka_shoot_critical", this.gameObject);
                 else Util.PlaySound("sfx_driver_bazooka_shoot", this.gameObject);
@@ -63,19 +63,19 @@ namespace RobDriver.SkillStates.Driver.Bazooka
                 {
                     base.AddRecoil2(-1f * this.recoil, -2f * this.recoil, -0.5f * this.recoil, 0.5f * this.recoil);
 
-                    Ray aimRay = base.GetAimRay();
+                    var aimRay = base.GetAimRay();
 
                     if (this.characterBody.inventory && this.characterBody.inventory.GetItemCount(DLC1Content.Items.MoreMissile) > 0)
                     {
-                        float damageMult = DriverPlugin.GetICBMDamageMult(this.characterBody);
+                        var damageMult = DriverPlugin.GetICBMDamageMult(this.characterBody);
 
-                        Vector3 rhs = Vector3.Cross(Vector3.up, aimRay.direction);
-                        Vector3 axis = Vector3.Cross(aimRay.direction, rhs);
+                        var rhs = Vector3.Cross(Vector3.up, aimRay.direction);
+                        var axis = Vector3.Cross(aimRay.direction, rhs);
 
-                        Vector3 direction = Quaternion.AngleAxis(-1.5f, axis) * aimRay.direction;
-                        Quaternion rotation = Quaternion.AngleAxis(1.5f, axis);
-                        Ray aimRay2 = new Ray(aimRay.origin, direction);
-                        for (int i = 0; i < 3; i++)
+                        var direction = Quaternion.AngleAxis(-1.5f, axis) * aimRay.direction;
+                        var rotation = Quaternion.AngleAxis(1.5f, axis);
+                        var aimRay2 = new Ray(aimRay.origin, direction);
+                        for (var i = 0; i < 3; i++)
                         {
                             ProjectileManager.instance.FireProjectile(new FireProjectileInfo
                             {
@@ -143,9 +143,6 @@ namespace RobDriver.SkillStates.Driver.Bazooka
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Skill;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Skill;
     }
 }

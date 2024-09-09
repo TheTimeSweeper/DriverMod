@@ -101,10 +101,10 @@ namespace RobDriver.SkillStates.Driver
 
             if (base.isAuthority)
             {
-                Ray aimRay = base.GetAimRay();
+                var aimRay = base.GetAimRay();
                 base.AddRecoil2(-1f * Shoot.recoil, -2f * Shoot.recoil, -0.5f * Shoot.recoil, 0.5f * Shoot.recoil);
 
-                BulletAttack bulletAttack = new BulletAttack
+                var bulletAttack = new BulletAttack
                 {
                     bulletCount = 1,
                     aimVector = aimRay.direction,
@@ -210,7 +210,7 @@ namespace RobDriver.SkillStates.Driver
 
         public override InterruptPriority GetMinimumInterruptPriority()
         {
-            float kek = 0.5f;
+            var kek = 0.5f;
             if (this.isCrit && this.oldShoot) kek = 0.75f;
 
             if (base.fixedAge >= kek * this.duration)

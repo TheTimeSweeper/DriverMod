@@ -10,7 +10,7 @@ namespace RobDriver.Modules.Components
         {
             base.duration = Random.Range(1f, 3f);
 
-            EffectData effectData = new EffectData
+            var effectData = new EffectData
             {
                 origin = this.origin,
                 genericFloat = base.duration
@@ -18,7 +18,7 @@ namespace RobDriver.Modules.Components
 
             effectData.SetHurtBoxReference(this.target);
 
-            GameObject effectPrefab = Modules.Assets.consumeOrb;
+            var effectPrefab = Modules.Assets.consumeOrb;
 
             EffectManager.SpawnEffect(effectPrefab, effectData, true);
         }

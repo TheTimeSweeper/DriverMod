@@ -34,7 +34,7 @@ namespace RobDriver.SkillStates.Emote
             {
                 if (base.characterBody)
                 {
-                    foreach (LocalUser lu in LocalUserManager.readOnlyLocalUsersList)
+                    foreach (var lu in LocalUserManager.readOnlyLocalUsersList)
                     {
                         if (lu.cachedBody == base.characterBody)
                         {
@@ -46,10 +46,7 @@ namespace RobDriver.SkillStates.Emote
             }
         }
 
-        protected void PlayEmote(string animString, string soundString = "", float animDuration = 0)
-        {
-            this.PlayEmote(animString, soundString, GetModelAnimator(), animDuration);
-        }
+        protected void PlayEmote(string animString, string soundString = "", float animDuration = 0) => this.PlayEmote(animString, soundString, GetModelAnimator(), animDuration);
 
         protected void PlayEmote(string animString, string soundString, Animator animator, float animDuration = 0)
         {
@@ -113,7 +110,7 @@ namespace RobDriver.SkillStates.Emote
         {
             base.FixedUpdate();
 
-            bool endEmote = false;
+            var endEmote = false;
 
             if (base.characterMotor)
             {
@@ -151,9 +148,6 @@ namespace RobDriver.SkillStates.Emote
             base.cameraTargetParams.RemoveParamsOverride(camOverrideHandle, 0.5f);
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Any;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Any;
     }
 }

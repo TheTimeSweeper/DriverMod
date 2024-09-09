@@ -60,7 +60,7 @@ namespace RobDriver.SkillStates.Driver.Compat
 
         private bool AttemptEnemyStep()
         {
-            SphereSearch s = new SphereSearch()
+            var s = new SphereSearch()
             {
                 origin = this.transform.position,
                 radius = 3f,

@@ -58,7 +58,7 @@ namespace RobDriver.Modules
         public static ConfigEntry<KeyboardShortcut> tauntKey;
         public static ConfigEntry<KeyboardShortcut> danceKey;
 
-        public static List<WeaponConfigBinding> weaponConfigBinding = new List<WeaponConfigBinding>();
+        public static List<WeaponConfigBinding> weaponConfigBinding = new();
 
         public struct WeaponConfigBinding
         {
@@ -167,7 +167,7 @@ namespace RobDriver.Modules
 
             var y = Config.BindAndOptions("07 - Weapons", weaponDef.configIdentifier + " - Enabled", true, "Set to false to remove this weapon from the drop pool.");
 
-            foreach (WeaponConfigBinding i in weaponConfigBinding)
+            foreach (var i in weaponConfigBinding)
             {
                 if (i.identifier == weaponDef.configIdentifier) return;
             }
@@ -182,7 +182,7 @@ namespace RobDriver.Modules
 
         public static bool GetWeaponConfig(DriverWeaponDef weaponDef)
         {
-            foreach (WeaponConfigBinding i in weaponConfigBinding)
+            foreach (var i in weaponConfigBinding)
             {
                 if (i.identifier == weaponDef.configIdentifier)
                 {
@@ -195,7 +195,7 @@ namespace RobDriver.Modules
 
         public static bool GetWeaponConfigEnabled(DriverWeaponDef weaponDef)
         {
-            foreach (WeaponConfigBinding i in weaponConfigBinding)
+            foreach (var i in weaponConfigBinding)
             {
                 if (i.identifier == weaponDef.configIdentifier)
                 {
@@ -208,7 +208,7 @@ namespace RobDriver.Modules
 
         public static int GetWeaponConfigShotCount(DriverWeaponDef weaponDef)
         {
-            foreach (WeaponConfigBinding i in weaponConfigBinding)
+            foreach (var i in weaponConfigBinding)
             {
                 if (i.identifier == weaponDef.configIdentifier)
                 {
@@ -242,7 +242,7 @@ namespace RobDriver.Modules
                 description += " (restart required)";
             }
 
-            ConfigEntry<T> configEntry = myConfig.Bind(section, name, defaultValue, description);
+            var configEntry = myConfig.Bind(section, name, defaultValue, description);
 
             if (DriverPlugin.rooInstalled)
             {
@@ -266,7 +266,7 @@ namespace RobDriver.Modules
                 description += " (restart required)";
             }
 
-            ConfigEntry<float> configEntry = myConfig.Bind(section, name, defaultValue, description);
+            var configEntry = myConfig.Bind(section, name, defaultValue, description);
 
             if (DriverPlugin.rooInstalled)
             {
@@ -290,7 +290,7 @@ namespace RobDriver.Modules
                 description += " (restart required)";
             }
 
-            ConfigEntry<int> configEntry = myConfig.Bind(section, name, defaultValue, description);
+            var configEntry = myConfig.Bind(section, name, defaultValue, description);
 
             if (DriverPlugin.rooInstalled)
             {
@@ -355,15 +355,9 @@ namespace RobDriver.Modules
             }));
         }
 
-        internal static ConfigEntry<bool> CharacterEnableConfig(string characterName)
-        {
-            return Config.BindAndOptions("01 - General", "Enabled", true, "Set to false to disable this character", true);
-        }
+        internal static ConfigEntry<bool> CharacterEnableConfig(string characterName) => Config.BindAndOptions("01 - General", "Enabled", true, "Set to false to disable this character", true);
 
-        internal static ConfigEntry<bool> ForceUnlockConfig(string characterName)
-        {
-            return Config.BindAndOptions("01 - General", "Force Unlock", false, "Makes this character unlocked by default", true);
-        }
+        internal static ConfigEntry<bool> ForceUnlockConfig(string characterName) => Config.BindAndOptions("01 - General", "Force Unlock", false, "Makes this character unlocked by default", true);
 
         public static bool GetKeyPressed(ConfigEntry<KeyboardShortcut> entry)
         {
@@ -389,13 +383,7 @@ namespace RobDriver.Modules
             this.minStages = minStages;
         }
 
-        public string GetStageName()
-        {
-            return stageName;
-        }
-        public int GetMinStages()
-        {
-            return minStages;
-        }
+        public string GetStageName() => stageName;
+        public int GetMinStages() => minStages;
     }
 }

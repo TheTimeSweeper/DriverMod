@@ -55,9 +55,9 @@ namespace RobDriver.SkillStates.Driver.Compat
 
             dashSpeedCurve = new AnimationCurve(new Keyframe[]
             {
-                new Keyframe(0f, 14f),
-                new Keyframe(0.8f, 0f),
-                new Keyframe(1f, 0f)
+                new(0f, 14f),
+                new(0.8f, 0f),
+                new(1f, 0f)
             });
 
             subState = SubState.Windup;
@@ -90,7 +90,7 @@ namespace RobDriver.SkillStates.Driver.Compat
                 {
                     characterBody.isSprinting = true;
 
-                    float num = dashSpeedCurve.Evaluate(stopwatch / grabDuration);
+                    var num = dashSpeedCurve.Evaluate(stopwatch / grabDuration);
                     characterMotor.rootMotion += aimDirection * (num * moveSpeedStat * Time.fixedDeltaTime);
                     characterMotor.velocity.y = 0f;
 
@@ -108,9 +108,9 @@ namespace RobDriver.SkillStates.Driver.Compat
 
         public void AttemptGrab()
         {
-            Ray aimRay = base.GetAimRay();
+            var aimRay = base.GetAimRay();
 
-            BullseyeSearch bullseyeSearch = new BullseyeSearch
+            var bullseyeSearch = new BullseyeSearch
             {
                 teamMaskFilter = TeamMask.GetEnemyTeams(base.GetTeam()),
                 filterByLoS = false,
@@ -123,7 +123,7 @@ namespace RobDriver.SkillStates.Driver.Compat
             bullseyeSearch.RefreshCandidates();
             bullseyeSearch.FilterOutGameObject(base.gameObject);
 
-            foreach (HurtBox hurtBox in bullseyeSearch.GetResults())
+            foreach (var hurtBox in bullseyeSearch.GetResults())
             {
                 if (hurtBox && hurtBox.healthComponent && hurtBox.healthComponent.body)
                 {
@@ -148,10 +148,10 @@ namespace RobDriver.SkillStates.Driver.Compat
 
                     if (base.isAuthority)
                     {
-                        float dmg = punchDamageCoefficient * this.damageStat;
+                        var dmg = punchDamageCoefficient * this.damageStat;
                         //if (this.empowered) dmg *= 2f;
 
-                        float force = 4000f;
+                        var force = 4000f;
                         if (hurtBox.healthComponent.body.isChampion) force = 24000f;
 
                         // damage
@@ -196,9 +196,6 @@ namespace RobDriver.SkillStates.Driver.Compat
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Frozen;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Frozen;
     }
 }

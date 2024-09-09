@@ -1,23 +1,21 @@
-﻿using EntityStates;
-using EntityStates.Executioner;
+﻿
 using RobDriver.Modules;
-using RobDriver.Modules.Survivors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace RobDriver
 {
     public static class DriverWeaponCatalog
     {
-        public static Dictionary<string, DriverWeaponDef> weaponDrops = new Dictionary<string, DriverWeaponDef>();
-        public static DriverWeaponDef[] weaponDefs = new DriverWeaponDef[0];
+        public static Dictionary<string, DriverWeaponDef> weaponDrops = [];
+        public static DriverWeaponDef[] weaponDefs = [];
 
         internal static DriverWeaponDef Pistol;
         internal static DriverWeaponDef PyriteGun;
         internal static DriverWeaponDef GoldenGun;
+        internal static DriverWeaponDef RocketLauncher;
         internal static DriverWeaponDef PrototypeRocketLauncher;
         internal static DriverWeaponDef ArmCannon;
         internal static DriverWeaponDef PlasmaCannon;
@@ -32,12 +30,21 @@ namespace RobDriver
         internal static DriverWeaponDef NemmandoGun;
         internal static DriverWeaponDef NemmercGun;
         internal static DriverWeaponDef RavSword;
+        internal static DriverWeaponDef Shotgun;
+        internal static DriverWeaponDef RiotShotgun;
+        internal static DriverWeaponDef SlugShotgun;
+        internal static DriverWeaponDef MachineGun;
+        internal static DriverWeaponDef HeavyMachineGun;
+        internal static DriverWeaponDef Sniper;
+        internal static DriverWeaponDef Bazooka;
+        internal static DriverWeaponDef GrenadeLauncher;
+        internal static DriverWeaponDef BadassShotgun;
 
         public static void AddWeapon(DriverWeaponDef weaponDef)
         {
             Array.Resize(ref weaponDefs, weaponDefs.Length + 1);
 
-            int index = weaponDefs.Length - 1;
+            var index = weaponDefs.Length - 1;
             weaponDef.index = (ushort)index;
 
             weaponDefs[index] = weaponDef;
@@ -95,23 +102,20 @@ namespace RobDriver
         {
             // These are all the pistol options that are forced upgrades with steadyaim
             // beetle shield doesnt count since it's dropped instead of reloaded
-            return weaponDef.nameToken == Pistol.nameToken ||
-                weaponDef.nameToken == LunarPistol.nameToken ||
-                weaponDef.nameToken == VoidPistol.nameToken ||
-                weaponDef.nameToken == Needler.nameToken ||
-                weaponDef.nameToken == PyriteGun.nameToken;
+            return weaponDef && (weaponDef == Pistol ||
+                weaponDef == LunarPistol ||
+                weaponDef == VoidPistol ||
+                weaponDef == Needler ||
+                weaponDef == PyriteGun);
         }
 
-        public static DriverWeaponDef GetWeaponFromIndex(int index)
-        {
-            return weaponDefs.ElementAtOrDefault(index) ?? Pistol;
-        }
+        public static DriverWeaponDef GetWeaponFromIndex(int index) => weaponDefs.ElementAtOrDefault(index) ?? Pistol;
 
         public static DriverWeaponDef GetRandomWeapon()
         {
-            List<DriverWeaponDef> validWeapons = new List<DriverWeaponDef>();
+            var validWeapons = new List<DriverWeaponDef>();
 
-            for (int i = 0; i < weaponDefs.Length; i++)
+            for (var i = 0; i < weaponDefs.Length; i++)
             {
                 if (Modules.Config.GetWeaponConfigEnabled(weaponDefs[i]) && weaponDefs[i].shotCount > 0) validWeapons.Add(weaponDefs[i]);
             }
@@ -123,9 +127,9 @@ namespace RobDriver
 
         public static DriverWeaponDef GetRandomWeaponFromTier(DriverWeaponTier tier)
         {
-            List<DriverWeaponDef> validWeapons = new List<DriverWeaponDef>();
+            var validWeapons = new List<DriverWeaponDef>();
 
-            for (int i = 0; i < weaponDefs.Length; i++)
+            for (var i = 0; i < weaponDefs.Length; i++)
             {
                 var weaponDef = weaponDefs[i];
                 if (weaponDef)

@@ -40,10 +40,7 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop
             base.PlayAnimation("Gesture, Override", "PressButton", "Action.playbackRate", this.duration);
         }
 
-        protected virtual void HideButton()
-        {
-            this.FindModelChild("ButtonModel").gameObject.SetActive(false);
-        }
+        protected virtual void HideButton() => this.FindModelChild("ButtonModel").gameObject.SetActive(false);
 
         public override void FixedUpdate()
         {
@@ -77,9 +74,9 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop
         {
             if (NetworkServer.active)
             {
-                GameObject weaponPickup = UnityEngine.Object.Instantiate<GameObject>(this.weaponDef.pickupPrefab, this.dropPosition, UnityEngine.Random.rotation);
+                var weaponPickup = UnityEngine.Object.Instantiate<GameObject>(this.weaponDef.pickupPrefab, this.dropPosition, UnityEngine.Random.rotation);
 
-                TeamFilter teamFilter = weaponPickup.GetComponent<TeamFilter>();
+                var teamFilter = weaponPickup.GetComponent<TeamFilter>();
                 if (teamFilter) teamFilter.teamIndex = this.teamComponent.teamIndex;
 
                 var weaponComponent = weaponPickup.GetComponent<SyncPickup>();
@@ -93,7 +90,7 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop
         {
             if (base.isAuthority)
             {
-                BlastAttack blastAttack = new BlastAttack();
+                var blastAttack = new BlastAttack();
                 blastAttack.radius = AimSupplyDrop.radius;
                 blastAttack.procCoefficient = 1f;
                 blastAttack.position = this.dropPosition;
@@ -126,10 +123,7 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop
             this.FireBlast();
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Pain;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Pain;
 
         public override void OnSerialize(NetworkWriter writer)
         {

@@ -37,10 +37,7 @@ namespace RobDriver.Modules
             DamageType.FruitOnHit
         };
 
-        internal static void Init()
-        {
-            InitializeBullets();
-        }
+        internal static void Init() => InitializeBullets();
 
         public static void InitializeBullets()
         {
@@ -55,7 +52,7 @@ namespace RobDriver.Modules
             Default.index = 0;
             bulletDefs.Add(Default);
 
-            foreach (DamageType i in allowedDamageTypes)
+            foreach (var i in allowedDamageTypes)
             {
                 //Renaming
                 switch (i)
@@ -145,25 +142,13 @@ namespace RobDriver.Modules
 
         }
 
-        public static void CreateBulletType(string nameToken, DamageType damageType, DriverWeaponTier tier, DamageColorIndex color)
-        {
-            CreateBulletType(nameToken, damageType, DamageTypes.Generic, tier, DamageColor.FindColor(color));
-        }
+        public static void CreateBulletType(string nameToken, DamageType damageType, DriverWeaponTier tier, DamageColorIndex color) => CreateBulletType(nameToken, damageType, DamageTypes.Generic, tier, DamageColor.FindColor(color));
 
-        public static void CreateBulletType(string nameToken, DamageType damageType, DriverWeaponTier tier, Color color)
-        {
-            CreateBulletType(nameToken, damageType, DamageTypes.Generic, tier, color);
-        }
+        public static void CreateBulletType(string nameToken, DamageType damageType, DriverWeaponTier tier, Color color) => CreateBulletType(nameToken, damageType, DamageTypes.Generic, tier, color);
 
-        public static void CreateBulletType(string nameToken, DamageAPI.ModdedDamageType moddedBulletType, DriverWeaponTier tier, DamageColorIndex color)
-        {
-            CreateBulletType(nameToken, DamageType.Generic, moddedBulletType, tier, DamageColor.FindColor(color));
-        }
+        public static void CreateBulletType(string nameToken, DamageAPI.ModdedDamageType moddedBulletType, DriverWeaponTier tier, DamageColorIndex color) => CreateBulletType(nameToken, DamageType.Generic, moddedBulletType, tier, DamageColor.FindColor(color));
 
-        public static void CreateBulletType(string nameToken, DamageAPI.ModdedDamageType moddedBulletType, DriverWeaponTier tier, Color color)
-        {
-            CreateBulletType(nameToken, DamageType.Generic, moddedBulletType, tier, color);
-        }
+        public static void CreateBulletType(string nameToken, DamageAPI.ModdedDamageType moddedBulletType, DriverWeaponTier tier, Color color) => CreateBulletType(nameToken, DamageType.Generic, moddedBulletType, tier, color);
 
         public static void CreateBulletType(string nameToken, DamageType damageType, DamageAPI.ModdedDamageType moddedBulletType, DriverWeaponTier tier, Color color)
         {
@@ -179,17 +164,14 @@ namespace RobDriver.Modules
             bulletDefs.Add(bulletDef);
         }
 
-        public static DriverBulletDef GetBulletDefFromIndex(int index)
-        {
-            return bulletDefs.ElementAtOrDefault(index) ?? Default;
-        }
+        public static DriverBulletDef GetBulletDefFromIndex(int index) => bulletDefs.ElementAtOrDefault(index) ?? Default;
 
         public static DriverBulletDef GetWeightedRandomBullet(DriverWeaponTier maxTier)
         {
-            int commonWeight = 5;
-            int uncommonWeight = maxTier >= DriverWeaponTier.Uncommon ? 3 : 0;
-            int legendaryWeight = maxTier >= DriverWeaponTier.Legendary ? 1 : 0;
-            int rnd = UnityEngine.Random.Range(0, commonWeight + uncommonWeight + legendaryWeight);
+            var commonWeight = 5;
+            var uncommonWeight = maxTier >= DriverWeaponTier.Uncommon ? 3 : 0;
+            var legendaryWeight = maxTier >= DriverWeaponTier.Legendary ? 1 : 0;
+            var rnd = UnityEngine.Random.Range(0, commonWeight + uncommonWeight + legendaryWeight);
 
             if (rnd < commonWeight) return GetRandomBulletFromTier(DriverWeaponTier.Common);
             if (rnd < commonWeight + uncommonWeight) return GetRandomBulletFromTier(DriverWeaponTier.Uncommon);
@@ -210,7 +192,7 @@ namespace RobDriver.Modules
 
             if (validBullets.Count == 0) return Default;
 
-            int rnd = UnityEngine.Random.Range(0, validBullets.Count());
+            var rnd = UnityEngine.Random.Range(0, validBullets.Count());
             return validBullets[rnd];
         }
     }

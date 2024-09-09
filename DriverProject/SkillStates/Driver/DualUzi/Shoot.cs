@@ -44,10 +44,7 @@ namespace RobDriver.SkillStates.Driver.DualUzi
             if (this.iDrive) this.iDrive.ConsumeAmmo();
         }
 
-        public override void OnExit()
-        {
-            base.OnExit();
-        }
+        public override void OnExit() => base.OnExit();
 
         private void Fire()
         {
@@ -59,10 +56,10 @@ namespace RobDriver.SkillStates.Driver.DualUzi
 
             if (base.isAuthority)
             {
-                Ray aimRay = base.GetAimRay();
+                var aimRay = base.GetAimRay();
                 base.AddRecoil2(-1f * Shoot.recoil, -2f * Shoot.recoil, -0.5f * Shoot.recoil, 0.5f * Shoot.recoil);
 
-                BulletAttack bulletAttack = new BulletAttack
+                var bulletAttack = new BulletAttack
                 {
                     bulletCount = 1,
                     aimVector = aimRay.direction,
@@ -162,7 +159,7 @@ namespace RobDriver.SkillStates.Driver.DualUzi
 
         public override InterruptPriority GetMinimumInterruptPriority()
         {
-            float kek = 0.5f;
+            var kek = 0.5f;
 
             if (base.fixedAge >= kek * this.duration)
             {

@@ -11,7 +11,7 @@ namespace RobDriver.SkillStates
 		{
 			base.OnEnter();
 
-			Vector3 vector = Vector3.up * 3f;
+			var vector = Vector3.up * 3f;
 			if (base.characterMotor)
 			{
 				vector += base.characterMotor.velocity;
@@ -20,12 +20,12 @@ namespace RobDriver.SkillStates
 
 			if (base.cachedModelTransform)
 			{
-				RagdollController ragdollController = base.cachedModelTransform.GetComponent<RagdollController>();
+				var ragdollController = base.cachedModelTransform.GetComponent<RagdollController>();
 				if (ragdollController)
 				{
 					// i hate that i have to do this
 
-					foreach (Transform i in ragdollController.bones)
+					foreach (var i in ragdollController.bones)
                     {
 						if (i)
 						{
@@ -60,9 +60,6 @@ namespace RobDriver.SkillStates
 			}
 		}
 
-		public override InterruptPriority GetMinimumInterruptPriority()
-		{
-			return InterruptPriority.Death;
-		}
-	}
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Death;
+    }
 }

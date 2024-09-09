@@ -29,7 +29,7 @@ namespace RobDriver.Modules.Components
 
         public void OnReceived()
         {
-            GameObject bodyObject = Util.FindNetworkObject(this.netId);
+            var bodyObject = Util.FindNetworkObject(this.netId);
             if (!bodyObject) return;
 
             bodyObject.AddComponent<Decapitation>();

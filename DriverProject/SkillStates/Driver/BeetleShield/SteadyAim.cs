@@ -19,15 +19,9 @@ namespace RobDriver.SkillStates.Driver.BeetleShield
             if (NetworkServer.active) this.characterBody.RemoveBuff(RoR2.RoR2Content.Buffs.SmallArmorBoost);
         }
 
-        protected override void PlayAnim()
-        {
-            base.PlayAnimation("Gesture, Override", "ShieldSteadyAim", "Action.playbackRate", 0.25f);
-        }
+        protected override void PlayAnim() => base.PlayAnimation("Gesture, Override", "ShieldSteadyAim", "Action.playbackRate", 0.25f);
 
-        protected override void PlayExitAnim()
-        {
-            base.PlayAnimation("Gesture, Override", "ShieldSteadyAimEnd", "Action.playbackRate", 0.2f);
-        }
+        protected override void PlayExitAnim() => base.PlayAnimation("Gesture, Override", "ShieldSteadyAimEnd", "Action.playbackRate", 0.2f);
 
         protected override void PlayShootAnim(bool wasCharged, bool wasCrit, float speed)
         {

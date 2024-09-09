@@ -8,31 +8,28 @@ namespace RobDriver.Modules.Achievements
 {
     internal class DriverGodslingPassiveAchievement : ModdedUnlockable
     {
-        public override string AchievementIdentifier { get; } = DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_ACHIEVEMENT_ID";
-        public override string UnlockableIdentifier { get; } = DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_REWARD_ID";
-        public override string AchievementNameToken { get; } = DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_ACHIEVEMENT_NAME";
-        public override string PrerequisiteUnlockableIdentifier { get; } = DriverPlugin.developerPrefix + "_DRIVER_BODY_UNLOCKABLE_REWARD_ID";
-        public override string UnlockableNameToken { get; } = DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_UNLOCKABLE_NAME";
-        public override string AchievementDescToken { get; } = DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_ACHIEVEMENT_DESC";
-        public override Sprite Sprite { get; } = Modules.Assets.mainAssetBundle.LoadAsset<Sprite>("texAltPassiveIcon");
+        public override string AchievementIdentifier => DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_ACHIEVEMENT_ID";
+        public override string UnlockableIdentifier => DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_REWARD_ID";
+        public override string AchievementNameToken => DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_ACHIEVEMENT_NAME";
+        public override string PrerequisiteUnlockableIdentifier => DriverPlugin.developerPrefix + "_DRIVER_BODY_UNLOCKABLE_REWARD_ID";
+        public override string UnlockableNameToken => DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_UNLOCKABLE_NAME";
+        public override string AchievementDescToken => DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_ACHIEVEMENT_DESC";
+        public override Sprite Sprite => Modules.Assets.mainAssetBundle.LoadAsset<Sprite>("texAltPassiveIcon");
 
-        public override Func<string> GetHowToUnlock { get; } = (() => Language.GetStringFormatted("UNLOCK_VIA_ACHIEVEMENT_FORMAT", new object[]
-                            {
+        public override Func<string> GetHowToUnlock => () => Language.GetStringFormatted("UNLOCK_VIA_ACHIEVEMENT_FORMAT",
+                            [
                                 Language.GetString(DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_ACHIEVEMENT_NAME"),
                                 Language.GetString(DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_ACHIEVEMENT_DESC")
-                            }));
-        public override Func<string> GetUnlocked { get; } = (() => Language.GetStringFormatted("UNLOCKED_FORMAT", new object[]
-                            {
+                            ]);
+        public override Func<string> GetUnlocked => () => Language.GetStringFormatted("UNLOCKED_FORMAT",
+                            [
                                 Language.GetString(DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_ACHIEVEMENT_NAME"),
                                 Language.GetString(DriverPlugin.developerPrefix + "_DRIVER_BODY_GODSLING_UNLOCKABLE_ACHIEVEMENT_DESC")
-                            }));
+                            ]);
 
         public static bool weaponPickedUpHard;
 
-        public override BodyIndex LookUpRequiredBodyIndex()
-        {
-            return BodyCatalog.FindBodyIndex("RobDriverBody");
-        }
+        public override BodyIndex LookUpRequiredBodyIndex() => BodyCatalog.FindBodyIndex("RobDriverBody");
 
         public override void OnInstall()
         {
@@ -42,28 +39,20 @@ namespace RobDriver.Modules.Achievements
             Run.onRunStartGlobal += this.Reset;
         }
 
-        private void Reset(Run run)
-        {
-            weaponPickedUpHard = false;
-        }
+        private void Reset(Run run) => weaponPickedUpHard = false;
 
         public void ClearCheck(Run run, RunReport runReport)
         {
-            if (run is null) return;
-            if (runReport is null) return;
-
-            if (!runReport.gameEnding) return;
+            if (weaponPickedUpHard || !base.meetsBodyRequirement || !run || !runReport?.gameEnding || runReport.ruleBook is null)
+                return;
 
             if (runReport.gameEnding.isWin)
             {
-                DifficultyDef difficultyDef = DifficultyCatalog.GetDifficultyDef(runReport.ruleBook.FindDifficulty());
+                var difficultyDef = DifficultyCatalog.GetDifficultyDef(runReport.ruleBook.FindDifficulty());
 
-                if (difficultyDef != null && difficultyDef.countsAsHardMode)
+                if (difficultyDef?.countsAsHardMode == true)
                 {
-                    if (base.meetsBodyRequirement && !weaponPickedUpHard)
-                    {
-                        base.Grant();
-                    }
+                    base.Grant();
                 }
             }
         }

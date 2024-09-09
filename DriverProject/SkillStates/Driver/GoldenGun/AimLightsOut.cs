@@ -2,9 +2,6 @@
 {
     public class AimLightsOut : Revolver.AimLightsOut
     {
-        protected override void SetNextState()
-        {
-            this.outer.SetNextState(new LightsOut());
-        }
+        protected override void SetNextState() => this.outer.SetNextState(new LightsOut());
     }
 }

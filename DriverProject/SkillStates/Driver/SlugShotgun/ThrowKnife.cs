@@ -1,26 +1,20 @@
 ﻿using UnityEngine;
 using RoR2;
 using EntityStates;
-using UnityEngine.AddressableAssets;
 using RoR2.Projectile;
 
 namespace RobDriver.SkillStates.Driver.SlugShotgun
 {
     public class ThrowKnife : GenericProjectileBaseState
     {
-        public static float baseDuration = 0.55f;
-        public static float baseDelayDuration = 0.1f * baseDuration;
-
-        public static float damageCoefficient = 6.5f;
-
         public override void OnEnter()
         {
             base.attackSoundString = "sfx_driver_gun_throw";
 
-            base.baseDuration = baseDuration;
-            base.baseDelayBeforeFiringProjectile = baseDelayDuration;
+            base.baseDuration = 0.55f;
+            base.baseDelayBeforeFiringProjectile = 0.1f * base.baseDuration;
 
-            base.damageCoefficient = damageCoefficient;
+            base.damageCoefficient = 6.5f;
             base.force = 120f;
 
             base.projectilePitchBonus = -7.5f;
@@ -38,23 +32,17 @@ namespace RobDriver.SkillStates.Driver.SlugShotgun
             // if i just rewrite it surely it can't break right?
             if (base.isAuthority)
             {
-                Ray aimRay = base.GetAimRay();
+                var aimRay = base.GetAimRay();
                 aimRay = this.ModifyProjectileAimRay(aimRay);
                 aimRay.direction = Util.ApplySpread(aimRay.direction, this.minSpread, this.maxSpread, 1f, 1f, 0f, this.projectilePitchBonus);
                 ProjectileManager.instance.FireProjectile(Modules.Projectiles.stunGrenadeProjectilePrefab, aimRay.origin, Util.QuaternionSafeLookRotation(aimRay.direction), 
-                    base.gameObject, this.damageStat * ThrowGrenade.damageCoefficient, this.force, this.RollCrit(), DamageColorIndex.Default, null, -1f);
+                    base.gameObject, this.damageStat * ThrowGrenade.DamageCoefficient, this.force, this.RollCrit(), DamageColorIndex.Default, null, -1f);
             }
         }
 
-        public override void FixedUpdate()
-        {
-            base.FixedUpdate();
-        }
+        public override void FixedUpdate() => base.FixedUpdate();
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Pain;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Pain;
 
         public override void PlayAnimation(float duration)
         {

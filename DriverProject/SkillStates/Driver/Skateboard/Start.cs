@@ -46,9 +46,6 @@ namespace RobDriver.SkillStates.Driver.Skateboard
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Frozen;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Frozen;
     }
 }

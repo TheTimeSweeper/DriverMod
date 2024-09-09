@@ -15,7 +15,7 @@ namespace RobDriver.SkillStates.Driver.Compat
         public override void OnEnter()
         {
             this.RefreshState();
-            this.hitboxName = "Knife";
+            this.hitboxName = "Hammer";
 
             this.damageCoefficient = _damageCoefficient;
             this.pushForce = 200f;
@@ -89,7 +89,7 @@ namespace RobDriver.SkillStates.Driver.Compat
         {
             if (base.isAuthority)
             {
-                Vector3 direction = this.GetAimRay().direction;
+                var direction = this.GetAimRay().direction;
                 direction.y = Mathf.Max(direction.y, direction.y * 0.5f);
                 this.FindModelChild("MeleePivot").rotation = Util.QuaternionSafeLookRotation(direction);
             }
@@ -102,11 +102,11 @@ namespace RobDriver.SkillStates.Driver.Compat
             Util.PlaySound(this.swingSoundString, this.gameObject);
             if (this.swingEffectPrefab)
             {
-                Transform muzzleTransform = this.FindModelChild(this.muzzleString);
+                var muzzleTransform = this.FindModelChild(this.muzzleString);
                 if (muzzleTransform)
                 {
                     swingEffectInstance = Object.Instantiate<GameObject>(this.swingEffectPrefab, muzzleTransform);
-                    ScaleParticleSystemDuration fuck = swingEffectInstance.GetComponent<ScaleParticleSystemDuration>();
+                    var fuck = swingEffectInstance.GetComponent<ScaleParticleSystemDuration>();
                     if (fuck) fuck.newDuration = fuck.initialDuration;
                 }
             }
@@ -118,7 +118,7 @@ namespace RobDriver.SkillStates.Driver.Compat
 
             if (swingEffectInstance)
             {
-                ScaleParticleSystemDuration fuck = swingEffectInstance.GetComponent<ScaleParticleSystemDuration>();
+                var fuck = swingEffectInstance.GetComponent<ScaleParticleSystemDuration>();
                 if (fuck) fuck.newDuration = 20f;
             }
         }
@@ -129,14 +129,14 @@ namespace RobDriver.SkillStates.Driver.Compat
 
             if (swingEffectInstance)
             {
-                ScaleParticleSystemDuration fuck = swingEffectInstance.GetComponent<ScaleParticleSystemDuration>();
+                var fuck = swingEffectInstance.GetComponent<ScaleParticleSystemDuration>();
                 if (fuck) fuck.newDuration = fuck.initialDuration;
             }
         }
 
         protected override void PlayAttackAnimation()
         {
-            string animString = "SpinSlash";
+            var animString = "SpinSlash";
 
             if (this.swingIndex == 0) animString = "Slash1";
             if (this.swingIndex == 1) animString = "Slash2";
@@ -148,7 +148,7 @@ namespace RobDriver.SkillStates.Driver.Compat
         {
             this.FireShuriken();
 
-            int index = (this.swingIndex + 1) % 3;
+            var index = (this.swingIndex + 1) % 3;
 
             this.outer.SetNextState(new SlashCombo
             {

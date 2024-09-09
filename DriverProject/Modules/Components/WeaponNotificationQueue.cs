@@ -19,7 +19,7 @@ namespace RobDriver.Modules.Components
 		{
 			if (master != null)
 			{
-				WeaponNotificationQueue characterMasterNotificationQueue = master.GetComponent<WeaponNotificationQueue>();
+				var characterMasterNotificationQueue = master.GetComponent<WeaponNotificationQueue>();
 				if (!characterMasterNotificationQueue)
 				{
 					characterMasterNotificationQueue = master.gameObject.AddComponent<WeaponNotificationQueue>();
@@ -38,10 +38,10 @@ namespace RobDriver.Modules.Components
 				return;
 			}
 
-			WeaponNotificationQueue notificationQueueForMaster = WeaponNotificationQueue.GetNotificationQueueForMaster(characterMaster);
+			var notificationQueueForMaster = WeaponNotificationQueue.GetNotificationQueueForMaster(characterMaster);
 			if (notificationQueueForMaster)
 			{
-				DriverWeaponDef weaponDef = DriverWeaponCatalog.GetWeaponFromIndex(weaponIndex);
+				var weaponDef = DriverWeaponCatalog.GetWeaponFromIndex(weaponIndex);
 
 				if (weaponDef)
 				{
@@ -59,19 +59,13 @@ namespace RobDriver.Modules.Components
 				duration = duration
 			};
 
-			Action<WeaponNotificationQueue> action = this.onCurrentNotificationChanged;
+			var action = this.onCurrentNotificationChanged;
 			if (action == null) return;
 			action(this);
 		}
 
-		public float GetCurrentNotificationT()
-		{
-			return (Run.instance.fixedTime - this.notification.startTime) / this.notification.duration;
-		}
+        public float GetCurrentNotificationT() => (Run.instance.fixedTime - this.notification.startTime) / this.notification.duration;
 
-		public CharacterMasterNotificationQueue.NotificationInfo GetCurrentNotification()
-		{
-			return this.notification?.notification;
-		}
-	}
+        public CharacterMasterNotificationQueue.NotificationInfo GetCurrentNotification() => this.notification?.notification;
+    }
 }

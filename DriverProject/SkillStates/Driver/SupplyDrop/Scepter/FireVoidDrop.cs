@@ -21,16 +21,13 @@ namespace RobDriver.SkillStates.Driver.SupplyDrop.Scepter
     }, false);
         }
 
-        protected override void PlayAnim()
-        {
-            base.PlayAnimation("Gesture, Override", "PressVoidButton", "Action.playbackRate", this.duration);
-        }
+        protected override void PlayAnim() => base.PlayAnimation("Gesture, Override", "PressVoidButton", "Action.playbackRate", this.duration);
 
         protected override void FireBlast()
         {
             if (base.isAuthority)
             {
-                BlastAttack blastAttack = new BlastAttack();
+                var blastAttack = new BlastAttack();
                 blastAttack.radius = AimSupplyDrop.radius;
                 blastAttack.procCoefficient = 1f;
                 blastAttack.position = this.dropPosition;

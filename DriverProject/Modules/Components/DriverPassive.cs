@@ -10,57 +10,15 @@ namespace RobDriver.Modules.Components
         public SkillDef pistolOnlyPassive;
         public SkillDef bulletsPassive;
         public SkillDef godslingPassive;
+
         public GenericSkill passiveSkillSlot;
 
-        public bool isDefault
-        {
-            get
-            {
-                if (this.defaultPassive && this.passiveSkillSlot)
-                {
-                    return this.passiveSkillSlot.skillDef == this.defaultPassive;
-                }
+        public bool isDefault => this.defaultPassive && this.passiveSkillSlot && this.passiveSkillSlot.skillDef == this.defaultPassive;
 
-                return false;
-            }
-        }
+        public bool isPistolOnly => this.pistolOnlyPassive && this.passiveSkillSlot && this.passiveSkillSlot.skillDef == this.pistolOnlyPassive;
 
-        public bool isPistolOnly
-        {
-            get
-            {
-                if (this.pistolOnlyPassive && this.passiveSkillSlot)
-                {
-                    return this.passiveSkillSlot.skillDef == this.pistolOnlyPassive;
-                }
+        public bool isBullets => this.bulletsPassive && this.passiveSkillSlot && this.passiveSkillSlot.skillDef == this.bulletsPassive;
 
-                return false;
-            }
-        }
-
-
-        public bool isBullets
-        {
-            get
-            {
-                if (this.bulletsPassive && this.passiveSkillSlot)
-                {
-                    return this.passiveSkillSlot.skillDef == this.bulletsPassive;
-                }
-                return false;
-            }
-        }
-
-        public bool isRyan
-        {
-            get
-            {
-                if (this.godslingPassive && this.passiveSkillSlot)
-                {
-                    return this.passiveSkillSlot.skillDef == this.godslingPassive;
-                }
-                return false;
-            }
-        }
+        public bool isRyan => this.godslingPassive && this.passiveSkillSlot && this.passiveSkillSlot.skillDef == this.godslingPassive;
     }
 }

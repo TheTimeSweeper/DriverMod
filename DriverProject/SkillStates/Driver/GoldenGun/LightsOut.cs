@@ -10,9 +10,9 @@ namespace RobDriver.SkillStates.Driver.GoldenGun
         protected override string shootSoundString => "sfx_driver_pistol_shoot_charged";
         protected override void FireBullet()
         {
-            Ray aimRay = base.GetAimRay();
+            var aimRay = base.GetAimRay();
 
-            BulletAttack bulletAttack = new BulletAttack
+            var bulletAttack = new BulletAttack
             {
                 bulletCount = 1,
                 aimVector = aimRay.direction,
@@ -51,7 +51,7 @@ namespace RobDriver.SkillStates.Driver.GoldenGun
                     damageInfo.damage *= 2f;
                     damageInfo.damageColorIndex = DamageColorIndex.Sniper;
 
-                    EffectData effectData = new EffectData
+                    var effectData = new EffectData
                     {
                         origin = hitInfo.point,
                         rotation = Quaternion.LookRotation(-hitInfo.direction)

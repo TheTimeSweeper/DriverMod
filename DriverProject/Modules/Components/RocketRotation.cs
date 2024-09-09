@@ -8,14 +8,8 @@ namespace RobDriver.Modules.Components
     {
         private Rigidbody rb;
 
-        private void Awake()
-        {
-            this.rb = this.GetComponent<Rigidbody>();
-        }
+        private void Awake() => this.rb = this.GetComponent<Rigidbody>();
 
-        private void FixedUpdate()
-        {
-            this.transform.rotation = Util.QuaternionSafeLookRotation(this.rb.velocity.normalized);
-        }
+        private void FixedUpdate() => this.transform.rotation = Util.QuaternionSafeLookRotation(this.rb.velocity.normalized);
     }
 }

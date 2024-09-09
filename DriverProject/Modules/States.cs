@@ -5,12 +5,9 @@ namespace RobDriver.Modules
 {
     public static class States
     {
-        internal static List<Type> entityStates = new List<Type>();
+        internal static List<Type> entityStates = new();
 
-        internal static void AddSkill(Type t)
-        {
-            entityStates.Add(t);
-        }
+        internal static void AddSkill(Type t) => entityStates.Add(t);
 
         public static void RegisterStates()
         {

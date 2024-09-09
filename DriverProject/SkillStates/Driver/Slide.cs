@@ -57,7 +57,7 @@ namespace RobDriver.SkillStates.Driver
 				this.PlayAnimation("Body", "BonusJump");*/
 				this.PlayAnimation("FullBody, Override", "AirDodge");
 
-				Vector3 velocity = base.characterMotor.velocity;
+				var velocity = base.characterMotor.velocity;
 				velocity.y = base.characterBody.jumpPower;
 				base.characterMotor.velocity = velocity;
 				return;
@@ -68,7 +68,7 @@ namespace RobDriver.SkillStates.Driver
 
 			if (EntityStates.Commando.SlideState.slideEffectPrefab)
 			{
-				Transform parent = base.FindModelChild("Root");
+				var parent = base.FindModelChild("Root");
 				this.slideEffectInstance = UnityEngine.Object.Instantiate<GameObject>(EntityStates.Commando.SlideState.slideEffectPrefab, parent);
 			}
 		}
@@ -88,7 +88,7 @@ namespace RobDriver.SkillStates.Driver
 
 			if (base.isAuthority)
 			{
-				float num = this.startedStateGrounded ? EntityStates.Commando.SlideState.slideDuration : EntityStates.Commando.SlideState.jumpDuration;
+				var num = this.startedStateGrounded ? EntityStates.Commando.SlideState.slideDuration : EntityStates.Commando.SlideState.jumpDuration;
 
 				if (base.inputBank && base.characterDirection)
 				{
@@ -131,17 +131,14 @@ namespace RobDriver.SkillStates.Driver
 
 		private void PlayImpactAnimation()
 		{
-			Animator modelAnimator = base.GetModelAnimator();
-			int layerIndex = modelAnimator.GetLayerIndex("Impact");
+			var modelAnimator = base.GetModelAnimator();
+			var layerIndex = modelAnimator.GetLayerIndex("Impact");
 			if (layerIndex >= 0)
 			{
 				modelAnimator.SetLayerWeight(layerIndex, 1f);
 			}
 		}
 
-		public override InterruptPriority GetMinimumInterruptPriority()
-		{
-			return InterruptPriority.PrioritySkill;
-		}
-	}
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.PrioritySkill;
+    }
 }

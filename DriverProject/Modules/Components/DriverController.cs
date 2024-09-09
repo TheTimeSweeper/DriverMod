@@ -65,8 +65,6 @@ namespace RobDriver.Modules.Components
 
         public GameObject crosshairPrefab;
 
-        private int lysateCellCount = 0;
-
         private GameObject muzzleTrail;
         public GameObject weaponEffectInstance;
 
@@ -93,7 +91,7 @@ namespace RobDriver.Modules.Components
             {
                 if (this.characterBody && this.characterBody.master)
                 {
-                    DriverWeaponTracker i = this.characterBody.master.GetComponent<DriverWeaponTracker>();
+                    var i = this.characterBody.master.GetComponent<DriverWeaponTracker>();
                     if (!i) i = this.characterBody.master.gameObject.AddComponent<DriverWeaponTracker>();
                     return i;
                 }
@@ -117,7 +115,7 @@ namespace RobDriver.Modules.Components
             this.skillLocator = this.GetComponent<SkillLocator>();
 
             // model shenanigans
-            ModelLocator modelLocator = this.GetComponent<ModelLocator>();
+            var modelLocator = this.GetComponent<ModelLocator>();
             this.childLocator = modelLocator.modelTransform.GetComponentInChildren<ChildLocator>();
             this.animator = modelLocator.modelTransform.GetComponentInChildren<Animator>();
             this.characterModel = modelLocator.modelTransform.GetComponentInChildren<CharacterModel>();
@@ -146,10 +144,10 @@ namespace RobDriver.Modules.Components
         private void GetSkillOverrides()
         {
             // get each skilldef from each weapondef in the catalog...... i hate you
-            List<SkillDef> primary = new List<SkillDef>();
-            List<SkillDef> secondary = new List<SkillDef>();
+            var primary = new List<SkillDef>();
+            var secondary = new List<SkillDef>();
 
-            for (int i = 0; i < DriverWeaponCatalog.weaponDefs.Length; i++)
+            for (var i = 0; i < DriverWeaponCatalog.weaponDefs.Length; i++)
             {
                 if (DriverWeaponCatalog.weaponDefs[i])
                 {
@@ -158,8 +156,8 @@ namespace RobDriver.Modules.Components
                 }
             }
 
-            this.primarySkillOverrides = primary.ToArray();
-            this.secondarySkillOverrides = secondary.ToArray();
+            this.primarySkillOverrides = [.. primary];
+            this.secondarySkillOverrides = [.. secondary];
         }
 
         private void Start()
@@ -223,19 +221,16 @@ namespace RobDriver.Modules.Components
         {
             if (NetworkServer.active)
             {
-                DriverWeaponTracker weaponTracker = this.weaponTracker;
+                var weaponTracker = this.weaponTracker;
                 if (weaponTracker?.isStoringWeapon == true)
                 {
-                    DriverWeaponTracker.StoredWeapon storedWeapon = weaponTracker.RetrieveWeapon();
+                    var storedWeapon = weaponTracker.RetrieveWeapon();
                     this.ServerGetStoredWeapon(storedWeapon.weaponDef, storedWeapon.bulletDef, storedWeapon.ammo);
                 }
             }
         }
 
-        private void StoreWeapon()
-        {
-            this.weaponTracker?.StoreWeapon(this.weaponDef, this.currentBulletDef, this.weaponTimer);
-        }
+        private void StoreWeapon() => this.weaponTracker?.StoreWeapon(this.weaponDef, this.currentBulletDef, this.weaponTimer);
 
         private void CheckForNeedler()
         {
@@ -243,7 +238,7 @@ namespace RobDriver.Modules.Components
 
             if (this.characterBody && this.characterBody.master && this.characterBody.master.inventory)
             {
-                DriverWeaponDef desiredWeapon = this.defaultWeaponDef;
+                var desiredWeapon = this.defaultWeaponDef;
 
                 if (this.characterBody.master.inventory.GetItemCount(RoR2Content.Items.TitanGoldDuringTP) > 0 &&
                     this.defaultWeaponDef.nameToken == DriverWeaponCatalog.Pistol.nameToken)
@@ -268,10 +263,7 @@ namespace RobDriver.Modules.Components
             }
         }
 
-        private void Inventory_onInventoryChanged()
-        {
-            this.CheckForNeedler();
-        }
+        private void Inventory_onInventoryChanged() => this.CheckForNeedler();
 
         private void CheckForUpgrade()
         {
@@ -280,7 +272,7 @@ namespace RobDriver.Modules.Components
             if (this.hasPickedUpHammer) return;
 
             // upgrade your pistol for run-ending bosses; this is more interesting than just injecting weapon drops imo
-            Scene currentScene = SceneManager.GetActiveScene();
+            var currentScene = SceneManager.GetActiveScene();
 
             if (currentScene.name == "moon" || currentScene.name == "moon2")
             {
@@ -311,13 +303,13 @@ namespace RobDriver.Modules.Components
 
         private void UpgradeToLunar()
         {
-            bool success = this.TryUpgradeWeapon(DriverWeaponCatalog.LunarPistol);
+            var success = this.TryUpgradeWeapon(DriverWeaponCatalog.LunarPistol);
             if (!success) return;
 
             this.PickUpWeapon(this.defaultWeaponDef);
             this.TryPickupNotification(true);
 
-            EffectData effectData = new EffectData
+            var effectData = new EffectData
             {
                 origin = this.childLocator.FindChild("PistolMuzzle").position,
                 rotation = Quaternion.identity
@@ -335,13 +327,13 @@ namespace RobDriver.Modules.Components
 
         private void UpgradeToVoid()
         {
-            bool success = this.TryUpgradeWeapon(DriverWeaponCatalog.VoidPistol);
+            var success = this.TryUpgradeWeapon(DriverWeaponCatalog.VoidPistol);
             if (!success) return;
 
             this.PickUpWeapon(this.defaultWeaponDef);
             this.TryPickupNotification(true);
 
-            EffectData effectData = new EffectData
+            var effectData = new EffectData
             {
                 origin = this.childLocator.FindChild("PistolMuzzle").position,
                 rotation = Quaternion.identity
@@ -387,8 +379,7 @@ namespace RobDriver.Modules.Components
         {
             var goldenGun = LostInTransit.LITContent.Items.GoldenGun;
 
-            if (goldenGun == null) return false;
-            return goldenGun.itemIndex == itemIndex;
+            return goldenGun && goldenGun.itemIndex == itemIndex;
         }
 
         // electric boogaloo
@@ -397,8 +388,7 @@ namespace RobDriver.Modules.Components
         {
             var goldenGun = ClassicItemsReturns.Items.GoldenGun.Instance;
 
-            if (goldenGun?.ItemDef == null) return false;
-            return goldenGun.ItemDef.itemIndex == itemIndex;
+            return goldenGun?.ItemDef && goldenGun.ItemDef.itemIndex == itemIndex;
         }
 
         private void CreateHammerEffect()
@@ -434,10 +424,10 @@ namespace RobDriver.Modules.Components
 
             if (this.characterBody && this.characterBody.inventory && scaleWithAttackSpeed)
             {
-                int alienHeadCount = this.characterBody.inventory.GetItemCount(RoR2Content.Items.AlienHead);
+                var alienHeadCount = this.characterBody.inventory.GetItemCount(RoR2Content.Items.AlienHead);
                 if (alienHeadCount > 0)
                 {
-                    for (int i = 0; i < alienHeadCount; i++)
+                    for (var i = 0; i < alienHeadCount; i++)
                     {
                         if (DriverPlugin.greenAlienHeadInstalled)
                         {
@@ -503,18 +493,16 @@ namespace RobDriver.Modules.Components
             if (this.characterBody.characterMotor.jumpCount > 0) this.characterBody.characterMotor.jumpCount--;
         }
 
-        public void ServerResetTimer()
-        {
+        public void ServerResetTimer() =>
             // just pick up the same weapon again cuz i don't feel like writing even more netcode to sync this
             this.ServerPickUpWeapon(this.weaponDef);
-        }
 
         /// <summary>
         /// Dont call this, gets stored weapon from DriverWeaponController
         /// </summary>
         public void ServerGetStoredWeapon(DriverWeaponDef newWeapon, DriverBulletDef newBullet, float ammo)
         {
-            NetworkIdentity identity = this.gameObject.GetComponent<NetworkIdentity>();
+            var identity = this.gameObject.GetComponent<NetworkIdentity>();
             if (!identity) return;
 
             new SyncStoredWeapon(identity.netId, newWeapon.index, newBullet.index, ammo).Send(NetworkDestination.Clients);
@@ -523,17 +511,14 @@ namespace RobDriver.Modules.Components
         /// <summary>
         /// Server telling you to pick up a new weapon
         /// </summary>
-        public void ServerPickUpWeapon(DriverWeaponDef newWeapon)
-        {
-            ServerPickUpWeapon(this, newWeapon, this.currentBulletDef, false, false);
-        }
+        public void ServerPickUpWeapon(DriverWeaponDef newWeapon) => ServerPickUpWeapon(this, newWeapon, this.currentBulletDef, false, false);
 
         /// <summary>
         /// Uhhh network shit idk, dont call this, it just works
         /// </summary>
         public void ServerPickUpWeapon(DriverController driverController, DriverWeaponDef newWeapon, DriverBulletDef newBullet, bool cutAmmo, bool isNewAmmoType)
         {
-            NetworkIdentity identity = driverController.gameObject.GetComponent<NetworkIdentity>();
+            var identity = driverController.gameObject.GetComponent<NetworkIdentity>();
             if (!identity) return;
 
             new SyncWeapon(identity.netId, newWeapon.index, newBullet.index, cutAmmo, isNewAmmoType).Send(NetworkDestination.Clients);
@@ -548,7 +533,7 @@ namespace RobDriver.Modules.Components
         private void DiscardWeapon()
         {
             // just create the effect here
-            GameObject newEffect = GameObject.Instantiate(Modules.Assets.discardedWeaponEffect);
+            var newEffect = GameObject.Instantiate(Modules.Assets.discardedWeaponEffect);
             newEffect.GetComponent<DiscardedWeaponComponent>().Init(this.weaponDef, (this.characterBody.characterDirection.forward * -this.backForce) + (Vector3.up * this.upForce) + this.characterBody.characterMotor.velocity);
             newEffect.transform.rotation = this.characterBody.modelLocator.modelTransform.rotation;
             newEffect.transform.position = this.childLocator.FindChild("Pistol").position + (Vector3.up * 0.5f);
@@ -669,12 +654,14 @@ namespace RobDriver.Modules.Components
         /// </summary>
         private void SetBulletAmmo(float ammo = -1, bool cutAmmo = false)
         {
-            if (muzzleTrail) UnityEngine.Object.Destroy(muzzleTrail.gameObject);
+            if (muzzleTrail)
+                GameObject.Destroy(muzzleTrail);
+
             if (this.HasSpecialBullets)
             {
-                Transform muzzleTransform;
-                if (weaponDef.animationSet == DriverWeaponDef.AnimationSet.Default) muzzleTransform = this.childLocator.FindChild("PistolMuzzle");
-                else muzzleTransform = this.childLocator.FindChild("ShotgunMuzzle");
+                var muzzleTransform = weaponDef.animationSet == DriverWeaponDef.AnimationSet.Default
+                    ? this.childLocator.FindChild("PistolMuzzle")
+                    : this.childLocator.FindChild("ShotgunMuzzle");
 
                 muzzleTrail = GameObject.Instantiate(Assets.defaultMuzzleTrail, muzzleTransform);
                 var color = currentBulletDef.trailColor.RGBMultiplied(0.5f).AlphaMultiplied(0.5f);
@@ -773,16 +760,14 @@ namespace RobDriver.Modules.Components
 
         private void TryUnlock()
         {
-            if (this.characterBody && this.characterBody.isPlayerControlled && this.characterBody.isLocalPlayer
-                && this.weaponDef != this.arsenal.DefaultWeapon)
+            if (this.characterBody && this.characterBody.isPlayerControlled && this.characterBody.isLocalPlayer && this.weaponDef != this.arsenal.DefaultWeapon)
             {
                 var statSheet = PlayerStatsComponent.FindBodyStatsComponent(this.characterBody);
                 var unlockable = UnlockableCatalog.GetUnlockableDef(this.weaponDef.nameToken);
                 if (unlockable && statSheet)
                 {
                     var master = statSheet.playerCharacterMasterController;
-                    if (master && master.networkUser && master.networkUser.localUser?.userProfile != null && 
-                        !master.networkUser.localUser.userProfile.HasUnlockable(unlockable))
+                    if (master && master.networkUser && master.networkUser.localUser?.userProfile?.HasUnlockable(unlockable) == false)
                     {
                         statSheet.currentStats.AddUnlockable(unlockable);
                     }
@@ -793,7 +778,7 @@ namespace RobDriver.Modules.Components
         public void EquipWeapon()
         {
             // unset all the overrides....
-            for (int i = 0; i < this.primarySkillOverrides.Length; i++)
+            for (var i = 0; i < this.primarySkillOverrides.Length; i++)
             {
                 if (this.primarySkillOverrides[i])
                 {
@@ -801,7 +786,7 @@ namespace RobDriver.Modules.Components
                 }
             }
 
-            for (int i = 0; i < this.secondarySkillOverrides.Length; i++)
+            for (var i = 0; i < this.secondarySkillOverrides.Length; i++)
             {
                 if (this.secondarySkillOverrides[i])
                 {
@@ -838,14 +823,9 @@ namespace RobDriver.Modules.Components
             }
             else
             {
-                if (this.weaponDef.animationSet == DriverWeaponDef.AnimationSet.TwoHanded)
-                {
-                    this.weaponRenderer.sharedMesh = DriverWeaponCatalog.Behemoth.mesh;
-                }
-                else
-                {
-                    this.weaponRenderer.sharedMesh = DriverWeaponCatalog.Pistol.mesh;
-                }
+                this.weaponRenderer.sharedMesh = this.weaponDef.animationSet == DriverWeaponDef.AnimationSet.TwoHanded
+                    ? DriverWeaponCatalog.Behemoth.mesh
+                    : DriverWeaponCatalog.Pistol.mesh;
             }
 
             // crosshair
@@ -940,9 +920,9 @@ namespace RobDriver.Modules.Components
 
             this.shellObjects = new GameObject[this.maxShellCount + 1];
 
-            GameObject desiredShell = Assets.shotgunShell;
+            var desiredShell = Assets.shotgunShell;
 
-            for (int i = 0; i < this.maxShellCount; i++)
+            for (var i = 0; i < this.maxShellCount; i++)
             {
                 this.shellObjects[i] = GameObject.Instantiate(desiredShell, this.childLocator.FindChild("Pistol"), false);
                 this.shellObjects[i].transform.localScale = Vector3.one * 1.1f;
@@ -959,7 +939,7 @@ namespace RobDriver.Modules.Components
 
             desiredShell = Assets.shotgunSlug;
 
-            for (int i = 0; i < this.maxShellCount; i++)
+            for (var i = 0; i < this.maxShellCount; i++)
             {
                 this.slugObjects[i] = GameObject.Instantiate(desiredShell, this.childLocator.FindChild("Pistol"), false);
                 this.slugObjects[i].transform.localScale = Vector3.one * 1.2f;
@@ -977,7 +957,7 @@ namespace RobDriver.Modules.Components
 
             if (this.shellObjects[this.currentShell] == null) return;
 
-            Transform origin = this.childLocator.FindChild("Pistol");
+            var origin = this.childLocator.FindChild("Pistol");
 
             this.shellObjects[this.currentShell].SetActive(false);
 
@@ -986,7 +966,7 @@ namespace RobDriver.Modules.Components
 
             this.shellObjects[this.currentShell].SetActive(true);
 
-            Rigidbody rb = this.shellObjects[this.currentShell].gameObject.GetComponent<Rigidbody>();
+            var rb = this.shellObjects[this.currentShell].gameObject.GetComponent<Rigidbody>();
             if (rb) rb.velocity = force;
 
             this.currentShell++;
@@ -999,7 +979,7 @@ namespace RobDriver.Modules.Components
 
             if (this.slugObjects[this.currentSlug] == null) return;
 
-            Transform origin = this.childLocator.FindChild("Pistol");
+            var origin = this.childLocator.FindChild("Pistol");
 
             this.slugObjects[this.currentSlug].SetActive(false);
 
@@ -1008,7 +988,7 @@ namespace RobDriver.Modules.Components
 
             this.slugObjects[this.currentSlug].SetActive(true);
 
-            Rigidbody rb = this.slugObjects[this.currentSlug].gameObject.GetComponent<Rigidbody>();
+            var rb = this.slugObjects[this.currentSlug].gameObject.GetComponent<Rigidbody>();
             if (rb) rb.velocity = force;
 
             this.currentSlug++;
@@ -1022,14 +1002,14 @@ namespace RobDriver.Modules.Components
 
             if (this.shellObjects != null && this.shellObjects.Length > 0)
             {
-                for (int i = 0; i < this.shellObjects.Length; i++)
+                for (var i = 0; i < this.shellObjects.Length; i++)
                 {
                     if (this.shellObjects[i]) Destroy(this.shellObjects[i]);
                 }
             }
             if (this.slugObjects != null && this.slugObjects.Length > 0)
             {
-                for (int i = 0; i < this.slugObjects.Length; i++)
+                for (var i = 0; i < this.slugObjects.Length; i++)
                 {
                     if (this.slugObjects[i]) Destroy(this.slugObjects[i]);
                 }
@@ -1053,7 +1033,7 @@ namespace RobDriver.Modules.Components
             // fuck, i have to network this before adding it actually
             if (this.weaponTimer > 0f && this.maxWeaponTimer > 0f)
             {
-                float amount = 1f * this.comboDecay;
+                var amount = 1f * this.comboDecay;
 
                 this.comboDecay = Mathf.Clamp(this.comboDecay - 0.1f, 0f, 1f);
 

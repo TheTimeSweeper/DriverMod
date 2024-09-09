@@ -15,7 +15,7 @@ namespace RobDriver.Modules
 {
     public static class Buffs
     {
-        internal static List<BuffDef> buffDefs = new List<BuffDef>();
+        internal static List<BuffDef> buffDefs = new();
 
         internal static DotController.DotIndex gougeIndex;
 
@@ -45,7 +45,7 @@ namespace RobDriver.Modules
         // simple helper method
         internal static BuffDef AddNewBuff(string buffName, Sprite buffIcon, Color buffColor, bool canStack, bool isDebuff)
         {
-            BuffDef buffDef = ScriptableObject.CreateInstance<BuffDef>();
+            var buffDef = ScriptableObject.CreateInstance<BuffDef>();
             buffDef.name = buffName;
             buffDef.buffColor = buffColor;
             buffDef.canStack = canStack;

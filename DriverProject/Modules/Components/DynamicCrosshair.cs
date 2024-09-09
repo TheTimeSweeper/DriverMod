@@ -19,14 +19,14 @@ namespace RobDriver.Modules.Components
         {
             this.crosshairController = this.GetComponent<CrosshairController>();
 
-            List<Image> hhhh = new List<Image>();
+            var hhhh = new List<Image>();
 
-            foreach (CrosshairController.SpritePosition fuckYouDontTellMeToStopUsingIAsMyVariableName in this.crosshairController.spriteSpreadPositions)
+            foreach (var fuckYouDontTellMeToStopUsingIAsMyVariableName in this.crosshairController.spriteSpreadPositions)
             {
                 if (fuckYouDontTellMeToStopUsingIAsMyVariableName.target) hhhh.Add(fuckYouDontTellMeToStopUsingIAsMyVariableName.target.GetComponent<Image>());
             }
 
-            this.crosshairSprites = hhhh.ToArray();
+            this.crosshairSprites = [.. hhhh];
         }
 
         private void FixedUpdate()
@@ -47,8 +47,8 @@ namespace RobDriver.Modules.Components
             {
                 if (this.crosshairController.hudElement.targetCharacterBody && this.crosshairController.hudElement.targetCharacterBody.hasAuthority)
                 {
-                    Vector3 origin = this.crosshairController.hudElement.targetCharacterBody.aimOrigin;
-                    Ray aimRay = this.crosshairController.hudElement.targetCharacterBody.inputBank.GetAimRay();
+                    var origin = this.crosshairController.hudElement.targetCharacterBody.aimOrigin;
+                    var aimRay = this.crosshairController.hudElement.targetCharacterBody.inputBank.GetAimRay();
 
                     // check if there's something in front of the crosshair
                     RaycastHit raycastHit;
@@ -56,9 +56,9 @@ namespace RobDriver.Modules.Components
                     {
                         if (raycastHit.collider)
                         {
-                            GameObject target = raycastHit.collider.gameObject;
+                            var target = raycastHit.collider.gameObject;
 
-                            HurtBox hurtbox = target.GetComponent<HurtBox>();
+                            var hurtbox = target.GetComponent<HurtBox>();
                             if (hurtbox)
                             {
                                 if (hurtbox.healthComponent && hurtbox.healthComponent.body == this.crosshairController.hudElement.targetCharacterBody)
@@ -88,7 +88,7 @@ namespace RobDriver.Modules.Components
         {
             if (this.crosshairSprites != null && this.crosshairSprites.Length > 0)
             {
-                for (int i = 0; i < this.crosshairSprites.Length; i++)
+                for (var i = 0; i < this.crosshairSprites.Length; i++)
                 {
                     if (this.crosshairSprites[i]) this.crosshairSprites[i].color = newColor;
                 }

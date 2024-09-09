@@ -52,26 +52,26 @@ namespace RobDriver.SkillStates.Driver.VoidRifle
             {
                 this.hasFired = true;
 
-                float recoilAmplitude = Shoot.bulletRecoil / this.attackSpeedStat;
+                var recoilAmplitude = Shoot.bulletRecoil / this.attackSpeedStat;
 
                 base.AddRecoil2(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
                 this.characterBody.AddSpreadBloom(4f);
                 EffectManager.SimpleMuzzleFlash(Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/MuzzleflashVoidRaidCrabMissiles.prefab").WaitForCompletion(), gameObject, muzzleString, false);
 
-                GameObject tracer = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidSurvivor/VoidSurvivorBeamTracer.prefab").WaitForCompletion();
+                var tracer = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidSurvivor/VoidSurvivorBeamTracer.prefab").WaitForCompletion();
                 //if (this.isCrit) tracer = Modules.Assets.shotgunTracerCrit;
 
                 if (base.isAuthority)
                 {
-                    float damage = Shoot.damageCoefficient * this.damageStat;
+                    var damage = Shoot.damageCoefficient * this.damageStat;
 
-                    Ray aimRay = GetAimRay();
+                    var aimRay = GetAimRay();
 
-                    float spread = Shoot.bulletSpread;
-                    float thiccness = Shoot.bulletThiccness;
+                    var spread = Shoot.bulletSpread;
+                    var thiccness = Shoot.bulletThiccness;
                     float force = 25;
 
-                    BulletAttack bulletAttack = new BulletAttack
+                    var bulletAttack = new BulletAttack
                     {
                         aimVector = aimRay.direction,
                         origin = aimRay.origin,

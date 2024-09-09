@@ -98,16 +98,13 @@ namespace RobDriver.SkillStates.Driver.Skateboard
             }
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Death;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Death;
 
         private void UpdateSkateDirection()
         {
             if (base.inputBank)
             {
-                Vector2 vector = Util.Vector3XZToVector2XY(base.inputBank.moveVector);
+                var vector = Util.Vector3XZToVector2XY(base.inputBank.moveVector);
                 if (vector != Vector2.zero)
                 {
                     vector.Normalize();
@@ -116,9 +113,6 @@ namespace RobDriver.SkillStates.Driver.Skateboard
             }
         }
 
-        private Vector3 GetIdealVelocity()
-        {
-            return base.characterDirection.forward * base.characterBody.moveSpeed * this.skateSpeedMultiplier;
-        }
+        private Vector3 GetIdealVelocity() => base.characterDirection.forward * base.characterBody.moveSpeed * this.skateSpeedMultiplier;
     }
 }

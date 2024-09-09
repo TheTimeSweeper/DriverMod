@@ -17,12 +17,12 @@ namespace RobDriver.SkillStates.Driver
             this.slipVector = ((base.inputBank.moveVector == Vector3.zero) ? base.characterDirection.forward : base.inputBank.moveVector).normalized;
             this.cachedForward = this.characterDirection.forward;
 
-            Animator anim = this.GetModelAnimator();
+            var anim = this.GetModelAnimator();
 
-            Vector3 rhs = base.characterDirection ? base.characterDirection.forward : this.slipVector;
-            Vector3 rhs2 = Vector3.Cross(Vector3.up, rhs);
-            float num = Vector3.Dot(this.slipVector, rhs);
-            float num2 = Vector3.Dot(this.slipVector, rhs2);
+            var rhs = base.characterDirection ? base.characterDirection.forward : this.slipVector;
+            var rhs2 = Vector3.Cross(Vector3.up, rhs);
+            var num = Vector3.Dot(this.slipVector, rhs);
+            var num2 = Vector3.Dot(this.slipVector, rhs2);
             anim.SetFloat("dashF", num);
             anim.SetFloat("dashR", num2);
 
@@ -69,10 +69,7 @@ namespace RobDriver.SkillStates.Driver
             }
         }
 
-        public virtual void DampenVelocity()
-        {
-            base.characterMotor.velocity *= 0.8f;
-        }
+        public virtual void DampenVelocity() => base.characterMotor.velocity *= 0.8f;
 
         public override void OnExit()
         {
@@ -82,9 +79,6 @@ namespace RobDriver.SkillStates.Driver
             base.OnExit();
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.Frozen;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Frozen;
     }
 }

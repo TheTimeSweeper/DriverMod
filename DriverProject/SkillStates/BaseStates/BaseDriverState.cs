@@ -21,9 +21,6 @@ namespace RobDriver.SkillStates.BaseStates
             if (this.iDrive) this.cachedWeaponDef = this.iDrive.weaponDef;
         }
 
-        public override void OnExit()
-        {
-            base.OnExit();
-        }
+        public override void OnExit() => base.OnExit();
     }
 }

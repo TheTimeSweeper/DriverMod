@@ -40,7 +40,7 @@ namespace RobDriver.Modules
                     return;
                 }
                 //Chat.AddMessage($"Client received SyncSomething. Position received is {position}. Number received is {number}.");
-                GameObject bodyObject = Util.FindNetworkObject(netId);
+                var bodyObject = Util.FindNetworkObject(netId);
                 if (!bodyObject) {
                     Log.Warning("SyncLifeSteal: bodyObject is null.");
                     return;

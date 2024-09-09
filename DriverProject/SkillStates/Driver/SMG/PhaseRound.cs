@@ -49,7 +49,7 @@ namespace RobDriver.SkillStates.Driver.SMG
             {
                 this.hasFired = true;
 
-                float recoilAmplitude = Shoot.recoil / this.attackSpeedStat;
+                var recoilAmplitude = Shoot.recoil / this.attackSpeedStat;
 
                 base.AddRecoil2(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
                 this.characterBody.AddSpreadBloom(12f);
@@ -57,7 +57,7 @@ namespace RobDriver.SkillStates.Driver.SMG
 
                 if (base.isAuthority)
                 {
-                    Ray aimRay = this.GetAimRay();
+                    var aimRay = this.GetAimRay();
                     ProjectileManager.instance.FireProjectile(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Commando/FMJRamping.prefab").WaitForCompletion(), 
                         aimRay.origin, Util.QuaternionSafeLookRotation(aimRay.direction), this.gameObject, this.damageStat * this._damageCoefficient, 1200f, this.isCrit, DamageColorIndex.Default, null, 120f);
                 }
@@ -86,10 +86,7 @@ namespace RobDriver.SkillStates.Driver.SMG
             }
         }
 
-        public override void OnExit()
-        {
-            base.OnExit();
-        }
+        public override void OnExit() => base.OnExit();
 
         public override InterruptPriority GetMinimumInterruptPriority()
         {

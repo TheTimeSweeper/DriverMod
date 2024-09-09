@@ -9,10 +9,7 @@ namespace RobDriver.SkillStates.Driver.MachineGun
 {
     public class Zap : GenericProjectileBaseState
     {
-        public static float baseDuration = 0.8f;
-        public static float baseDelayDuration = 0.5f * baseDuration;
-
-        public static float damageCoefficient = 3.8f;
+        public static float damage = 3.8f;
 
         private uint playID;
 
@@ -24,12 +21,10 @@ namespace RobDriver.SkillStates.Driver.MachineGun
 
             //base.attackSoundString = "sfx_driver_gun_throw";
 
-            base.baseDuration = baseDuration;
-            base.baseDelayBeforeFiringProjectile = baseDelayDuration;
-
-            base.damageCoefficient = damageCoefficient;
+            base.baseDuration = 0.8f;
+            base.baseDelayBeforeFiringProjectile = 0.5f * base.baseDuration;
+            base.damageCoefficient = 3.8f;
             base.force = 120f;
-
             base.projectilePitchBonus = 0f;
             //base.minSpread = 0;
             //base.maxSpread = 0;
@@ -41,14 +36,11 @@ namespace RobDriver.SkillStates.Driver.MachineGun
 
             this.playID = Util.PlaySound("sfx_driver_zap_prep", this.gameObject);
 
-            DriverController iDrive = this.GetComponent<DriverController>();
+            var iDrive = this.GetComponent<DriverController>();
             if (iDrive) iDrive.ConsumeAmmo();
         }
 
-        public override void FixedUpdate()
-        {
-            base.FixedUpdate();
-        }
+        public override void FixedUpdate() => base.FixedUpdate();
 
         public override void FireProjectile()
         {
@@ -69,8 +61,9 @@ namespace RobDriver.SkillStates.Driver.MachineGun
 
         public override InterruptPriority GetMinimumInterruptPriority()
         {
-            if (base.fixedAge >= (this.duration * this.delayBeforeFiringProjectile) + 0.1f && this.firedProjectile) return InterruptPriority.Any;
-            return InterruptPriority.Pain;
+            return (base.fixedAge >= (this.duration * this.delayBeforeFiringProjectile) + 0.1f && this.firedProjectile)
+                ? InterruptPriority.Any
+                : InterruptPriority.Pain;
         }
 
         public override void PlayAnimation(float duration)

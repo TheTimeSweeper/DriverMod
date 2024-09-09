@@ -117,24 +117,15 @@ namespace RobDriver.SkillStates.Driver
             this.lightEffectInstance = GameObject.Instantiate(Modules.Assets.mainAssetBundle.LoadAsset<GameObject>("GunLight"));
         }
 
-        protected virtual void PlayAnim()
-        {
-            base.PlayAnimation("Gesture, Override", "SteadyAim", "Action.playbackRate", 0.25f);
-        }
+        protected virtual void PlayAnim() => base.PlayAnimation("Gesture, Override", "SteadyAim", "Action.playbackRate", 0.25f);
 
-        protected virtual void PlayExitAnim()
-        {
-            base.PlayAnimation("Gesture, Override", "SteadyAimEnd", "Action.playbackRate", 0.2f);
-        }
+        protected virtual void PlayExitAnim() => base.PlayAnimation("Gesture, Override", "SteadyAimEnd", "Action.playbackRate", 0.2f);
 
-        private void Inventory_onInventoryChanged()
-        {
-            this.shurikenComponent = this.GetComponent<PrimarySkillShurikenBehavior>();
-        }
+        private void Inventory_onInventoryChanged() => this.shurikenComponent = this.GetComponent<PrimarySkillShurikenBehavior>();
 
         private void UpdateLightEffect()
         {
-            Ray ray = this.GetAimRay();
+            var ray = this.GetAimRay();
             RaycastHit raycastHit;
             if (Physics.Raycast(ray.origin, ray.direction, out raycastHit, Shoot.range, LayerIndex.CommonMasks.bullet))
             {
@@ -277,14 +268,14 @@ namespace RobDriver.SkillStates.Driver
                     return;
                 }
 
-                float value = Util.Remap(this.chargeTimer, 0f, this.chargeDuration, 0f, 1f);
+                var value = Util.Remap(this.chargeTimer, 0f, this.chargeDuration, 0f, 1f);
                 this.iDrive.chargeValue = value;
             }
         }
 
         protected virtual void PlayShootAnim(bool wasCharged, bool wasCrit, float speed)
         {
-            string animString = "SteadyAimFire";
+            var animString = "SteadyAimFire";
 
             if (wasCharged)
             {
@@ -301,7 +292,7 @@ namespace RobDriver.SkillStates.Driver
 
         protected virtual string GetSoundString(bool crit, bool charged)
         {
-            string soundString = "sfx_driver_pistol_shoot";
+            var soundString = "sfx_driver_pistol_shoot";
             if (crit) soundString = "sfx_driver_pistol_shoot_critical";
             if (charged) soundString = "sfx_driver_pistol_shoot_charged";
             return soundString;
@@ -315,7 +306,7 @@ namespace RobDriver.SkillStates.Driver
 
             if (base.fixedAge <= 0.25f) this.jamFlag = true;
 
-            bool wasCharged = this.isCharged;
+            var wasCharged = this.isCharged;
 
             this.shotCooldown = this.baseShotDuration / this.attackSpeedStat;
             this.chargeTimer = 0f;
@@ -345,10 +336,10 @@ namespace RobDriver.SkillStates.Driver
 
             if (base.isAuthority)
             {
-                Ray aimRay = base.GetAimRay();
+                var aimRay = base.GetAimRay();
                 base.AddRecoil2(-1f * SteadyAim.recoil, -2f * SteadyAim.recoil, -0.5f * SteadyAim.recoil, 0.5f * SteadyAim.recoil);
 
-                float dmg = Shoot.damageCoefficient;
+                var dmg = Shoot.damageCoefficient;
 
                 if (wasCharged)
                 {
@@ -359,12 +350,12 @@ namespace RobDriver.SkillStates.Driver
 
                 this.lastCharge = wasCharged;
 
-                BulletAttack.FalloffModel falloffModel = BulletAttack.FalloffModel.DefaultBullet;
+                var falloffModel = BulletAttack.FalloffModel.DefaultBullet;
                 if (this.lastCharge) falloffModel = BulletAttack.FalloffModel.None;
 
                 if (this.isPiercing)
                 {
-                    BulletAttack bulletAttack = new BulletAttack
+                    var bulletAttack = new BulletAttack
                     {
                         bulletCount = 1,
                         aimVector = aimRay.direction,
@@ -399,7 +390,7 @@ namespace RobDriver.SkillStates.Driver
                 }
                 else
                 {
-                    BulletAttack bulletAttack = new BulletAttack
+                    var bulletAttack = new BulletAttack
                     {
                         bulletCount = 1,
                         aimVector = aimRay.direction,
@@ -444,7 +435,7 @@ namespace RobDriver.SkillStates.Driver
 
                                 if (wasCharged)
                                 {
-                                    EffectData effectData = new EffectData
+                                    var effectData = new EffectData
                                     {
                                         origin = hitInfo.point,
                                         rotation = Quaternion.LookRotation(-hitInfo.direction)
@@ -475,12 +466,12 @@ namespace RobDriver.SkillStates.Driver
 
             if (base.isAuthority)
             {
-                Ray aimRay = base.GetAimRay();
+                var aimRay = base.GetAimRay();
                 base.AddRecoil2(-1f * Shoot.recoil, -2f * Shoot.recoil, -0.5f * Shoot.recoil, 0.5f * Shoot.recoil);
 
-                float dmg = Shoot.damageCoefficient;
+                var dmg = Shoot.damageCoefficient;
 
-                BulletAttack.FalloffModel falloffModel = BulletAttack.FalloffModel.DefaultBullet;
+                var falloffModel = BulletAttack.FalloffModel.DefaultBullet;
 
                 if (this.lastCharge)
                 {
@@ -488,9 +479,9 @@ namespace RobDriver.SkillStates.Driver
                     falloffModel = BulletAttack.FalloffModel.None;
                 }
 
-                GameObject tracerPrefab = Shoot.critTracerEffectPrefab;
+                var tracerPrefab = Shoot.critTracerEffectPrefab;
 
-                BulletAttack bulletAttack = new BulletAttack
+                var bulletAttack = new BulletAttack
                 {
                     bulletCount = (uint)bulletCount,
                     aimVector = aimRay.direction,
@@ -534,7 +525,7 @@ namespace RobDriver.SkillStates.Driver
 
                             if (this.lastCharge)
                             {
-                                EffectData effectData = new EffectData
+                                var effectData = new EffectData
                                 {
                                     origin = hitInfo.point,
                                     rotation = Quaternion.LookRotation(-hitInfo.direction)
@@ -582,9 +573,6 @@ namespace RobDriver.SkillStates.Driver
             this.FindModelChild("PistolSight").gameObject.SetActive(false);
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority()
-        {
-            return InterruptPriority.PrioritySkill;
-        }
+        public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.PrioritySkill;
     }
 }
