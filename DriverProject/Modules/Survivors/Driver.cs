@@ -517,6 +517,7 @@ namespace RobDriver.Modules.Survivors
             GameObject model = childLocator.gameObject;
 
             Transform hitboxTransform = childLocator.FindChild("HammerBaseHitbox");
+            hitboxTransform.localScale *= 1.3f;
             Modules.Prefabs.SetupHitbox(model, new Transform[]
                 {
                     hitboxTransform
@@ -1977,12 +1978,12 @@ namespace RobDriver.Modules.Survivors
 
             if (Modules.Config.cursed.Value)
             {
-                Modules.Skills.AddSpecialSkills(prefab, stunGrenadeSkillDef, supplyDropSkillDef, supplyDropLegacySkillDef, knifeSkillDef, /*healSkillDef,*/ syringeSkillDef, syringeLegacySkillDef, coinSkillDef);
+                Modules.Skills.AddSpecialSkills(prefab, stunGrenadeSkillDef, supplyDropSkillDef, supplyDropLegacySkillDef, knifeSkillDef, /*healSkillDef,*/ syringeSkillDef, syringeLegacySkillDef/*, coinSkillDef*/);
                 Modules.Skills.AddUnlockablesToFamily(skillLocator.special.skillFamily, null, supplyDropUnlockableDef, supplyDropUnlockableDef);
             }
             else
             {
-                Modules.Skills.AddSpecialSkills(prefab, stunGrenadeSkillDef, supplyDropSkillDef, knifeSkillDef, /*healSkillDef,*/ syringeSkillDef, coinSkillDef);
+                Modules.Skills.AddSpecialSkills(prefab, stunGrenadeSkillDef, supplyDropSkillDef, knifeSkillDef, /*healSkillDef,*/ syringeSkillDef/*, coinSkillDef*/);
                 Modules.Skills.AddUnlockablesToFamily(skillLocator.special.skillFamily, null, supplyDropUnlockableDef);
             }
             #endregion

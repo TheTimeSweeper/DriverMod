@@ -773,16 +773,14 @@ namespace RobDriver.Modules.Components
 
         private void TryUnlock()
         {
-            if (this.characterBody && this.characterBody.isPlayerControlled && this.characterBody.isLocalPlayer
-                && this.weaponDef != this.arsenal.DefaultWeapon)
+            if (this.characterBody && this.characterBody.isPlayerControlled && this.weaponDef != this.arsenal.DefaultWeapon)
             {
                 var statSheet = PlayerStatsComponent.FindBodyStatsComponent(this.characterBody);
                 var unlockable = UnlockableCatalog.GetUnlockableDef(this.weaponDef.nameToken);
-                if (unlockable && statSheet)
+                if (unlockable && statSheet && statSheet.playerCharacterMasterController)
                 {
-                    var master = statSheet.playerCharacterMasterController;
-                    if (master && master.networkUser && master.networkUser.localUser?.userProfile != null && 
-                        !master.networkUser.localUser.userProfile.HasUnlockable(unlockable))
+                    var netUser = statSheet.playerCharacterMasterController.networkUser;
+                    if (netUser && netUser.localUser?.userProfile?.HasUnlockable(unlockable) == false)
                     {
                         statSheet.currentStats.AddUnlockable(unlockable);
                     }

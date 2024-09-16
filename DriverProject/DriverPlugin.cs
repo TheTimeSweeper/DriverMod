@@ -115,17 +115,10 @@ namespace RobDriver
             if (Modules.Config.dynamicCrosshairUniversal.Value) On.RoR2.UI.CrosshairController.Awake += CrosshairController_Awake;
             //R2API.RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
-            On.RoR2.UI.MainMenu.MainMenuController.Start += MainMenuController_Start;
+            RoR2.RoR2Application.onLoad += Driver.LateSkinSetup;
             // uncomment this if network testing
             // just download nuxlar's MultiplayerModTesting ffs, youre just gonna forget to comment it out again
             //On.RoR2.Networking.NetworkManagerSystemSteam.OnClientConnect += (s, u, t) => { };
-        }
-
-        private void MainMenuController_Start(On.RoR2.UI.MainMenu.MainMenuController.orig_Start orig, RoR2.UI.MainMenu.MainMenuController self)
-        {
-            orig(self);
-            Driver.LateSkinSetup();
-            On.RoR2.UI.MainMenu.MainMenuController.Start -= MainMenuController_Start;
         }
 
         private void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
