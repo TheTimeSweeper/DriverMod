@@ -14,7 +14,7 @@ namespace RobDriver.SkillStates.Driver.Compat
         public override void OnEnter()
         {
             this.RefreshState();
-            this.hitboxName = "Knife";
+            this.hitboxName = "Hammer";
 
             this.charge = Mathf.Clamp01(Util.Remap(this.characterMotor.velocity.magnitude, 0f, 60f, 0f, 1f));
 

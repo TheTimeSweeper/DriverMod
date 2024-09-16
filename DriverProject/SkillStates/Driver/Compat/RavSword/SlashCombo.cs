@@ -15,7 +15,7 @@ namespace RobDriver.SkillStates.Driver.Compat
         public override void OnEnter()
         {
             this.RefreshState();
-            this.hitboxName = "Knife";
+            this.hitboxName = "Hammer";
 
             this.damageCoefficient = _damageCoefficient;
             this.pushForce = 200f;

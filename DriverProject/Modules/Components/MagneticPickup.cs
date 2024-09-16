@@ -1,6 +1,5 @@
 ﻿using RobDriver.Modules.Survivors;
 using RoR2;
-using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace RobDriver.Modules.Components
@@ -10,45 +9,38 @@ namespace RobDriver.Modules.Components
         // stole this code from MagneticPickups mod
         private void FixedUpdate()
         {
-            // Retrieve players and get the closest one.
-            var players = TeamComponent.GetTeamMembers(TeamIndex.Player);
-            var location = GetClosestPlayerLocation(players, this.transform.position);
+            if (!Config.enableMagneticPickups.Value)
+                return;
 
-            // Move the pickup towards the player's location if they are within the radius.
-            if (Vector3.Distance(this.transform.position, location) < Config.pickupRadius.Value)
+            if (IsDriverPlayerNearby(this.transform.position, out var driverPosition))
             {
-                MovePickupTowardsPlayer(location);
+                MovePickupTowardsPlayer(driverPosition);
             }
         }
 
         // stole this code from MagneticPickups mod
-        private Vector3 GetClosestPlayerLocation(
-            ReadOnlyCollection<TeamComponent> players,
-            Vector3 location)
+        private bool IsDriverPlayerNearby(Vector3 thisPosition, out Vector3 driverPosition)
         {
-            var closestPosition = Vector3.positiveInfinity;
-            var lowestDistance = Config.pickupRadius.Value;
-            foreach (var teamComponent in players)
+            driverPosition = Vector3.zero;
+            var lowestDistance = float.PositiveInfinity;
+            foreach (var tc in TeamComponent.GetTeamMembers(TeamIndex.Player))
             {
-                var networkBody = Util.LookUpBodyNetworkUser(teamComponent.gameObject);
-                if (!networkBody || teamComponent.body.baseNameToken != Driver.bodyNameToken)
+                if (tc && tc.body && tc.body.isPlayerControlled && tc.body.baseNameToken == Driver.bodyNameToken)
                 {
-                    continue;
-                }
-
-                var distance = Vector3.Distance(teamComponent.body.footPosition, location);
-                if (distance < lowestDistance)
-                {
-                    teamComponent.body.TryGetComponent<DriverController>(out var iDrive);
-
-                    if (!Config.enableMagenticConditionalPickups.Value || (iDrive && !iDrive.HasSpecialBullets && iDrive.weaponDef.nameToken == iDrive.defaultWeaponDef.nameToken))
+                    var distance = (tc.body.footPosition - thisPosition).sqrMagnitude;
+                    if (distance < lowestDistance)
                     {
-                        closestPosition = teamComponent.body.footPosition;
-                        lowestDistance = distance;
+                        if (!Config.enableMagenticConditionalPickups.Value || (tc.body.TryGetComponent<DriverController>(out var iDrive) 
+                            && iDrive && !iDrive.HasSpecialBullets && iDrive.weaponDef == iDrive.defaultWeaponDef))
+                        {
+                            driverPosition = tc.body.footPosition;
+                            lowestDistance = distance;
+                        }
                     }
                 }
             }
-            return closestPosition;
+
+            return lowestDistance < (Config.pickupRadius.Value * Config.pickupRadius.Value);
         }
 
         // stole this code from MagneticPickups mod
@@ -86,7 +78,7 @@ namespace RobDriver.Modules.Components
                 50f
             );
 
-            rigidBody.velocity += -speed;
+            rigidBody.velocity -= speed;
         }
     }
 }

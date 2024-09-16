@@ -3002,7 +3002,8 @@ namespace RobDriver.Modules.Survivors
 
                         // add passive specific stuff
                         // give the poor godsling players the ultra rare weapons, nobody likes getting bullets from michael
-                        weaponComponent.isNewAmmoType = (uniqueDrop && uniqueDrop.dropChance >= 100) || Util.CheckRoll(Config.godslingDropRateSplit.Value);
+                        if (!uniqueDrop || uniqueDrop.dropChance < 100)
+                            weaponComponent.isNewAmmoType = Util.CheckRoll(Config.godslingDropRateSplit.Value);
 
                         // non-legendary gets rerolled
                         weaponComponent.bulletDef = isBoss ? DriverBulletCatalog.GetRandomBulletFromTier(DriverWeaponTier.Legendary) : 

@@ -16,7 +16,7 @@ namespace RobDriver.SkillStates.Driver.Compat.NemmandoSword
         {
             RefreshState();
 
-            this.hitboxName = "Knife";
+            this.hitboxName = "Hammer";
 
             this.damageCoefficient = _damageCoefficient;
             this.pushForce = 0f;

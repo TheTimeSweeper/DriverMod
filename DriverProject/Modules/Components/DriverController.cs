@@ -246,7 +246,7 @@ namespace RobDriver.Modules.Components
                 DriverWeaponDef desiredWeapon = this.defaultWeaponDef;
 
                 if (this.characterBody.master.inventory.GetItemCount(RoR2Content.Items.TitanGoldDuringTP) > 0 &&
-                    this.defaultWeaponDef.nameToken == DriverWeaponCatalog.Pistol.nameToken)
+                    this.defaultWeaponDef == DriverWeaponCatalog.Pistol)
                 {
                     desiredWeapon = DriverWeaponCatalog.PyriteGun;
                 }
@@ -256,14 +256,13 @@ namespace RobDriver.Modules.Components
                     desiredWeapon = DriverWeaponCatalog.Needler;
                 }
 
-                // give new weapon if you arent holding a stored weapon
-                if (DriverWeaponCatalog.IsWeaponPistol(defaultWeaponDef) && this.defaultWeaponDef.nameToken != desiredWeapon.nameToken)
+                if (this.defaultWeaponDef != desiredWeapon)
                 {
+                    if (this.weaponDef == this.defaultWeaponDef)
+                        this.PickUpWeapon(desiredWeapon);
+
                     // set new default
                     this.defaultWeaponDef = desiredWeapon;
-                    // pick up now if you're already on the default
-                    // otherwise, it gets picked up once youre out of ammo
-                    if (this.weaponDef.nameToken == this.defaultWeaponDef.nameToken) this.PickUpWeapon(desiredWeapon);
                 }
             }
         }
@@ -282,7 +281,7 @@ namespace RobDriver.Modules.Components
             // upgrade your pistol for run-ending bosses; this is more interesting than just injecting weapon drops imo
             Scene currentScene = SceneManager.GetActiveScene();
 
-            if (currentScene.name == "moon" || currentScene.name == "moon2")
+            if (currentScene.name == "moon" || currentScene.name == "moon2" || currentScene.name == "limbo")
             {
                 this.UpgradeToLunar();
             }
@@ -290,11 +289,6 @@ namespace RobDriver.Modules.Components
             if (currentScene.name == "voidraid")
             {
                 this.UpgradeToVoid();
-            }
-
-            if (currentScene.name == "limbo")
-            {
-                this.UpgradeToLunar();
             }
         }
 
@@ -387,18 +381,16 @@ namespace RobDriver.Modules.Components
         {
             var goldenGun = LostInTransit.LITContent.Items.GoldenGun;
 
-            if (goldenGun == null) return false;
-            return goldenGun.itemIndex == itemIndex;
+            return goldenGun ? goldenGun.itemIndex == itemIndex : false;
         }
 
         // electric boogaloo
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private bool IsItemGoldenGun2(ItemIndex itemIndex)
         {
-            var goldenGun = ClassicItemsReturns.Items.GoldenGun.Instance;
+            var goldenGun = ClassicItemsReturns.Items.Uncommon.GoldenGun.Instance;
 
-            if (goldenGun?.ItemDef == null) return false;
-            return goldenGun.ItemDef.itemIndex == itemIndex;
+            return goldenGun?.ItemDef ? goldenGun.ItemDef.itemIndex == itemIndex : false;
         }
 
         private void CreateHammerEffect()
