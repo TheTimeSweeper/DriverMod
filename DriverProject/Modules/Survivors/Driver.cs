@@ -524,6 +524,7 @@ namespace RobDriver.Modules.Survivors
                 }, "Hammer");
 
             hitboxTransform = childLocator.FindChild("KnifeHitbox");
+            hitboxTransform.localScale *= 1.3f;
             Modules.Prefabs.SetupHitbox(model, new Transform[]
                 {
                     hitboxTransform

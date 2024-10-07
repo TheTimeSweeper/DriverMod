@@ -131,7 +131,7 @@ namespace RobDriver.Modules
 
             dynamicCrosshairUniversal = Config.BindAndOptions("04 - Visuals", "Dynamic Crosshair (Universal)", false, "If set to true, highlight the crosshair while hovering over entities, but for ALL characters. Overrides the other option. (Client-side)", true);
 
-            defaultPistolAnims = Config.BindAndOptions("04 - Visuals", "Default Pistol Animations", false, "If set to true, return pistol passive scope animations back to the default.");
+            defaultPistolAnims = Config.BindAndOptions("04 - Visuals", "Default Pistol Animations", true, "If set to true, return pistol passive scope animations back to the default.");
             
             enabledRedVfxForKnife = Config.BindAndOptions("04 - Visuals", "Red Slashing VFX", false, "If set to true, knife has red VFX.");
 
