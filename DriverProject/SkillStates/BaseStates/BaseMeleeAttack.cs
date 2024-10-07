@@ -148,17 +148,20 @@ namespace RobDriver.SkillStates.BaseStates
             }
             if (base.isAuthority)
             {
-                foreach (CoinController coin in CoinController.OverlapAttackGetCoins(attack).Where(c => c.canRicochet))
+                foreach (var healthComponent in attack.ignoredHealthComponentList)
                 {
-                    coin.CmdRicochetBullet(attack.attacker,
-                        attack.inflictor, 
-                        attack.isCrit, 
-                        attack.damage, 
-                        attack.procChainMask.mask,
-                        attack.forceVector, 
-                        attack.forceVector == null, 
-                        (byte)attack.damageColorIndex, 
-                        (uint)attack.damageType);
+                    if (healthComponent && healthComponent.TryGetComponent<CoinController>(out var coin) && coin.canRicochet)
+                    {
+                        coin.CmdRicochetMelee(attack.attacker,
+                            attack.inflictor,
+                            attack.isCrit,
+                            attack.damage,
+                            attack.procChainMask.mask,
+                            attack.forceVector,
+                            attack.forceVector == null,
+                            (byte)attack.damageColorIndex,
+                            (uint)attack.damageType);
+                    }
                 }
             }
 

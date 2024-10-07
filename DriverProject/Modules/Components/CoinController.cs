@@ -1,7 +1,7 @@
-﻿using RoR2;
+﻿using System.Collections;
+using RoR2;
 using RoR2.Orbs;
 using RoR2.Projectile;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -9,13 +9,6 @@ namespace RobDriver.Modules.Components
 {
     public class CoinController : NetworkBehaviour, IProjectileImpactBehavior, IOnIncomingDamageServerReceiver
     {
-        public enum RicochetPriority
-        {
-            None,
-            Body,
-            Coin
-        }
-
         public HealthComponent projectileHealthComponent;
         public ProjectileController controller;
         public DriverController iDrive;
@@ -26,7 +19,7 @@ namespace RobDriver.Modules.Components
         private float coolStopwatchScale = 0.01f;
         private bool startCoolStopwatch = false;
         public float ricochetMultiplier = 2f;
-        private Vector3 rotationSpeed = new Vector3(2000f, 0f, 0f);
+        private Vector3 rotationSpeed;
         public int bounceCountStored = 0;
         private DamageInfo damageInfo;
 
@@ -61,7 +54,12 @@ namespace RobDriver.Modules.Components
             this.rotationSpeed = new Vector3(speed, 0f, 0f);
 
             iDrive = controller.owner.GetComponent<DriverController>();
-            this.GetComponent<TeamFilter>().teamIndex = TeamIndex.Neutral;
+        }
+
+        private IEnumerator SwapBack()
+        {
+            yield return new WaitForSeconds(0.25f);
+            this.gameObject.layer = LayerIndex.entityPrecise.intVal;
         }
 
         private void FixedUpdate()
@@ -109,7 +107,7 @@ namespace RobDriver.Modules.Components
         }
 
         [Command]
-        public void CmdRicochetBullet(GameObject attacker, GameObject inflictor, bool isCrit, float damage, uint procChainMask, Vector3 force, bool canRejectForce, byte colorIndex, uint damageType)
+        public void CmdRicochetMelee(GameObject attacker, GameObject inflictor, bool isCrit, float damage, uint procChainMask, Vector3 force, bool canRejectForce, byte colorIndex, uint damageType)
         {
             this.damageInfo = new DamageInfo
             {
@@ -128,6 +126,7 @@ namespace RobDriver.Modules.Components
             bounceCountStored++;
             coolStopwatchScale = (coolStopwatchScale * bounceCountStored) + 0.01f;
             startCoolStopwatch = true;
+            canRicochet = false;
         }
 
         public void RicochetBullet(DamageInfo damageInfo)
@@ -144,19 +143,6 @@ namespace RobDriver.Modules.Components
             bounceCountStored++;
             coolStopwatchScale = (coolStopwatchScale * bounceCountStored) + 0.01f;
             startCoolStopwatch = true;
-        }
-
-        public static List<CoinController> OverlapAttackGetCoins(OverlapAttack attack)
-        {
-            List<CoinController> coinList = new List<CoinController>();
-            foreach (HealthComponent healthComponent in attack.ignoredHealthComponentList)
-            {
-                if (healthComponent && healthComponent.TryGetComponent<CoinController>(out var coin))
-                {
-                    coinList.Add(coin);
-                }
-            }
-            return coinList;
         }
     }
 }

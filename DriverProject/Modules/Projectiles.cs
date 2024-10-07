@@ -228,6 +228,7 @@ namespace RobDriver.Modules
             coinProjectileGhost.transform.GetChild(1).GetComponent<TrailRenderer>().material.SetColor("_TintColor", Color.yellow);
             coinProjectile = Modules.Assets.mainAssetBundle.LoadAsset<GameObject>("CoinProjectile").InstantiateClone("DriverCoinProjectile", true);
             coinProjectile.AddComponent<NetworkIdentity>();
+            coinProjectile.layer = LayerIndex.defaultLayer.intVal;
             var soundLoop = coinProjectile.AddComponent<StopCoinSound>();
             soundLoop.SoundEventToPlay = "sfx_driver_coin_spin";
 
@@ -238,7 +239,8 @@ namespace RobDriver.Modules
 
             coinProjectile.AddComponent<SkillLocator>();
             var teamComponent = coinProjectile.AddComponent<TeamComponent>();
-            teamComponent.hideAllyCardDisplay = false;
+            teamComponent.hideAllyCardDisplay = true;
+            teamComponent.teamIndex = TeamIndex.Neutral; 
 
             var characterBody = coinProjectile.AddComponent<CharacterBody>();
             characterBody.baseVisionDistance = Mathf.Infinity;
@@ -289,7 +291,7 @@ namespace RobDriver.Modules
             List<HurtBox> hurtboxes = new List<HurtBox>();
 
             var hurtBox = coinProjectile.transform.GetChild(0).GetChild(0).gameObject.AddComponent<HurtBox>();
-            hurtBox.gameObject.layer = LayerIndex.entityPrecise.intVal;
+            hurtBox.gameObject.layer = LayerIndex.defaultLayer.intVal;
             hurtBox.healthComponent = healthComponent;
             hurtBox.isBullseye = true;
             hurtBox.isSniperTarget = true;

@@ -13,7 +13,7 @@ namespace RobDriver.Modules.Components
 
         public float searchRadius = 50f;
         public GameObject inflictor;
-        public SphereSearch search;
+        public BullseyeSearch search;
         public Vector3 coinPosition;
         public DriverController iDrive;
         public int bounceCount = 1;
@@ -117,35 +117,34 @@ namespace RobDriver.Modules.Components
         {
             HurtBox target = null;
 
-            this.search = new SphereSearch
+            this.search = new BullseyeSearch
             {
-                mask = LayerIndex.entityPrecise.mask,
-                radius = searchRadius,
-                origin = position
+                queryTriggerInteraction = QueryTriggerInteraction.Ignore,
+                filterByDistinctEntity = false,
+                filterByLoS = false,
+                minDistanceFilter = 0f,
+                sortMode = BullseyeSearch.SortMode.Distance,
+                teamMaskFilter = TeamMask.all,
+                maxDistanceFilter = searchRadius,
+                maxAngleFilter = 360f,
+                searchDirection = Vector3.up,
+                searchOrigin = position
             };
+            search.RefreshCandidates();
+            search.FilterOutGameObject(this.inflictor);
 
-            TeamMask teamMask = TeamMask.GetUnprotectedTeams(teamIndex);
-            HurtBox[] hurtBoxes = search.RefreshCandidates().OrderCandidatesByDistance().FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes();
-            var prio = CoinController.RicochetPriority.None;
-
-            foreach (HurtBox hurtBox in hurtBoxes)
+            var teamMask = TeamMask.GetEnemyTeams(teamIndex);
+            foreach (var hurtBox in search.GetResults())
             {
-                List<CoinController> coins = new List<CoinController>();
-                hurtBox.healthComponent.GetComponents(coins);
-                foreach (var coin in coins)
-                {
-                    if (coin.canRicochet && prio < CoinController.RicochetPriority.Coin)
-                    {
-                        target = hurtBox;
-                        prio = CoinController.RicochetPriority.Coin;
-                    }
-                }
-
-                CharacterBody body = hurtBox.healthComponent.body;
-                if (body && teamMask.HasTeam(body.teamComponent.teamIndex) && prio < CoinController.RicochetPriority.Body)
+                if (hurtBox.healthComponent.TryGetComponent<CoinController>(out var coin) && coin.canRicochet)
                 {
                     target = hurtBox;
-                    prio = CoinController.RicochetPriority.Body;
+                    break;
+                }
+
+                if (!target && hurtBox.healthComponent.body && teamMask.HasTeam(hurtBox.healthComponent.body.teamComponent.teamIndex))
+                {
+                    target = hurtBox;
                 }
             }
             return target;
