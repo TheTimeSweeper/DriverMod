@@ -52,6 +52,18 @@ namespace RobDriver.Modules.Weapons
 
         protected void CreateWeapon()
         {
+            CreateWeaponDef();
+
+            DriverWeaponCatalog.AddWeapon(weaponDef);
+            DriverWeaponCatalog.AddWeaponDrop(uniqueDropBodyName, weaponDef);
+            if (Modules.Config.enableArsenal.Value) Skills.AddWeaponSkill(Driver.characterPrefab, weaponDef, locked: true);
+        }
+
+        private void CreateWeaponDef()
+        {
+            if (weaponDef != null)
+                return;
+
             Texture icon = null;
             if (!string.IsNullOrEmpty(iconName)) icon = Assets.mainAssetBundle.LoadAsset<Texture>(iconName);
 
@@ -73,9 +85,6 @@ namespace RobDriver.Modules.Weapons
                 dropChance = dropChance,
                 buffType = buffType
             });
-            DriverWeaponCatalog.AddWeapon(weaponDef);
-            DriverWeaponCatalog.AddWeaponDrop(uniqueDropBodyName, weaponDef);
-            if (Modules.Config.enableArsenal.Value) Skills.AddWeaponSkill(Driver.characterPrefab, weaponDef, locked: true);
         }
     }
 }
